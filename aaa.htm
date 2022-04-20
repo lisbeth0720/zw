@@ -1,0 +1,124 @@
+﻿<html>
+<head>
+<title>文件上传</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style type="text/css">
+<!--
+td {  font-size: 9pt}
+a {  color: #000000; text-decoration: none}
+a:hover {  text-decoration: underline}
+.tx {  height: 16px; width: 30px; border-color: black black #000000; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 1px; border-left-width: 0px; font-size: 9pt; background-color: #eeeeee; color: #0000FF}
+.bt {  font-size: 9pt; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; height: 16px; width: 80px; background-color: #eeeeee; cursor: hand}
+.tx1 { height: 20px; width: 30px; font-size: 9pt; border: 1px solid; border-color: black black #000000; color: #0000FF}
+-->
+</style>
+<script language="javascript">
+<!--
+   function onCmdOk(flag)
+   {
+		if(document.form1.file1.value=="")
+		{
+			alert("文件名称不能为空，请输入!");
+			document.form1.file1.focus();
+			return false;
+		}
+      if (document.form1.file1.value.indexOf("“")>=0 || document.form1.file1.value.indexOf("”")>=0 || document.form1.file1.value.indexOf("'")>=0)
+      {
+			alert("文件名中不能包含中文引号或者英文单引号，请修改本地文件名后再重新提交!");
+			document.form1.file1.focus();
+			return false;
+      }
+		if (flag==1) 
+		   document.form1.fromtype=2;
+		else
+		   document.form1.fromtype=0;
+		if (document.form1.calchash.checked)
+      {
+         if (document.form1.delexist1[0].checked)
+            document.form1.action="wpfileupload.asp?contenttype="+document.form1.contenttype.value+"&calchash=1&delexist=0&utf8=1";
+         else
+		      document.form1.action="wpfileupload.asp?contenttype="+document.form1.contenttype.value+"&calchash=1&delexist=1&utf8=1";
+      }
+		else
+      {
+         if (document.form1.delexist1[0].checked)
+		      document.form1.action="wpfileupload.asp?contenttype="+document.form1.contenttype.value+"&calchash=0&delexist=0&utf8=1";
+         else
+            document.form1.action="wpfileupload.asp?contenttype="+document.form1.contenttype.value+"&calchash=0&delexist=1&utf8=1";
+      }
+
+	    return true;
+	}
+-->
+</script>
+
+</head>
+<body bgcolor="#f0f8ff" text="#000000">
+  <br>
+  <table width="98%" border="1" cellspacing="0" cellpadding="5" align="center" bordercolordark="#CCCCCC" bordercolorlight="#000000">
+   <form name="form1" method="post" action="wpfileupload.asp?contenttype=0" enctype="multipart/form-data">
+    <input type="hidden" name="act" value="upload">
+    <tr align="center" valign="middle">
+    
+      <td align="left" height="40" width="540">&nbsp;素材类型:&nbsp;&nbsp;<select name="contenttype" style="width:200">
+                   
+                  <OPTION value="0" selected>0-自适应</OPTION> 
+                   
+                  <OPTION value="1">1-文本</OPTION> 
+                   
+                  <OPTION value="2">2-网页</OPTION> 
+                   
+                  <OPTION value="3">3-图片</OPTION> 
+                   
+                  <OPTION value="4">4-通知(静态)</OPTION> 
+                   
+                  <OPTION value="5">5-通知(向上滚动文本)</OPTION> 
+                   
+                  <OPTION value="6">6-字幕(向左滚动文本)</OPTION> 
+                   
+                  <OPTION value="7">7-动画</OPTION> 
+                   
+                  <OPTION value="8">8-Office文稿</OPTION> 
+                   
+                  <OPTION value="9">9-音频</OPTION> 
+                   
+                  <OPTION value="10">10-视频文件/网络视频/电视</OPTION> 
+                   
+                  <OPTION value="11">11-操作系统自检测</OPTION> 
+                   
+                  <OPTION value="12">12-专用应用程序...</OPTION> 
+                   
+                  <OPTION value="13">13-远程命令</OPTION> 
+                   
+                  <OPTION value="15">15-传输文件(不进行显示)</OPTION> 
+                   
+   </select>&nbsp;<font color=red>(注意:请选择对应素材类型的文件)</font>
+	  </td>
+	</tr>
+    <tr align="center" valign="middle"> 
+      <td align="left" id="upid" height="40" width="540">&nbsp;文件名称:&nbsp;&nbsp;<input type="hidden" name="upcount" class="tx" value="1"><input type="file" name="file1" style="width:400" class="tx1">
+      <input type="hidden" name="companyid" value="wisepeak">
+		<input type="hidden" name="version" value="">
+		<input type="hidden" name="mobile" value="">
+		<input type="hidden" name="fromwhere" value="">
+		<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="calchash" value="1">计算素材文件签名&nbsp;&nbsp;
+     <input type="radio" name="delexist1" value="0" checked>不覆盖该文件&nbsp;&nbsp;<input type="hidden" name="delexist1" value="2">
+     
+        <input type="radio" name="delexist1" value="1">覆盖该文件
+        
+      </td>
+    </tr>
+    <tr align="center" valign="middle" bgcolor="#eeeeee">
+      <td bgcolor="#eeeeee" height="24" width="540">
+        <input type="submit" name="Submit" value="· 提交文件 ·" class="bt" OnClick="return onCmdOk(0);">
+        <input type="reset" name="Reset" value="· 重置 ·" class="bt">
+      </td>
+    </tr>
+    <tr align="center" valign="middle" bgcolor="#eeeeee">
+      <td bgcolor="#eeeeee" height="24" width="540">提示：对于大文件，提交过程需要一段时间，请耐心等待。提交完毕后，系统将提示您。
+      </td>
+    </tr>
+   </form>
+  </table>
+</body>
+</html>

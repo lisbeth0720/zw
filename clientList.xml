@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<clientlist>
+<itemsarray>
+<item>
+<name>显示端1</name>
+<ip>192.168.1.10</ip>
+<mac>3065ec82ba41</mac>
+</item>
+<item>
+<name>签名屏</name>
+<ip>192.168.1.199</ip>
+<mac>0001808661d0</mac>
+</item>
+</itemsarray>
+</clientlist>

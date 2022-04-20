@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>平板操控</title>
+<script type="text/javascript" src="js/jquery-1.9.1.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="js/RangeSlider.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/pd.js"></script>
+<link rel="stylesheet" href="css/common.css" />
+<link rel="stylesheet" href="css/pd.css" />
+<script type="text/javascript">
+</script>
+<style>
+#div1{
+	width:46px;
+    height: 42%;
+    border-radius: 50px;
+    position: relative;
+    display: block;
+    float: left;
+    margin-top: 8%;
+}
+#div2{
+	width: 25px;
+    height: 25px;
+    border-radius: 70px;
+    position: absolute;
+    background: white;
+    box-shadow: 0px 2px 4px rgba(0,0,0,0.4);
+}
+#div3{
+	width:46px;
+    height: 42%;
+    border-radius: 50px;
+    position: relative;
+    display: block;
+    float: left;
+    margin-top: 8%;
+}
+#div4{
+	width: 22px;
+    height: 22px;
+    border-radius: 70px;
+    position: absolute;
+    background: white;
+    box-shadow: 0px 2px 4px rgba(0,0,0,0.4);
+}
+.open1{
+	background: rgba(0,184,0,0.8);
+}
+.open2{
+	top: 2px;
+	right: 1px;
+}
+.close1{
+	background: rgba(255,255,255,0.4);
+	border:1px solid rgba(0,0,0,0.15);
+	border-left: transparent;
+}
+.close2{
+	border:1px solid rgba(0,0,0,0.1);
+}
+.loadpng{
+    border: 1px solid #aaa;
+    display: none;
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    background: #fff;
+	margin-left:10%;
+	margin-top:5%;
+}
+.loadpng .loadImage{
+	width:100%;
+}
+#event_canvas{
+}
+.closeImg{
+	display:block;
+	float:right;
+	width:30px;
+	margin-bottom:10px;
+}
+.canvasSpan{
+	display: block;
+    float: left;
+    font-size: 14px;
+    color: #fff;
+    background: #aaa;
+    border-radius: 5px;
+    width: 80px;
+    text-align: center;
+    height: 25px;
+    line-height: 25px;
+    margin-left: 10px;
+    margin-top: 2px;
+}
+.loadpng label{
+	font-size:14px;
+}
+.autoFresh{
+	background:#fff;
+	color:#333;
+}
+.addSize,.minusSize{
+	background:#fff;
+}
+.addSize img{
+	height:100%;
+}
+.minusSize img{
+	height:100%;
+}
+</style>
+</head>
+
+<body id="mescroll" class="mescroll">
+<div class="loadpng"  ontouchend=''>
+	<div>
+        <img src="images/allTitle/closeImg.png" class="closeImg"/>
+        <span class="canvasSpan freshCanvas" onClick="freshCanvas()">手动刷新</span>
+        <!--<span class="canvasSpan autoFresh">
+        	<input type="radio" name="refresh" id="freshCanvas" onClick="freshCanvas()"/><label for="freshCanvas"><span>手动刷新</span></label>
+        </span>-->
+        <span class="canvasSpan autoFresh">
+        	<input type="radio" name="refresh" id="onefreshCanvas" onClick="automaticfreshCanvas(1)"/><label for="onefreshCanvas"><span>1s刷新</span></label>
+        </span>
+        <span class="canvasSpan autoFresh">
+        	<input type="radio" name="refresh" id="twofreshCanvas" onClick="automaticfreshCanvas(2)"/><label for="twofreshCanvas"><span>2s刷新</span></label>
+        </span>
+        <span class="canvasSpan autoFresh">
+        	<input type="radio" name="refresh" id="threefreshCanvas" onClick="automaticfreshCanvas(3)"/><label for="threefreshCanvas"><span>3s刷新</span></label>
+       </span>
+       <!--<span class="drawSync canvasSpan">同步画笔</span>-->
+       <div class="drawSync canvasSpan" style="width: 150px;background: #fff;color: #333;">
+       		<div id="div3" class="close1" style="height: 103%; width: 40%;display: block;float: left;margin-top: 0%;">
+                <div id="div4" class="close2"></div>
+            </div> 
+        	<span style='font-size:14px;display: block;width: 40%;float: left;'>画笔同步</span>
+       </div>
+       <span class="canvasSpan addSize" style="width:30px;">
+        	<img src="images/allTitle/addSize.png" class="addImageSize" onClick="addSize(this);"/>
+        </span>
+        <span class="canvasSpan minusSize" style="width:30px;">
+        	<img src="images/allTitle/minus.png" class="minusImageSize" onClick="minusSize(this);"/>
+        </span>
+    </div>
+    <canvas class="loadImage" width="800" height="600">
+    </canvas>
+</div>
+<div class="content">
+<div class="top">
+	<div class="topLeft">
+    	<div class="clientList">
+        	<ul id="top">
+              
+         	</ul>
+        </div>
+        <div class="file">
+            <span class="close">X</span>
+        </div>
+        <div class="controlAll">
+        	<ul>
+            	<li class="allSound soundNum">
+                	<img src="images/leftControl/quanjuyinliang.png" />
+                    <span>全局音量</span>
+                </li>
+                <div class="systemSound">
+                	<img class="noSound" src="images/leftControl/quanjuyinliangSelected.png" style="height:20px;margin-left:10px;margin-top:6px;display:block;float:left;"/>
+                	<input id='range' type='range' min='0' max='255' value='' onchange='change()'/><span id='value' style="line-height:35px;display:block;float:left;width:10%;">5</span>
+				</div>
+                <li class="handControl"  onclick='docmd(69,0)'>
+                	<img src="images/leftControl/shoudongmoshi.png"/>
+                    <span>手动播放</span>
+                </li>
+                <li class="startProgram"  onclick='docmd(11,0)'>
+                	<img src="images/leftControl/qidongjiemu.png"/>
+                    <span>自动播放</span>
+                </li>
+                <li class="stopProgram" onclick='docmd(70,0)'>
+                	<img src="images/leftControl/tingzhijiemu.png" />
+                    <span>停止节目单</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="topMain" id="tabscreen">
+    	<p>
+        	节目单
+        </p>
+        <p style="width:32%;font-size:14px;"><span id="pic"></span><span id="title" style="color:#aaa;">
+        (读取/刷新)</span></p>
+        <div class="slider">
+            <div id="div1" class="close1">
+                <div id="div2" class="close2"></div>
+            </div> 
+        	<span style='font-size:14px;'>全屏</span>
+        </div>
+        <p align="right" style="margin-left:0%;width:20%;float:right;" class="clickMore">
+        	<img src="images/allTitle/more.png" style="height:100%;"/>
+        </p>
+        <div class="programList" id="Screen">
+        </div>
+    </div>
+    <div class="topRight">
+    	<div class="channelChange">
+        	<p class="getChannel" id="changeChannel">频道获取</p>
+            <div id="channelBar" style="display:none;">
+                <select name="channelList" id="channelList" style="width: 90%; height: 40px;font-size: 16px;border-radius: 10px;background: #f5f5f5;border: 1px solid #f5f5f5;color: #999;">
+                </select>
+                <div style="margin-top:10px;width:100%;">
+                    <span class="smallbtn" id="channelBtn" >
+                    	<img src="images/leftControl/qidongjiemu.png" />
+                        <span>切换</span>
+                        
+                    </span>
+                    <span class="smallbtn" id="channelBtnPause" >
+                    	<img src="images/leftControl/shoudongmoshi.png" />
+                        <span>切换</span>
+                        
+                    </span>
+                </div>
+                <div class="allchecked batchChecked" onClick="allClientChannel();">
+                	<span>自动全切</span>
+                </div>
+    			<div class="allchecked handleBatchChecked" onClick="allClientChannel();">
+                	<span>手动全切</span>
+                </div>
+            </div>
+        </div>
+        <div class="name">
+         <p class="clientName" style="color:#bbb;font-size:14px;margin-bottom:5px;margin-left:5%;"></p>
+         <p class="hostName" style="color:#bbb;font-size:14px;margin-bottom:5px;margin-left:5%;"></p>
+         <p class="menuListName" style="color:#bbb;font-size:14px;margin-left:5%;"></p>
+        </div>
+        <div class="controlAll">
+        	<p class="all">全局控制</p>
+            <ul class="controlImage">
+            	<li class="open">
+                	<img src="images/allTitle/kaiguanSelected.png" />
+                </li>
+                <li class="apply">
+                	<img src="images/allTitle/yingyong.png" />
+                </li>
+                <li class="controlStart">
+                	<img src="images/allTitle/bokong.png" />
+                </li>
+                <li class="tab">
+                	<img src="images/allTitle/anjian.png" />
+                </li>
+            </ul>
+        </div>
+        <div class="applies">
+            <div class="bar" id="bar1">
+                  <span style="margin-left:5%;">设备控制</span>
+                  <ul class="cmdBar">
+                  	
+                      <li class="sendCmd" onclick="lightChange('1000_0XFE0X050X000X000X000X000XD90XC5fxxf0XFE0X050X000X010X000X000X880X05fxxf0XFE0X050X000X020X000X000X780X05',this)">
+                          关灯
+                      </li>
+                      <li class="sendCmd" onclick="lightChange('1000_0XFE0X050X000X010X000X000X880X05fxxf0XFE0X050X000X020X000X000X780X05fxxf0XFE0X050X000X000XFF0X000X980X35',this)">红灯</li>
+                      <li class="sendCmd" onclick="lightChange('1000_0XFE0X050X000X000X000X000XD90XC5fxxf0XFE0X050X000X020X000X000X780X05fxxf0XFE0X050X000X010XFF0X000XC90XF5',this)">绿灯</li>
+                      <li class="sendCmd" onclick="lightChange('1000_0XFE0X050X000X000X000X000XD90XC5fxxf0XFE0X050X000X010X000X000X880X05fxxf0XFE0X050X000X020XFF0X000X390XF5',this)">蓝灯</li>
+                      <li class="sendCmd" onclick="lightChange('1000_0XFE0X050X000X020X000X000X780X05fxxf0XFE0X050X000X000XFF0X000X980X35fxxf0XFE0X050X000X010XFF0X000XC90XF5',this)">黄灯</li>
+                      <li class="sendCmd" onclick="lightChange('1000_0XFE0X050X000X010X000X000X880X05fxxf0XFE0X050X000X000XFF0X000X980X35fxxf0XFE0X050X000X020XFF0X000X390XF5',this)">紫灯</li>
+                      <!-- <li class="sendCmd" onclick="lightChange('1000_0XFE0X050X000X000X000X000XD90XC5fxxf0XFE0X050X000X010XFF0X000XC90XF5fxxf0XFE0X050X000X020XFF0X000X390XF5',this)">青灯</li>
+                      <li class="sendCmd" onclick="lightChange('1000_0XFE0X050X000X000XFF0X000X980X35fxxf0XFE0X050X000X010XFF0X000XC90XF5fxxf0XFE0X050X000X020XFF0X000X390XF5',this)">白灯</li>-->
+                      <li class="sendCmd1" onclick="lightChange('1000_0XFE0X050X000X030XFF0X000X680X35fxxf0XFE0X050X000X030X000X000X290XC5',this)" style="width:45%;background:#71dea8;color:#fff;margin-bottom:20px;">
+                         开门
+                      </li>
+                     <li class="sendCmd openOrClose" onclick="powerOn();" style="background: #f3a9a9;">
+                      	<img src="images/allTitle/open.png" />
+                      	<span>开机</span>
+                      </li>
+                      <li class="sendCmd" onclick="powerOff()" style="margin-right:0;background: #f3a9a9;color:#fff;">
+                      	<img src="images/allTitle/close.png" />
+                      	<span>关机</span>
+                      </li>
+                      <li class="sendCmd openOrClose" onclick="openAll()" style="background: #f3a9a9;">
+                      	<img src="images/allTitle/openAll.png" />
+                      	<span>全开</span>
+                      </li>
+                      <li class="sendCmd" onclick="closeAll()" style="margin-right:0;background: #f3a9a9;color:#fff;">
+                      	<img src="images/allTitle/closeAll.png" />
+                      	<span>全关</span>
+                      </li>
+                  </ul>
+            </div>
+            <div class="bar" id="bar2" style="display:none;">
+                  <span style="margin-left:5%;">录屏工具</span>
+                  <ul class="cmdBar">
+                    <li class="sendCmd" onclick="getUrl('wpplaycontrol.asp?wpplaycontrol=WiseRecScreen&command=3&param=0')" >进行录制</li>
+                    <li class="sendCmd" onclick="getUrl('wpplaycontrol.asp?wpplaycontrol=WiseRecScreen&command=2&param=0')" >暂停录制</li>
+                    <li class="sendCmd" onclick="getUrl('wpplaycontrol.asp?wpplaycontrol=WiseRecScreen&command=24&param=0')" >录制设置</li>
+                    <li class="sendCmd" onclick="getUrl('wpplaycontrol.asp?wpplaycontrol=WiseRecScreen&command=2&param=1')" >停止录制</li>
+                    <li class="sendCmd" onclick="getUrl('wpplaycontrol.asp?wpplaycontrol=WiseRecScreen&command=18&param=0')" >录制状态</li>
+                    <li class="sendCmd" onclick="getUrl('wpplaycontrol.asp?wpplaycontrol=WiseRecScreen&command=17&param=0')" >关闭</li>
+                  </ul>
+                  <span style="margin-left:5%;">互动应用</span>
+                  <ul class="cmdBar">
+                    <li class="sendCmd" onclick="getUrl('wpdispqrmsg.asp?wpdispqrmsg=http://mylocalhost192.168.1.:8080/getmenuh.html');" >终端二维码</li>
+                    <li class="sendCmd" onclick="SendMSGBar('SendMSGBar','show')" >文字/二维码</li>
+                    <li class="sendCmd" onclick="takePhoto()" >拍照</li>
+                    <li class="sendCmd" onclick="SourceGet()">数字内容</li>
+                   	<li class="sendCmd" onclick="getScreen()">截屏</li>
+                    <li class="sendCmd" onclick="getScreen()">触控板</li>
+                   
+                    <li class="sendCmd" onclick="openClient()">打开浏览器</li>
+                   	<li class="sendCmd" onclick="closeClient()">关闭浏览器</li>
+                    <li class="sendCmd" onclick="docmd('keycode','0xFFE3 + 0xFFE1 + 0xFF1B');" >任务管理器</li>
+                    <li class="sendCmd" onclick="openKeyBoard()">打开/关闭<br/>软键盘</li>
+                  </ul>
+            </div>
+            <div class="bar" id="bar3" style="display:none;">
+                <span style="margin-left:5%;">播放控制</span>
+                <ul class="cmdBar">
+                	
+                    <li class="sendCmd" onclick="docmd(12,0)" >第一节目</li>
+                    <li class="sendCmd" onclick="docmd(15,0)" >最后节目</li>
+                    <li class="sendCmd" onclick="docmd(14,0)" >上一项</li>
+                    <li class="sendCmd" onclick="docmd(13,0)" >下一项</li>
+                    <li class="sendCmd" onclick="docmd(11,0)" >启动节目单</li>
+                    <li class="sendCmd" onclick="docmd(70,0)" >停止节目单</li>
+                    <!--<li class="sendCmd" onclick="docmd(100,2)" >最大化</li>
+                    <li class="sendCmd" onclick="docmd(100,0)" >最小化</li>-->
+                    <li class="sendCmd" onclick="docmd(2001,2)" >最大化</li>
+                    <li class="sendCmd" onclick="docmd(2000,0)" >最小化</li>
+                    <li class="sendCmd" onclick="docmd('keycode','0xFFE3 + 0xFFE9 + 0xFF52');" >旋转屏幕上</li>
+                    <li class="sendCmd" onclick="docmd('keycode','0xFFE3 + 0xFFE9 + 0xFF54');" >旋转屏幕下</li>
+                    <li class="sendCmd" onclick="docmd('keycode','0xFFE3 + 0xFFE9 + 0xFF51');" >旋转屏幕左</li>
+                    <li class="sendCmd" onclick="docmd('keycode','0xFFE3 + 0xFFE9 + 0xFF53');" >旋转屏幕右</li>
+                    
+                </ul>
+            </div>
+            <div class="bar" id="bar4" style="display:none;">
+                <span style="margin-left:5%;">Windows组合键</span>
+                  <ul class="cmdBar">
+                    <li class="sendCmd" onclick="docmd('keycode','0xFFE9 + 0xFFC1');;" >ALT+F4</li>
+                    <li class="sendCmd" onclick="docmd('keycode','0xFFE9 + 0xFF09');;" >ALT+TAB</li>
+                    <li class="sendCmd" onclick="docmd('keycode','0xFF1B');" >ESC</li>
+                    <li class="sendCmd" onclick="docmd('keycode','0xFF0D');" >Enter</li>
+                    <li class="sendCmd" onclick="docmd('keycode','0xFF09');" >TAB</li>
+                    <li class="sendCmd" onclick="docmd('keycode','0xFFE1');" >SHIFT</li>
+                    
+                    <li class="sendCmd" onclick="docmd('keycode','0XFF5B');" >WIN</li>
+                    <li class="sendCmd" onclick="docmd('keycode','0xFFE9');" >ALT</li>
+                    
+                    <li class="sendCmd" onclick="docmd('keycode','0xFF20');" >空格</li>
+                    <li class="sendCmd" onclick="docmd('keycode','0xFF08');" >退格</li>
+                    
+                    
+                    <li class="sendCmd" onclick="docmd('keycode','screenClass -keyevent 0xFF55');" >PD下一页</li>
+                    <li class="sendCmd" onclick="docmd('keycode','screenClass -keyevent 0xFF9B');" >PU上一页</li>
+                    <li class="sendCmd" onclick="docmd('keycode','screenClass -keyevent 0xFF50');" >HM首页</li>
+                    <li class="sendCmd" onclick="docmd('keycode','screenClass -keyevent 0xFF57');" >EN尾页</li>
+                    <li class="sendCmd" onclick="docmd('keycode','0xFF52');" >
+                    	<img src="images/allTitle/up.png" />
+                    	<span>上</span>
+                    </li>
+                    <li class="sendCmd" onclick="docmd('keycode','0xFF54');" >
+                    	<img src="images/allTitle/down.png" />
+                    	<span>下</span>
+                    </li>
+                    <li class="sendCmd" onclick="docmd('keycode','0xFF51');" >
+                    	<img src="images/allTitle/left.png" />
+                    	<span>左</span>
+                    </li>
+                    <li class="sendCmd" onclick="docmd('keycode','0xFF53');" >
+                    	<img src="images/allTitle/right.png" />
+                    	<span>右</span>
+                    </li>
+                    <li class="sendCmd" onclick="rightMouse()" >右键</li>
+                    <li class="sendCmd" onclick="twoMouse()" >双击</li>
+                  </ul>
+            </div>
+        </div>
+    </div>
+    
+</div>
+<div class="bottom">
+	<div id="functionButton">
+    	<div class="musicOrVideo">
+        	<img class="video images pictures" src="" />
+            <img class="before image" src="images/bottomPlay/shangyixiang.png" onclick="docmd(14,0)"/>
+            <img class="start" style="width:6%;" src="images/bottomPlay/tingzhi.png" />
+            <img class="next image" src="images/bottomPlay/xiayixiang.png" onclick="docmd(13,0)"/>
+            <div class="showRate">
+           		<span class="fileName1" style="font-size:14px;line-height:20px;width:100%;"></span>
+            	<input id='rateProgress' type='range' min='0' max='100' value='' onchange='rateProgress()' style='margin-right:10px;'><span id='rateProgressValue' style="font-size:20px;display:block;float:left;width:22%;margin-left:1%;">5</span>
+            </div>
+            <ul class="controlBottomTab">
+                <li>
+                	<b class="startUp"></b> 
+                    <span>启动</span>
+                </li>
+               
+                <li>
+                	<b class="pause"></b>
+                    <span>停止</span>
+                </li>
+                <li>
+                	<b class="materialSound soundNum"></b>
+                    
+                    <span>音量</span>
+                </li>
+                
+                
+                <li>
+                	<b class="soundIn" onclick="docmd(3041,254);"></b>
+                    <span>淡入</span>
+                <li>
+                	<b class="soundOut" onclick="docmd(3041,0);"></b>
+                    <span>淡出</span>
+                </li>
+                <li>
+                	<b class="controlLab" onclick="docmd(3008,0);"></b>
+                    <span>进度</span>
+                </li>
+            </ul>
+            <input id='range2' type='range' min='0' max='255' value='' onchange='change()'><span id='value2' style="width: 15%;text-align: center;font-size: 16px;display:none;position:absolute;left:59%;">5</span>
+		
+        </div>
+        <div class="picture">
+        	<img class="pictures images" src=""  >
+            <span class="fileName" style="width:20%;"></span>
+            <img class="before image" src="images/bottomPlay/shangyixiang.png" style="margin-right:5%;" onclick="docmd(14,0)"/>
+            <img class="next image" src="images/bottomPlay/xiayixiang.png" style="margin-right:5%;" onclick="docmd(13,0)"/>
+            <ul class="controlBottomTab">
+                <li> 
+                    <b class="startUp"></b>
+                    <span>启动</span>
+                </li>
+                <li>
+                	<b class="pause"></b>
+                    <span>停止</span>
+                </li>
+                <li>
+                	<b class="page_up" onclick="docmd('keycode','0xFF55')"></b>
+                    <span>上翻</span>
+                </li>
+                <li>
+                	<b class="page_down"  onclick="docmd('keycode','0xFF9B')"></b>
+                    <span>下翻</span>
+                </li>
+                <li>
+                	<b class="page_Home" onclick="docmd('keycode','0xFF50')"></b>
+                    <span>最前</span>
+                </li>
+                <li>
+                	<b class="page_End" onclick="docmd('keycode','0xFF57')"></b>
+                    <span>最后</span>
+                </li>
+            </ul>
+        </div>
+        <div class="ppt">
+        	<img class="ppts images pictures" src="" style="width:80%;" >
+            <span class="fileName" style="width:20%;"></span>
+            <img class="before image" src="images/bottomPlay/shangyixiang.png" style="margin-right:5%;" onclick="docmd(14,0)" />
+            <img class="next image" src="images/bottomPlay/xiayixiang.png" style="margin-right:5%;" onclick="docmd(13,0)"/>
+            <ul class="controlBottomTab">
+                <li> 
+                    <b class="startUp"></b>
+                    <span>启动</span>
+                </li>
+                <li>
+                	<b class="pause"></b>
+                    <span>停止</span>
+                </li>
+                <li>
+                	<b class="beforePage" onclick="docmd('keycode','screenClass -keyevent 0xFF55')"></b>
+                    <span>上页</span>
+                </li>
+                <li>
+                	<b class="nextPage" onclick="docmd('keycode','screenClass -keyevent 0xFF9B')"></b>
+                    <span>下页</span>
+                </li>
+                <li>
+                	<b class="headPage" onclick="docmd('keycode','screenClass -keyevent 0xFF50')"></b>
+                    <span>首页</span>
+                </li>
+                <li>
+                	<b class="endPage" onclick="docmd('keycode','screenClass -keyevent 0xFF57')"></b>
+                    <span>尾页</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div id="SendMSGBar" class="msgBar">
+  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td height="50" colspan="2" align="center" bgcolor="#00CCCC">发送文字/二维码到屏幕</td>
+    </tr>
+    <tr>
+      <td width="22%" height="40" align="center">内容</td>
+      <td width="78%"><input type="text" name="wpsubmitmsg" id="wpsubmitmsg" /> <input name="pmt" type="checkbox" id="pmt" value="1" checked="checked" />
+        </td>
+    </tr>
+    <tr>
+      <td height="40" align="center">头像</td>
+      <td><select name="icon" id="icon">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+      </select>&nbsp;<label for="pmt">屏幕叠加显示</label></td>
+    </tr>
+    <tr>
+      <td height="40" align="center">用户</td>
+      <td><input name="sid" type="text" id="sid" value="游客" /></td>
+    </tr>
+    <tr>
+      <td colspan="2">
+      <ul class="cmdBar">
+        <li class="sendCmd" onclick="SendMSGBar('SendMSGBar','send')" >发文字</li>
+        <li class="sendCmd" onclick="SendMSGBar('SendMSGBar','send1')" >发二维码</li>
+        <li class="sendCmd" onclick="SendMSGBar('SendMSGBar','cancel')" >取消</li>
+      </ul>
+      </td>
+    </tr>
+  </table>
+ </div>
+</div>
+<script>
+	var div2=document.getElementById("div2");
+	var div1=document.getElementById("div1");
+	var div3=document.getElementById("div3");
+	var div4=document.getElementById("div4");
+	div2.onclick=function(){
+	  div1.className=(div1.className=="close1")?"open1":"close1";
+	  div2.className=(div2.className=="close2")?"open2":"close2";
+	  var border1="1px solid rgba(0,0,0,0.1)";
+	  var border2="1px solid rgba(0,0,0,0.15)";
+	  if(div1.className=="close1"){
+		  $(".close2").removeAttr("style");
+			$(".close2").animate({
+				left:"0",
+				top:"0",
+			});
+			$(".close1").animate({background:"#aaa",border:border2,borderLeft:"transparent"});
+			$(".before").attr("onclick","docmd(14,0)");
+			$(".next").attr("onclick","docmd(13,0)");
+			$(".cmdBar").find("li").eq(0).attr("onclick","docmd(12,0)");
+			$(".cmdBar").find("li").eq(1).attr("onclick","docmd(15,0)");
+			$(".cmdBar").find("li").eq(2).attr("onclick","docmd(14,0)");
+			$(".cmdBar").find("li").eq(3).attr("onclick","docmd(13,0)");
+		}else{
+			$(".open2").removeAttr("style");
+			$(".open2").animate({right:"1px",top:"2px"});
+			$(".before").attr("onclick","docmd(14,3)");
+			$(".next").attr("onclick","docmd(13,3)");
+			$(".cmdBar").find("li").eq(0).attr("onclick","docmd(12,3)");
+			$(".cmdBar").find("li").eq(1).attr("onclick","docmd(15,3)");
+			$(".cmdBar").find("li").eq(2).attr("onclick","docmd(14,3)");
+			$(".cmdBar").find("li").eq(3).attr("onclick","docmd(13,3)");	
+		}
+	}
+	
+	div4.onclick=function(){
+	  div3.className=(div3.className=="close1")?"open1":"close1";
+	  div4.className=(div4.className=="close2")?"open2":"close2";
+	  var border1="1px solid rgba(0,0,0,0.1)";
+	  var border2="1px solid rgba(0,0,0,0.15)";
+	  if(div3.className=="close1"){
+		  $(".close2").removeAttr("style");
+			$(".close2").animate({
+				left:"0",
+				top:"0",
+			});
+			$(".close1").animate({background:"#aaa",border:border2,borderLeft:"transparent"});
+			
+		}else{
+			$(".open2").removeAttr("style");
+			$(".open2").animate({right:"1px",top:"2px"});
+			//getScreen();
+		}
+	}
+	
+</script>
+
+<script>
+
+</script>
+</body>
+</html>
