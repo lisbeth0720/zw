@@ -1,0 +1,874 @@
+﻿[{
+		"language": "CH",
+		"content": {
+			"pctrl.html": [{
+					"word": "发送成功"
+				},
+				{
+					"word":"提示信息"
+				},
+				{
+					"word":"确定"
+				},
+				{
+					"word":"取消"
+				},
+				{
+					"word": "音频源切换"
+				},
+				{
+					"word": "声卡源"
+				},
+				{
+					"word": "麦克源"
+				},
+				{
+					"word": "视频源切换"
+				},
+				{
+					"word": "录屏"
+				},
+				{
+					"word": "本地摄像头1"
+				},
+				{
+					"word": "本地摄像头2"
+				},
+				{
+					"word": "图片预览"
+				},
+				{
+					"word": "截屏"
+				},
+				{
+					"word": "手动刷新"
+				},
+				{
+					"word": "画笔同步"
+				},
+				{
+					"word": "拖动"
+				},
+				{
+					"word": "开/关"
+				},
+				{
+					"word": "右键"
+				},
+				{
+					"word": "登录"
+				},
+				{
+					"word": "触控板"
+				},
+				{
+					"word": "左键"
+				},
+				{
+					"word": "右键"
+				},
+				{
+					"word": "回车"
+				},
+				{
+					"word": "开/关软键盘"
+				},
+				{
+					"word": "文件上传"
+				},
+				{
+					"word": "选择文件"
+				},
+				{
+					"word": "上传文件"
+				},
+				{
+					"word": "上传文件"
+				},
+				{
+					"word": "更多"
+				},
+				{
+					"word": "切换"
+				},
+				{
+					"word": "切换"
+				},
+				{
+					"word": "自动全切"
+				},
+				{
+					"word": "手动全切"
+				},
+				{
+					"word": "窗口名"
+				},
+				{
+					"word": "系统音量"
+				},
+				{
+					"word": "手动播放"
+				},
+				{
+					"word": "自动播放"
+				},
+				{
+					"word": "停止播放"
+				},
+				{
+					"word": "节目单列表"
+				},
+				{
+					"word": "频道获取"
+				},
+				{
+					"word": "启动"
+				},
+				{
+					"word": "停止"
+				},
+				{
+					"word": "音量"
+				},
+				{
+					"word": "淡入"
+				},
+				{
+					"word": "淡出"
+				},
+				{
+					"word": "控制条"
+				},
+				{
+					"word": "投屏"
+				},
+				{
+					"word": "停临时"
+				},
+				{
+					"word": "刷栏目"
+				},
+				{
+					"word": "停栏目"
+				},
+				{
+					"word": "启动"
+				},
+				{
+					"word": "停止"
+				},
+				{
+					"word": "上翻"
+				},
+				{
+					"word": "下翻"
+				},
+				{
+					"word": "最前"
+				},
+				{
+					"word": "最后"
+				},
+				{
+					"word": "投屏"
+				},
+				{
+					"word": "停临时"
+				},
+				{
+					"word": "刷栏目"
+				},
+				{
+					"word": "停栏目"
+				},
+				{
+					"word": "启动"
+				},
+				{
+					"word": "停止"
+				},
+				{
+					"word": "上页"
+				},
+				{
+					"word": "下页"
+				},
+				{
+					"word": "首页"
+				},
+				{
+					"word": "尾页"
+				},
+				{
+					"word": "投屏"
+				},
+				{
+					"word": "停临时"
+				},
+				{
+					"word": "刷栏目"
+				},
+				{
+					"word": "停栏目"
+				},
+				{
+					"word": "全局控制"
+				},
+				
+				{
+					"word": "右键"
+				},
+				{
+					"word": "双击"
+				},
+				{
+					"word": "发送文字/二维码到屏幕"
+				},
+				{
+					"word": "内容"
+				},
+				{
+					"word": "屏幕叠加显示"
+				},
+				{
+					"word": "头像"
+				},
+				{
+					"word": "用户"
+				},
+				{
+					"word": "游客"
+				},
+				{
+					"word": "居中显示"
+				},
+				{
+					"word": "居中全屏"
+				},
+				{
+					"word": "发文字"
+				},
+				{
+					"word": "发二维码"
+				},
+				{
+					"word": "取消"
+				}
+			]
+		},
+		"msg":[{
+				"message":"获取数据出错!"
+			},
+			{
+				"message":"当前节目单为空!"
+			},
+			{
+				"message":"终端名:"
+			},
+			{
+				"message":"计算机名:"
+			},
+			{
+				"message":"节目单名:"
+			},
+			{
+				"message":"节目单名称:"
+			},
+			{
+				"message":"下载"
+			},
+			{
+				"message":"预览"
+			},
+			{
+				"message":"发送成功"
+			},
+			{
+				"message":"发送失败"
+			},
+			{
+				"message":"确定要重启吗?"
+			},
+			{
+				"message":"确定要关机吗?"
+			},
+			{
+				"message":"确定要全关吗?"
+			},
+			{
+				"message":"确定要关闭LED吗?"
+			},
+			{
+				"message":"确定要打开LED吗?"
+			},
+			{
+				"message":"选择文件"
+			},
+			{
+				"message":"网络摄像头"
+			},
+			{
+				"message":"音视频"
+			},
+			{
+				"message":"Office文档"
+			},
+			{
+				"message":"图片"
+			},
+			{
+				"message":"文本"
+			},
+			{
+				"message":"网页"
+			},
+			{
+				"message":"图片"
+			},
+			{
+				"message":"动画"
+			},
+			{
+				"message":"音频"
+			},
+			{
+				"message":"视频"
+			},
+			{
+				"message":"压缩文件"
+			},
+			{
+				"message":"操作系统自检"
+			},
+			{
+				"message":"应用程序"
+			},
+			{
+				"message":"自适应"
+			},
+			{
+				"message":"通知(静态)"
+			},
+			{
+				"message":"通知(向上滚动)"
+			},
+			{
+				"message":"字幕(向左滚动)"
+			},
+			{
+				"message":"远程指令"
+			},
+			{
+				"message":"栏目"
+			},
+			{
+				"message":"获取频道出错!"
+			},
+			{
+				"message":"地址:"
+			},
+			{
+				"message":"布局:"
+			},
+			{
+				"message":"人工智能识别"
+			},
+			{
+				"message":"音视频"
+			},
+			{
+				"message":"网页"
+			},
+			{
+				"message":"表盘时钟"
+			},
+			{
+				"message":"动画"
+			},
+			{
+				"message":"演讲稿播放器"
+			},
+			{
+				"message":"网络流媒体"
+			},
+			{
+				"message":"网页截图"
+			},
+			{
+				"message":"图片"
+			},
+			{
+				"message":"进程清理"
+			},
+			{
+				"message":"仪表盘"
+			},
+			{
+				"message":"广播音视频"
+			},
+			{
+				"message":"音视频/电视"
+			},
+			{
+				"message":"记事本"
+			},
+			{
+				"message":"P2P快速分发"
+			},
+			{
+				"message":"音乐及歌词"
+			},
+			{
+				"message":"讲稿"
+			},
+			{
+				"message":"程序运行管理"
+			},
+			{
+				"message":"二维码"
+			},
+			{
+				"message":"记录列表"
+			},
+			{
+				"message":"串口/指令"
+			},
+			{
+				"message":"同步LED字幕"
+			},
+			{
+				"message":"音量方案设置"
+			},
+			{
+				"message":"数字时钟"
+			},
+			{
+				"message":"多功能计时器"
+			},
+			{
+				"message":"键盘鼠标活动监视器"
+			},
+			{
+				"message":"便捷工具条"
+			},
+			{
+				"message":"电视播放/换台"
+			},
+			{
+				"message":"系统更新助手"
+			},
+			{
+				"message":"网页下载"
+			},
+			{
+				"message":"语音通讯"
+			},
+			{
+				"message":"远程桌面"
+			},
+			{
+				"message":"显示端"
+			},
+			{
+				"message":"控制端"
+			},
+			{
+				"message":"网络在线/断线检测"
+			},
+			{
+				"message":"慧易录"
+			},
+			{
+				"message":"控制代理服务器"
+			},
+			{
+				"message":"截图工具"
+			},
+			{
+				"message":"边缘计算中心"
+			},
+			{
+				"message":"慧指签名"
+			},
+			{
+				"message":"office文档转网页"
+			}
+		]
+	},
+	{
+		"language": "EN",
+		"content": {
+		
+			"pctrl.html": [{
+					"word": "Sent Successfully"
+				},
+				{
+					"word":"Tip Message"
+				},
+				{
+					"word":"Ok"
+				},
+				{
+					"word":"Cancle"
+				},
+				{
+					"word": "Audio Source Switching"
+				},
+				{
+					"word": "Sound Card Source"
+				},
+				{
+					"word": "Source"
+				},
+				{
+					"word": "Video Source Switch"
+				},
+				{
+					"word": "Record Screen"
+				},
+				{
+					"word": "Local Camera 1"
+				},
+				{
+					"word": "Local Camera 2"
+				},
+				{
+					"word": "Picture Preview"
+				},
+				{
+					"word": "Screenshot"
+				},
+				{
+					"word": "Manual Refresh"
+				},
+				{
+					"word": "Brush Sync"
+				},
+				{
+					"word": "Drag"
+				},
+				{
+					"word": "On/Off"
+				},
+				{
+					"word": "Right Click"
+				},
+				{
+					"word": "Login"
+				},
+				{
+					"word": "Trackpad"
+				},
+				{
+					"word": "Left"
+				},
+				{
+					"word": "Right Click"
+				},
+				{
+					"word": "Enter"
+				},
+				{
+					"word": "Open/Close Soft Keyboard"
+				},
+				{
+					"word": "File Upload"
+				},
+				{
+					"word": "Select File"
+				},
+				{
+					"word": "Upload File"
+				},
+				{
+					"word": "Upload File"
+				},
+				{
+					"word": "More"
+				},
+				{
+					"word": "Switch"
+				},
+				{
+					"word": "Switch"
+				},
+				{
+					"word": "Automatic Full Cut"
+				},
+				{
+					"word": "Manual Full Cut"
+				},
+				{
+					"word": "Window Name"
+				},
+				{
+					"word": "SystemVolume"
+				},
+				{
+					"word": "ManualPlay"
+				},
+				{
+					"word": "AutoPlay" 
+				},
+				{
+					"word": "Stop Playing"
+				},
+				{
+					"word": "Program List"
+				},
+				{
+					"word": "Channel Access"
+				},
+				{
+					"word": "Start"
+				},
+				{
+					"word": "Stop"
+				},
+				{
+					"word": "Volume"
+				},
+				{
+					"word": "Fade In"
+				},
+				{
+					"word": "Fade Out"
+				},
+				{
+					"word": "Control Bar"
+				},
+				{
+					"word": "Screenshot"
+				},
+				{
+					"word": "When To Stop"
+				},
+				{
+					"word":"Brush Columns"
+				},
+				{
+					"word":"Stop Columns"
+				},
+				{
+					"word": "Start"
+				},
+				{
+					"word": "Stop"
+				},
+				{
+					"word": "Upword"
+				},
+				{
+					"word": "Scroll Down"
+				},
+				{
+					"word": "Top"
+				},
+				{
+					"word": "Last"
+				},
+				{
+					"word": "Screenshot"
+				},
+				{
+					"word": "When To Stop"
+				},
+				{
+					"word":"Brush Columns"
+				},
+				{
+					"word":"Stop Columns"
+				},
+				{
+					"word": "Start"
+				},
+				{
+					"word": "Stop"
+				},
+				{
+					"word": "Previous Page"
+				},
+				{
+					"word": "Next Page"
+				},
+				{
+					"word": "Home Page"
+				},
+				{
+					"word": "Last Page"
+				},
+				{
+					"word": "Screenshot"
+				},
+				{
+					"word": "When To Stop"
+				},
+				{
+					"word":"Brush Columns"
+				},
+				{
+					"word":"Stop Columns"
+				},
+				{
+					"word": "Global Control"
+				},
+				
+				{
+					"word": "Right Key"
+				},
+				{
+					"word": "Double Click"
+				},
+				{
+					"word": "Send Text/Qr Code To The Screen"
+				},
+				{
+					"word": "Content"
+				},
+				{
+					"word": "Screen Overlay"
+				},
+				{
+					"word": "Avatar"
+				},
+				{
+					"word": "User"
+				},
+				{
+					"word": "Visitor"
+				},
+				{
+					"word": "Centered Display"
+				},
+				{
+					"word": "Center And Full Screen"
+				},
+				{
+					"word": "Send Text"
+				},
+				{
+					"word": "Send Qr Code"
+				},
+				{
+					"word": "Cancel"
+				}
+			]
+		},
+		"msg":[{
+				"message": "data acquisition error!"
+			},
+			{
+				"message": "the current program list is empty!"
+			},
+			{
+				"message": "terminal name :"
+			},
+			{
+				"message": "Computer name:"
+			},
+			{
+				"message": "Program name:"
+			},
+			{
+				"message": "Program name:"
+			},
+			{
+				"message": "download"
+			},
+			{
+				"message": "preview"
+			},
+			{
+				"message": "sent successfully"
+			},
+			{
+				"message": "send failed"
+			},
+			{
+				"message": "are you sure you want to restart?"
+			},
+			{
+				"message": "Are you sure you want to turn it off?"
+			},
+			{
+				"message": "are you sure to close it all?"
+			},
+			{
+				"message": "are you sure to turn off the LED?"
+			},
+			{
+				"message": "are you sure to turn on the LED?"
+			},
+			{
+				"message": "select file"
+			},
+			{
+				"message": "webcam"
+			},
+			{
+				"message": "audio and video"
+			},
+			{
+				"message": "the Office document"
+			},
+			{
+				"message": "image"
+			},
+			{
+				"message": "text"
+			},
+			{
+				"message": "page"
+			},
+			{
+				"message": "image"
+			},
+			{
+				"message": "animation"
+			},
+			{
+				"message": "audio"
+			},
+			{
+				"message": "video"
+			},
+			{
+				"message": "compressed file"
+			},
+			{
+				"message": "operating system self-check"
+			},
+			{
+				"message": "application"
+			},
+			{
+				"message": "adaptive"
+			},
+			{
+				"message": "notification (static)"
+			},
+			{
+				"message": "notification (scroll up)"
+			},
+			{
+				"message": "subtitle (scroll left)"
+			},
+			{
+				"message": "remote instruction"
+			},
+			{
+				"message": "column"
+			},
+			{
+				"message": "error getting channel!"
+			},
+			{
+				"message":"Address:"
+			},
+			{
+				"message":"Layout:"
+			}
+		]
+		
+	}
+]

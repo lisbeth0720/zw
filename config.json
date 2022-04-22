@@ -1,0 +1,6 @@
+﻿//配置文件
+[{
+    "dragScreen":false,//甩屏
+    "translation":false,//翻译
+    "morebtn":true//加载更多按钮
+}]

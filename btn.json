@@ -1,0 +1,1254 @@
+﻿[{
+		"language": "CH",
+    "content": {
+      "btntype": [
+        {
+          "name": "设备",
+          "fil": [
+            {
+              "filname": "pctrl",
+              "imgsrc": "images/allTitle/kaiguan.png"
+            },
+            {
+              "filname": "mctrl",
+              "imgsrc": "images/keysImg/thumb.png"
+            },
+            {
+              "filname": "newpctrl",
+              "imgsrc": "images/zhongkong.png"
+            },
+            {
+              "filname": "newmctrl",
+              "imgsrc": "images/keysImg/thumb.png"
+            }
+          ],
+          "imgsrc": "images/allTitle/kaiguan.png",
+          "btncontent": [
+            
+            {
+              "title": "设备控制",
+              "typecontent": [ 
+                {
+                  "word": "一键所有屏幕开",
+                  "evtlistener": "openClientAll()"
+                },
+                {
+                  "word": "一键所有屏幕关",
+                  "evtlistener": "closeClientAll()"
+                },
+                {
+                  "word": "当前设备开机",
+                  "evtlistener": "powerOn()"
+                },
+                {
+                  "word": "当前设备关机",
+                  "evtlistener": "powerOff(0)"
+                },
+                {
+                  "word": "当前区全开",
+                  "evtlistener": "openAll()"
+                },
+                {
+                  "word": "当前区全关",
+                  "evtlistener": "closeAll()"
+                },
+                {
+                  "word": "LED屏/屏幕开",
+                  "evtlistener": "openOrCloseLCD('Turn-On TV')"
+                },
+                {
+                  "word": "LED屏/屏幕关",
+                  "evtlistener": "openOrCloseLCD('Turn-Off TV')"
+                }
+              ]
+            },{
+              "title":"模式切换",
+              "typecontent": [
+		
+                {
+                  "word": "八屏-视频播放模式M3",
+                  "evtlistener": "sendCommonOrder('new','comm','0x200x010x000x140x040x010xAA0x010x490x020xAA0xBB0xCC0xDD0xEE0x110x220x330xAA0x20','','')"
+                },
+                {
+                  "word": "十工五任、内生安全-21比9模式M4",
+                  "evtlistener": "sendCommonOrder('new','comm','0x200x010x000x140x040x010xAA0x010x490x030xAA0xBB0xCC0xDD0xEE0x110x220x330xAA0x20','','')"
+                },
+                {
+                  "word": "十工五任、内生安全-16比9模式M5",
+                  "evtlistener": "sendCommonOrder('new','comm','0x200x010x000x140x040x010xAA0x010x490x040xAA0xBB0xCC0xDD0xEE0x110x220x330xAA0x20','','')"
+                },
+                {
+                  "word": "十工五任、内生安全-全屏模式M6",
+                  "evtlistener": "sendCommonOrder('new','comm','0x200x010x000x140x040x010xAA0x010x490x050xAA0xBB0xCC0xDD0xEE0x110x220x330xAA0x20','','')"
+                },
+                {
+                  "word": "演示态势感知-全屏模式M7",
+                  "evtlistener": "sendCommonOrder('new','comm','0x200x010x000x140x040x010xAA0x010x490x060xAA0xBB0xCC0xDD0xEE0x110x220x330xAA0x20','','')"
+                },
+                {
+                  "word": "应急指挥50.1-全屏模式M9-外接",
+                  "evtlistener": "sendCommonOrder('new','comm','0x200x010x000x140x040x010xAA0x010x490x080xAA0xBB0xCC0xDD0xEE0x110x220x330xAA0x20','','')"
+                },
+                {
+                  "word": "NGSOC全屏模式M10-外接",
+                  "evtlistener": "sendCommonOrder('new','comm','0x200x010x000x140x040x010xAA0x010x490x090xAA0xBB0xCC0xDD0xEE0x110x220x330xAA0x20','','')"
+                },
+                {
+                  "word": "实战攻防演习-全屏模式M8-外接",
+                  "evtlistener": "sendCommonOrder('new','comm','0x200x010x000x140x040x010xAA0x010x490x070xAA0xBB0xCC0xDD0xEE0x110x220x330xAA0x20','','')"
+                }
+              ]
+            },{
+              "title": "音频控制",
+              "typecontent": [
+                {
+                  "word": "当前区域音量+",
+                  "evtlistener": "changeVolum('inc')"
+                },
+                {
+                  "word": "当前区域音量-",
+                  "evtlistener": "changeVolum('des')"
+                },
+
+		{
+                  "word": "A1曲屏LED音箱设备开",
+                  "evtlistener": "sendCommonOrder('http://172.16.14.251:8080','tcp','0x550x010xA40x000x000xA5','8080','172.16.14.183')"
+                },
+
+		{
+                  "word": "A1曲屏LED音箱设备关",
+                  "evtlistener": "sendCommonOrder('http://172.16.14.251:8080','tcp','0x550x010xA50x000x000xA4','8080','172.16.14.183')"
+                },
+
+		{
+                  "word": "A0序厅LED音箱设备开",
+                  "evtlistener": "sendCommonOrder('http://172.16.14.251:8080','tcp','0x550x010xA40x000x000xA5','8080','172.16.14.181')"
+                },
+
+		{
+                  "word": "A0序厅LED音箱设备关",
+                  "evtlistener": "sendCommonOrder('http://172.16.14.251:8080','tcp','0x550x010xA50x000x000xA4','8080','172.16.14.181')"
+                }
+              ]
+            }
+            
+            
+            
+            
+          ]
+        },
+        {
+          "name": "应用",
+          "fil": [
+            {
+              "filname": "pctrl",
+              "imgsrc": "images/allTitle/yingyong.png"
+            },
+            {
+              "filname": "mctrl",
+              "imgsrc": "images/keysImg/app.png"
+            },
+            {
+              "filname": "newpctrl",
+              "imgsrc": "images/yingyong.png"
+            },
+            {
+              "filname": "newmctrl",
+              "imgsrc": "images/keysImg/app.png"
+            }
+          ],
+         
+          "btncontent": [
+            
+            {
+              "title": "互动应用",
+              "typecontent": [
+                {
+                  "word": "远程操控",
+                  "evtlistener": "getScreen()"
+                },
+                {
+                  "word": "触控板",
+                  "evtlistener": "touchPanel()"
+                },
+                {
+                  "word": "文件上传",
+                  "evtlistener": "uploadFile(this)"
+                },
+                {
+                  "word": "数字内容",
+                  "evtlistener": "SourceGet()"
+                },
+                {
+                  "word": "打开浏览器",
+                  "evtlistener": "openClient()"
+                },
+                {
+                  "word": "关闭浏览器",
+                  "evtlistener": "closeClient()"
+                },
+                {
+                  "word": "终端二维码",
+                  "evtlistener": "getUrl('wpdispqrmsg.asp?wpdispqrmsg=http://mylocalhost192.168.1.:8080/pctrl.html&wpstyle=1');"
+                },
+                {
+                  "word": "文字/二维码",
+                  "evtlistener": "SendMSGBar('SendMSGBar','show')"
+                },
+                {
+                  "word": "拍照",
+                  "evtlistener": "takePhoto()"
+                },
+                {
+                  "word": "任务管理器",
+                  "evtlistener": "docmd('keycode','0xFFE3%2b0xFFE1%2b0xFF1B');"
+                },
+                {
+                  "word": "开/关软键盘",
+                  "evtlistener": "openKeyBoard()"
+                },
+                {
+                  "word": "其他版本",
+                  "evtlistener": "newPadControl()"
+                }
+              ]
+            },
+            
+            {
+              "title": "签名工具",
+              "typecontent": [
+                {
+                  "word": "启动标注程序",
+                  "evtlistener": "getUrl('wpplaycontrol.asp?wpplaycontrol=WiseSignPlayer&command=3&param=0')"
+                },
+                {
+                  "word": "停止标注程序",
+                  "evtlistener": "getUrl('wpplaycontrol.asp?wpplaycontrol=WiseSignPlayer&command=2&param=0')"
+                },
+                {
+                  "word": "转入标注",
+                  "evtlistener": "getUrl('wpplaycontrol.asp?wpplaycontrol=WiseSignPlayer&command=54&param=0')"
+                },
+                {
+                  "word": "转出标注",
+                  "evtlistener": "getUrl('wpplaycontrol.asp?wpplaycontrol=WiseSignPlayer&command=55&param=0')"
+                },
+                {
+                  "word": "临时保存签名",
+                  "evtlistener": "getUrl('wpplaycontrol.asp?wpplaycontrol=WiseSignPlayer&command=52&param=0')"
+                },
+                {
+                  "word": "保存签名",
+                  "evtlistener": "getUrl('wpplaycontrol.asp?wpplaycontrol=WiseSignPlayer&command=53&param=0')"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "播控",
+          "fil": [
+            {
+              "filname": "pctrl",
+              "imgsrc": "images/allTitle/bokong.png"
+            },
+            {
+              "filname": "mctrl",
+              "imgsrc": "images/keysImg/control.png"
+            },
+            {
+              "filname": "newpctrl",
+              "imgsrc": "images/bokong.png"
+            },
+            {
+              "filname": "newmctrl",
+              "imgsrc": "images/keysImg/control.png"
+            }
+          ],
+         
+          "btncontent": [
+            {
+              "title": "播放控制",
+              "typecontent": [
+                {
+                  "word": "紧急通知",
+                  "evtlistener": "emergentInform('60_1')"
+                },
+                {
+                  "word": "紧急疏散",
+                  "evtlistener": "emergentInform('60_2')"
+                },
+                {
+                  "word": "重启即时任务",
+                  "evtlistener": "emergentInform('76')"
+                },
+                {
+                  "word": "停止临时任务",
+                  "evtlistener": "emergentInform('26')"
+                },
+                {
+                  "word": "第一节目",
+                  "evtlistener": "docmd1(12,0)"
+                },
+                {
+                  "word": "最后节目",
+                  "evtlistener": "docmd1(15,0)"
+                },
+                {
+                  "word": "上一项",
+                  "evtlistener": "docmd1('before',0)"
+                },
+                {
+                  "word": "下一项",
+                  "evtlistener": "docmd1('next',0)"
+                },
+                {
+                  "word": "启动节目单",
+                  "evtlistener": "docmd(11,0)"
+                },
+                {
+                  "word": "停止节目单",
+                  "evtlistener": "docmd(70,0)"
+                },
+                {
+                  "word": "最大化",
+                  "evtlistener": "docmd(2001,2)"
+                },
+                {
+                  "word": "最小化",
+                  "evtlistener": "docmd(2000,0)"
+                },
+                {
+                  "word": "旋转屏幕上",
+                  "evtlistener": "docmd('keycode','0xFFE3%2b0xFFE9%2b0xFF52');"
+                },
+                {
+                  "word": "旋转屏幕下",
+                  "evtlistener": "docmd('keycode','0xFFE3%2b0xFFE9%2b0xFF54');"
+                },
+                {
+                  "word": "旋转屏幕左",
+                  "evtlistener": "docmd('keycode','0xFFE3%2b0xFFE9%2b0xFF51');"
+                },
+                {
+                  "word": "旋转屏幕右",
+                  "evtlistener": "docmd('keycode','0xFFE3%2b0xFFE9%2b0xFF53');"
+                },
+                {
+                  "word": "启动显示端",
+                  "evtlistener": "emergentInform('31')"
+                },
+                {
+                  "word": "重启显示端",
+                  "evtlistener": "emergentInform('31_31')"
+                },
+                {
+                  "word": "重启智能处理中心",
+                  "evtlistener": "reStartWiseSendInfo()"
+                },
+                {
+                  "word": "重启播放机",
+                  "evtlistener": "powerOff(1)"
+                },
+                {
+                  "word": "启动处理过程",
+                  "evtlistener": "emergentInform(113)"
+                },
+                {
+                  "word": "停止处理过程",
+                  "evtlistener": "emergentInform(114)"
+                },
+                {
+                  "word": "重启处理过程",
+                  "evtlistener": "emergentInform(115)"
+                },
+                {
+                  "word": "触发数据获取",
+                  "evtlistener": "emergentInform(116)"
+                },
+                {
+                  "word": "控制室启动分发",
+                  "evtlistener": "controlRoomDistribute()"
+                },
+                {
+                  "word": "退出所有驻留",
+                  "evtlistener": "docmd(993084,993084)"
+                },
+                {
+                  "word": "全部暂停",
+                  "evtlistener": "docmd(993002,0)"
+                },
+                {
+                  "word": "全部继续",
+                  "evtlistener": "docmd(993003,0)"
+                },
+                {
+                  "word": "全部静音",
+                  "evtlistener": "docmd(993088,0)"
+                },
+                {
+                  "word": "全部非静音",
+                  "evtlistener": "docmd(993089,0)"
+                },
+                {
+                  "word": "打开窗口声音",
+                  "evtlistener": "docmd('openSound')"
+                },
+                {
+                  "word": "关闭窗口声音",
+                  "evtlistener": "docmd('closeSound')"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "按键",
+          "fil": [
+            {
+              "filname": "pctrl",
+              "imgsrc": "images/allTitle/anjian.png"
+            },
+            {
+              "filname": "mctrl",
+              "imgsrc": "images/keysImg/keys.png"
+            },
+            {
+              "filname": "newpctrl",
+              "imgsrc": "images/anjian.png"
+            },
+            {
+              "filname": "newmctrl",
+              "imgsrc": "images/keysImg/keys.png"
+            }
+          ],
+          
+          "btncontent": [
+            {
+              "title": "按键控制",
+              "typecontent": [
+                {
+                  "word": "ALT+F4",
+                  "evtlistener": "docmd('keycode','0xFFE9%2b0xFFC1')"
+                },
+                {
+                  "word": "ALT+TAB",
+                  "evtlistener": "docmd('keycode','0xFFE9%2b0xFF09')"
+                },
+                {
+                  "word": "ESC",
+                  "evtlistener": "docmd('keycode','0xFF1B')"
+                },
+                {
+                  "word": "Enter",
+                  "evtlistener": "docmd('keycode','0xFF0D')"
+                },
+                {
+                  "word": "TAB",
+                  "evtlistener": "docmd('keycode','0xFF09')"
+                },
+                {
+                  "word": "SHIFT",
+                  "evtlistener": "docmd('keycode','0xFFE1')"
+                },
+                {
+                  "word": "WIN",
+                  "evtlistener": "docmd('keycode','0XFF5B')"
+                },
+                {
+                  "word": "ALT",
+                  "evtlistener": "docmd('keycode','0xFFE9')"
+                },
+                {
+                  "word": "空格",
+                  "evtlistener": "docmd('keycode','0xFF20')"
+                },
+                {
+                  "word": "退格",
+                  "evtlistener": "docmd('keycode','0xFF08')"
+                },
+                {
+                  "word": "右键",
+                  "evtlistener": "rightMouse()"
+                },
+                {
+                  "word": "双击",
+                  "evtlistener": "twoMouse()"
+                },
+                {
+                  "word": "PU上一页",
+                  "evtlistener": "docmd('keycode','urlplayer%20-keyevent%200xFF55')"
+                },
+                {
+                  "word": "PD下一页",
+                  "evtlistener": "docmd('keycode','urlplayer%20-keyevent%200xFF9B')"
+                },
+                {
+                  "word": "HM首页",
+                  "evtlistener": "docmd('keycode','urlplayer%20-keyevent%200xFF50')"
+                },
+                {
+                  "word": "EN尾页",
+                  "evtlistener": "docmd('keycode','urlplayer%20-keyevent%200xFF57')"
+                },
+                {
+                  "word": "上",
+                  "evtlistener": "docmd('keycode','0xFF52')"
+                },
+                {
+                  "word": "下",
+                  "evtlistener": "docmd('keycode','0xFF54')"
+                },
+                {
+                  "word": "左",
+                  "evtlistener": "docmd('keycode','0xFF51')"
+                },
+                {
+                  "word": "右",
+                  "evtlistener": "docmd('keycode','0xFF53')"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }  
+	},
+  {
+    "language": "EN",
+    "content": {
+      "btntype": [       
+        {
+          "name": "facility",
+          "fil": [
+            {
+              "filname": "pctrl",
+              "imgsrc": "images/allTitle/kaiguan.png"
+            },
+            {
+              "filname": "mctrl",
+              "imgsrc": "images/keysImg/thumb.png"
+            },
+            {
+              "filname": "newpctrl",
+              "imgsrc": "images/zhongkong.png"
+            },
+            {
+              "filname": "newmctrl",
+              "imgsrc": "images/keysImg/thumb.png"
+            }
+          ],
+          "imgsrc": "images/allTitle/kaiguan.png",
+          "btncontent": [
+            {
+              "title": "light control",
+              "typecontent": [
+                {
+                  "word": "turn off the light",
+                  "evtlistener": "lightChange('1000_0XFE0X050X000X000X000X000XD90XC5fxxf0XFE0X050X000X010X000X000X880X05fxxf0XFE0X050X000X020X000X000X780X05',this)"
+                },
+                {
+                  "word": "red light",
+                  "evtlistener": "lightChange('1000_0XFE0X050X000X010X000X000X880X05fxxf0XFE0X050X000X020X000X000X780X05fxxf0XFE0X050X000X000XFF0X000X980X35',this)"
+                },
+                {
+                  "word": "green light",
+                  "evtlistener": "lightChange('1000_0XFE0X050X000X000X000X000XD90XC5fxxf0XFE0X050X000X020X000X000X780X05fxxf0XFE0X050X000X010XFF0X000XC90XF5',this)"
+                },
+                {
+                  "word": "blue light",
+                  "evtlistener": "lightChange('1000_0XFE0X050X000X000X000X000XD90XC5fxxf0XFE0X050X000X010X000X000X880X05fxxf0XFE0X050X000X020XFF0X000X390XF5',this)"
+                },
+                {
+                  "word": "yellow light",
+                  "evtlistener": "lightChange('1000_0XFE0X050X000X020X000X000X780X05fxxf0XFE0X050X000X000XFF0X000X980X35fxxf0XFE0X050X000X010XFF0X000XC90XF5',this)"
+                },
+                {
+                  "word": "purple light",
+                  "evtlistener": "lightChange('1000_0XFE0X050X000X010X000X000X880X05fxxf0XFE0X050X000X000XFF0X000X980X35fxxf0XFE0X050X000X020XFF0X000X390XF5',this)"
+                }
+              ]
+            },
+            {
+              "title": "device control",
+              "typecontent": [
+                {
+                  "word": "open the door",
+                  "evtlistener": "lightChange('1000_0XFE0X050X000X030XFF0X000X680X35fxxf0XFE0X050X000X030X000X000X290XC5',this)"
+                },
+                {
+                  "word": "power on",
+                  "evtlistener": "powerOn()"
+                },
+                {
+                  "word": "power off",
+                  "evtlistener": "powerOff(0)"
+                },
+                {
+                  "word": "all open",
+                  "evtlistener": "openAll()"
+                },
+                {
+                  "word": "all off",
+                  "evtlistener": "closeAll()"
+                },
+                {
+                  "word": "open LED",
+                  "evtlistener": "openLED()"
+                },
+                {
+                  "word": "close LED",
+                  "evtlistener": "closeLED()"
+                },
+                {
+                  "word": "Open Screen",
+                  "evtlistener": "openOrCloseLCD('Turn-On TV')"
+                },
+                {
+                  "word": "Close Screen",
+                  "evtlistener": "openOrCloseLCD('Turn-Off TV')"
+                }
+              ]
+            },
+            {
+              "title": "Audio Control",
+              "typecontent": [
+                {
+                  "word": "Host/Mic",
+                  "evtlistener": "openTVControl('#tvControlShadow4')"
+                },
+                {
+                  "word": "Speakers",
+                  "evtlistener": "openTVControl('#tvControlShadow2')"
+                },
+                {
+                  "word": "Speakers Group",
+                  "evtlistener": "openTVControl('#tvControlShadow3')"
+                }
+              ]
+            },
+            {
+              "title": "lamp belt control",
+              "typecontent": [
+                {
+                  "word": "light belt 1(on)",
+                  "evtlistener": "lightChange('1000_0XF50X010XFF0XD30X280X000X010X0F',this)"
+                },
+                {
+                  "word": "lamp belt 1(off)",
+                  "evtlistener": "lightChange('1000_0XF50X010XFF0XD30X280X000XFF0X11',this)"
+                },
+                {
+                  "word": "light belt 2(on)",
+                  "evtlistener": "lightChange('1000_0XF50X010XFF0XD30X280X010X010X0E',this)"
+                },
+                {
+                  "word": "lamp belt 2(off)",
+                  "evtlistener": "lightChange('1000_0XF50X010XFF0XD30X280X010XFF0X10',this)"
+                },
+                {
+                  "word": "light belt 3(on)",
+                  "evtlistener": "lightChange('1000_0XF50X010XFF0XD30X280X020X010X0D',this)"
+                },
+                {
+                  "word": "lamp belt 3(off)",
+                  "evtlistener": "lightChange('1000_0XF50X010XFF0XD30X280X020XFF0X0F',this)"
+                }
+              ]
+            },
+            {
+              "title": "tree ring lamp control",
+              "typecontent": [
+                {
+                  "word": "tree ring lamp 1(on)",
+                  "evtlistener": "lightChange('1000_0X550X010XA00X000X010XA0',this)"
+                },
+                {
+                  "word": "tree ring lamp 1(off)",
+                  "evtlistener": "lightChange('1000_0X550X010XA10X000X010XA1',this)"
+                },
+                {
+                  "word": "tree ring lamp 2(on)",
+                  "evtlistener": "lightChange('1000_0X550X010XA00X000X020XA3',this)"
+                },
+                {
+                  "word": "tree ring lamp 2(off)",
+                  "evtlistener": "lightChange('1000_0X550X010XA10X000X020XA2',this)"
+                },
+                {
+                  "word": "tree ring lamp 3(on)",
+                  "evtlistener": "lightChange('1000_0X550X010XA00X000X030XA2',this)"
+                },
+                {
+                  "word": "tree ring lamp 3(off)",
+                  "evtlistener": "lightChange('1000_0X550X010XA10X000X030XA3',this)"
+                },
+                {
+                  "word": "tree ring lamp 4(on)",
+                  "evtlistener": "lightChange('1000_0X550X010XA00X000X040XA5',this)"
+                },
+                {
+                  "word": "tree ring lamp 4(off)",
+                  "evtlistener": "lightChange('1000_0X550X010XA10X000X040XA4',this)"
+                },
+                {
+                  "word": "tree ring lamp 5(on)",
+                  "evtlistener": "lightChange('1000_0X550X010XA00X000X050XA4',this)"
+                },
+                {
+                  "word": "tree ring lamp 5(off)",
+                  "evtlistener": "lightChange('1000_0X550X010XA10X000X050XA5',this)"
+                },
+                {
+                  "word": "open",
+                  "evtlistener": "openAllGrowthRing()"
+                },
+                {
+                  "word": "close",
+                  "evtlistener": "closeAllGrowthRing()"
+                }
+              ]
+            },
+            {
+              "title": "curtain control",
+              "typecontent": [
+                {
+                  "word": "curtain open",
+                  "evtlistener": "curtain close"
+                },
+                {
+                  "word": "curtain close",
+                  "evtlistener": "closecurtain()"
+                },
+                {
+                  "word": "pause",
+                  "evtlistener": "pausecurtain()"
+                }
+              ]
+            },
+            {
+              "title": "area control",
+              "typecontent": [
+                {
+                  "word": "regional level 1",
+                  "evtlistener": "openArea2()"
+                },
+                {
+                  "word": "regional level 2",
+                  "evtlistener": "openArea3()"
+                },
+                {
+                  "word": "regional level 3",
+                  "evtlistener": "closeArea3()"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "apply",
+          "fil": [
+            {
+              "filname": "pctrl",
+              "imgsrc": "images/allTitle/yingyong.png"
+            },
+            {
+              "filname": "mctrl",
+              "imgsrc": "images/keysImg/app.png"
+            },
+            {
+              "filname": "newpctrl",
+              "imgsrc": "images/yingyong.png"
+            },
+            {
+              "filname": "newmctrl",
+              "imgsrc": "images/keysImg/app.png"
+            }
+          ],
+
+          "btncontent": [
+            {
+              "title": "screen recording tool",
+              "typecontent": [
+                {
+                  "word": "recording",
+                  "evtlistener": "getUrl('wpplaycontrol.asp?wpplaycontrol=WiseRecScreen&command=3&param=0')"
+                },
+                {
+                  "word": "pause recording",
+                  "evtlistener": "getUrl('wpplaycontrol.asp?wpplaycontrol=WiseRecScreen&command=2&param=0')"
+                },
+                {
+                  "word": "recording Settings",
+                  "evtlistener": "getUrl('wpplaycontrol.asp?wpplaycontrol=WiseRecScreen&command=34&param=0')"
+                },
+                {
+                  "word": "record status",
+                  "evtlistener": "getUrl('wpplaycontrol.asp?wpplaycontrol=WiseRecScreen&command=18&param=0')"
+                },
+                {
+                  "word": "stop recording",
+                  "evtlistener": "getUrl('wpplaycontrol.asp?wpplaycontrol=WiseRecScreen&command=2&param=1')"
+                },
+                {
+                  "word": "audio source switching",
+                  "evtlistener": "changeSound()"
+                },
+                {
+                  "word": "video source switch",
+                  "evtlistener": "changeVideo()"
+                },
+                {
+                  "word": "play",
+                  "evtlistener": "getUrl('wpplaycontrol.asp?wpplaycontrol=WiseRecScreen&command=47&param=0')"
+                },
+                {
+                  "word": "stop",
+                  "evtlistener": "getUrl('wpplaycontrol.asp?wpplaycontrol=WiseRecScreen&command=47&param=1')"
+                },
+                {
+                  "word": "quit recording",
+                  "evtlistener": "getUrl('wpplaycontrol.asp?wpplaycontrol=WiseRecScreen&command=17')"
+                }
+              ]
+            },
+            {
+              "title": "interactive application",
+              "typecontent": [
+                {
+                  "word": "remoteControl",
+                  "evtlistener": "getScreen()"
+                },
+                {
+                  "word": "trackpad",
+                  "evtlistener": "touchPanel()"
+                },
+                {
+                  "word": "file upload",
+                  "evtlistener": "uploadFile(this)"
+                },
+                {
+                  "word": "digital content",
+                  "evtlistener": "SourceGet()"
+                },
+                {
+                  "word": "open browser",
+                  "evtlistener": "openClient()"
+                },
+                {
+                  "word": "close browser",
+                  "evtlistener": "closeClient()"
+                },
+                {
+                  "word": "terminal qrcode",
+                  "evtlistener": "getUrl('wpdispqrmsg.asp?wpdispqrmsg=http://mylocalhost192.168.1.:8080/pctrl.html&wpstyle=1');"
+                },
+                {
+                  "word": "word/qrcode",
+                  "evtlistener": "SendMSGBar('SendMSGBar','show')"
+                },
+                {
+                  "word": "take photos",
+                  "evtlistener": "takePhoto()"
+                },
+                {
+                  "word": "task manager",
+                  "evtlistener": "docmd('keycode','0xFFE3%2b0xFFE1%2b0xFF1B');"
+                },
+                {
+                  "word": "open/close soft keyboard",
+                  "evtlistener": "openKeyBoard()"
+                },
+                {
+                  "word": "otherEdition",
+                  "evtlistener": "newPadControl()"
+                }
+              ]
+            },
+            {
+              "title": "face recognition",
+              "typecontent": [
+                {
+                  "word": "add",
+                  "evtlistener": "addFace()"
+                },
+                {
+                  "word": "update",
+                  "evtlistener": "updateFace()"
+                },
+                {
+                  "word": "delete",
+                  "evtlistener": "deleteFace()"
+                },
+                {
+                  "word": "merge",
+                  "evtlistener": "mergeFace()"
+                }
+              ]
+            },
+            {
+              "title": "stand in line",
+              "typecontent": [
+                {
+                  "word": "template1",
+                  "evtlistener": "gotoPage(1)"
+                },
+                {
+                  "word": "template2",
+                  "evtlistener": "gotoPage(2)"
+                }
+              ]
+            },
+            {
+              "title": "resource control",
+              "typecontent": [
+                {
+                  "word": "launch IOS screen shot",
+                  "evtlistener": "startScreen('3')"
+                },
+                {
+                  "word": "stop IOS screenshot",
+                  "evtlistener": "startScreen('17')"
+                },
+                {
+                  "word": "start other screenshots",
+                  "evtlistener": "otherScreen('111_0')"
+                },
+                {
+                  "word": "stop other screenshots",
+                  "evtlistener": "otherScreen('112_0')"
+                },
+                {
+                  "word": "disable USB storage",
+                  "evtlistener": "startusb('105')"
+                },
+                {
+                  "word": "enable USB storage",
+                  "evtlistener": "startusb('106')"
+                },
+                {
+                  "word": "general resolution",
+                  "evtlistener": "getScreenSize('10240768')"
+                },
+                {
+                  "word": "2K resolution",
+                  "evtlistener": "getScreenSize('19201080')"
+                },
+                {
+                  "word": "4K resolution",
+                  "evtlistener": "getScreenSize('38402160')"
+                },
+                {
+                  "word": "insert HDMI1",
+                  "evtlistener": "startScreen('internal001')"
+                },
+                {
+                  "word": "insert HDMI2",
+                  "evtlistener": "startScreen('internal002')"
+                },
+                {
+                  "word": "insert HDMI3",
+                  "evtlistener": "startScreen('internal003')"
+                }
+              ]
+            },{
+              "title": "Signature tool",
+              "typecontent": [
+                {
+                  "word": "Start annotator",
+                  "evtlistener": "getUrl('wpplaycontrol.asp?wpplaycontrol=WiseSignPlayer&command=3&param=0')"
+                },
+                {
+                  "word": "Stop annotator",
+                  "evtlistener": "getUrl('wpplaycontrol.asp?wpplaycontrol=WiseSignPlayer&command=2&param=0')"
+                },
+                {
+                  "word": "start mark",
+                  "evtlistener": "getUrl('wpplaycontrol.asp?wpplaycontrol=WiseSignPlayer&command=54&param=0')"
+                },
+                {
+                  "word": "stop mark",
+                  "evtlistener": "getUrl('wpplaycontrol.asp?wpplaycontrol=WiseSignPlayer&command=55&param=0')"
+                },
+                {
+                  "word": "Temporary save sign",
+                  "evtlistener": "getUrl('wpplaycontrol.asp?wpplaycontrol=WiseSignPlayer&command=52&param=0')"
+                },
+                {
+                  "word": "Save sign",
+                  "evtlistener": "getUrl('wpplaycontrol.asp?wpplaycontrol=WiseSignPlayer&command=53&param=0')"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Broadcast",
+          "fil": [
+            {
+              "filname": "pctrl",
+              "imgsrc": "images/allTitle/bokong.png"
+            },
+            {
+              "filname": "mctrl",
+              "imgsrc": "images/keysImg/control.png"
+            },
+            {
+              "filname": "newpctrl",
+              "imgsrc": "images/bokong.png"
+            },
+            {
+              "filname": "newmctrl",
+              "imgsrc": "images/keysImg/control.png"
+            }
+          ],
+
+          "btncontent": [
+            {
+              "title": "playback control",
+              "typecontent": [
+                {
+                  "word": "urgent notice",
+                  "evtlistener": "emergentInform('60_1')"
+                },
+                {
+                  "word": "emergency evacuation",
+                  "evtlistener": "emergentInform('60_2')"
+                },
+                {
+                  "word": "restart immediate task",
+                  "evtlistener": "emergentInform('76')"
+                },
+                {
+                  "word": "stop temporary task",
+                  "evtlistener": "emergentInform('26')"
+                },
+                {
+                  "word": "first programme",
+                  "evtlistener": "docmd1(12,0)"
+                },
+                {
+                  "word": "last programme",
+                  "evtlistener": "docmd1(15,0)"
+                },
+                {
+                  "word": "prev item",
+                  "evtlistener": "docmd1('before',0)"
+                },
+                {
+                  "word": "next item",
+                  "evtlistener": "docmd1('next',0)"
+                },
+                {
+                  "word": "launch program",
+                  "evtlistener": "docmd(11,0)"
+                },
+                {
+                  "word": "stop program",
+                  "evtlistener": "docmd(70,0)"
+                },
+                {
+                  "word": "maximize",
+                  "evtlistener": "docmd(2001,2)"
+                },
+                {
+                  "word": "maximize",
+                  "evtlistener": "docmd(2000,0)"
+                },
+                {
+                  "word": "rotate on screen",
+                  "evtlistener": "docmd('keycode','0xFFE3%2b0xFFE9%2b0xFF52');"
+                },
+                {
+                  "word": "rotate under screen",
+                  "evtlistener": "docmd('keycode','0xFFE3%2b0xFFE9%2b0xFF54');"
+                },
+                {
+                  "word": "rotate screen left",
+                  "evtlistener": "docmd('keycode','0xFFE3%2b0xFFE9%2b0xFF51');"
+                },
+                {
+                  "word": "rotate screen right",
+                  "evtlistener": "docmd('keycode','0xFFE3%2b0xFFE9%2b0xFF53');"
+                },
+                {
+                  "word": "start display terminal",
+                  "evtlistener": "emergentInform('31')"
+                },
+                {
+                  "word": "restart display terminal",
+                  "evtlistener": "emergentInform('31_31')"
+                },
+                {
+                  "word": "restart the smart processing centre",
+                  "evtlistener": "reStartWiseSendInfo()"
+                },
+                {
+                  "word": "restart player",
+                  "evtlistener": "powerOff(1)"
+                },
+                {
+                  "word": "Start processing",
+                  "evtlistener": "emergentInform(113)"
+                },
+                {
+                  "word": "Stop processing",
+                  "evtlistener": "emergentInform(114)"
+                },
+                {
+                  "word": "restart processing",
+                  "evtlistener": "emergentInform(115)"
+                },
+                {
+                  "word": "Triggered data acquisition",
+                  "evtlistener": "emergentInform(116)"
+                },
+                {
+                  "word": "ControlRoomDistribute",
+                  "evtlistener": "controlRoomDistribute()"
+                },
+                {
+                  "word": "ExitAllResides",
+                  "evtlistener": "docmd(993084,993084)"
+                },
+                {
+                  "word": "PauseAll",
+                  "evtlistener": "docmd(993002,0)"
+                },
+                {
+                  "word": "ContinueAll",
+                  "evtlistener": "docmd(993003,0)"
+                },
+                {
+                  "word": "MuteAll",
+                  "evtlistener": "docmd(993088,0)"
+                },
+                {
+                  "word": "RestoreAll",
+                  "evtlistener": "docmd(993089,0)"
+                },
+                {
+                  "word": "openWinSound",
+                  "evtlistener": "docmd(openSound)"
+                },
+                {
+                  "word": "closeWinSound",
+                  "evtlistener": "docmd(closeSound)"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "key",
+          "fil": [
+            {
+              "filname": "pctrl",
+              "imgsrc": "images/allTitle/anjian.png"
+            },
+            {
+              "filname": "mctrl",
+              "imgsrc": "images/keysImg/keys.png"
+            },
+            {
+              "filname": "newpctrl",
+              "imgsrc": "images/anjian.png"
+            },
+            {
+              "filname": "newmctrl",
+              "imgsrc": "images/keysImg/keys.png"
+            }
+          ],
+
+          "btncontent": [
+            {
+              "title": "button control",
+              "typecontent": [
+                {
+                  "word": "ALT+F4",
+                  "evtlistener": "docmd('keycode','0xFFE9%2b0xFFC1')"
+                },
+                {
+                  "word": "ALT+TAB",
+                  "evtlistener": "docmd('keycode','0xFFE9%2bxFF09')"
+                },
+                {
+                  "word": "ESC",
+                  "evtlistener": "docmd('keycode','0xFF1B')"
+                },
+                {
+                  "word": "Enter",
+                  "evtlistener": "docmd('keycode','0xFF0D')"
+                },
+                {
+                  "word": "TAB",
+                  "evtlistener": "docmd('keycode','0xFF09')"
+                },
+                {
+                  "word": "SHIFT",
+                  "evtlistener": "docmd('keycode','0xFFE1')"
+                },
+                {
+                  "word": "WIN",
+                  "evtlistener": "docmd('keycode','0XFF5B')"
+                },
+                {
+                  "word": "ALT",
+                  "evtlistener": "docmd('keycode','0xFFE9')"
+                },
+                {
+                  "word": "space",
+                  "evtlistener": "docmd('keycode','0xFF20')"
+                },
+                {
+                  "word": "backspace",
+                  "evtlistener": "docmd('keycode','0xFF08')"
+                },
+                {
+                  "word": "right click",
+                  "evtlistener": "rightMouse()"
+                },
+                {
+                  "word": "double-click",
+                  "evtlistener": "twoMouse()"
+                },
+                {
+                  "word": "previous page",
+                  "evtlistener": "docmd('keycode','urlplayer%20-keyevent%200xFF55')"
+                },
+                {
+                  "word": "next page",
+                  "evtlistener": "docmd('keycode','urlplayer%20-keyevent%200xFF9B')"
+                },
+                {
+                  "word": "home page",
+                  "evtlistener": "docmd('keycode','urlplayer%20-keyevent%200xFF50')"
+                },
+                {
+                  "word": "endpage",
+                  "evtlistener": "docmd('keycode','urlplayer%20-keyevent%200xFF57')"
+                },
+                {
+                  "word": "up",
+                  "evtlistener": "docmd('keycode','0xFF52')"
+                },
+                {
+                  "word": "down",
+                  "evtlistener": "docmd('keycode','0xFF54')"
+                },
+                {
+                  "word": "left",
+                  "evtlistener": "docmd('keycode','0xFF51')"
+                },
+                {
+                  "word": "right",
+                  "evtlistener": "docmd('keycode','0xFF53')"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+]
