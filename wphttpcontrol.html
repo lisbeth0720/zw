@@ -1,0 +1,867 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="noVNC_loading">
+<head>
+    <title>WisePeak</title>
+    <meta charset="utf-8">
+    <!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
+                Remove this if you use the .htaccess -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- Icons (see app/images/icons/Makefile for what the sizes are for) -->
+    <link rel="icon" sizes="16x16" type="image/png" href="app/images/icons/novnc-16x16.png">
+    <link rel="icon" sizes="24x24" type="image/png" href="app/images/icons/novnc-24x24.png">
+    <link rel="icon" sizes="32x32" type="image/png" href="app/images/icons/novnc-32x32.png">
+    <link rel="icon" sizes="48x48" type="image/png" href="app/images/icons/novnc-48x48.png">
+    <link rel="icon" sizes="60x60" type="image/png" href="app/images/icons/novnc-60x60.png">
+    <link rel="icon" sizes="64x64" type="image/png" href="app/images/icons/novnc-64x64.png">
+    <link rel="icon" sizes="72x72" type="image/png" href="app/images/icons/novnc-72x72.png">
+    <link rel="icon" sizes="76x76" type="image/png" href="app/images/icons/novnc-76x76.png">
+    <link rel="icon" sizes="96x96" type="image/png" href="app/images/icons/novnc-96x96.png">
+    <link rel="icon" sizes="120x120" type="image/png" href="app/images/icons/novnc-120x120.png">
+    <link rel="icon" sizes="144x144" type="image/png" href="app/images/icons/novnc-144x144.png">
+    <link rel="icon" sizes="152x152" type="image/png" href="app/images/icons/novnc-152x152.png">
+    <link rel="icon" sizes="192x192" type="image/png" href="app/images/icons/novnc-192x192.png">
+    <!-- Firefox currently mishandles SVG, see #1419039
+    <link rel="icon" sizes="any" type="image/svg+xml" href="app/images/icons/novnc-icon.svg">
+    -->
+    <!-- Repeated last so that legacy handling will pick this -->
+    <link rel="icon" sizes="16x16" type="image/png" href="app/images/icons/novnc-16x16.png">
+
+    <!-- Apple iOS Safari settings -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Home Screen Icons (favourites and bookmarks use the normal icons) -->
+    <link rel="apple-touch-icon" sizes="60x60" type="image/png" href="app/images/icons/novnc-60x60.png">
+    <link rel="apple-touch-icon" sizes="76x76" type="image/png" href="app/images/icons/novnc-76x76.png">
+    <link rel="apple-touch-icon" sizes="120x120" type="image/png" href="app/images/icons/novnc-120x120.png">
+    <link rel="apple-touch-icon" sizes="152x152" type="image/png" href="app/images/icons/novnc-152x152.png">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="app/styles/base.css">
+
+    <!-- this is included as a normal file in order to catch script-loading errors as well -->
+    <script src="app/error-handler.js"></script>
+
+    <!-- begin scripts -->
+    <!-- promise polyfills promises for IE11 -->
+    <script src="vendor/promise.js"></script>
+    <!-- ES2015/ES6 modules polyfill -->
+    <script nomodule src="vendor/browser-es-module-loader/dist/browser-es-module-loader.js"></script>
+    <!-- actual script modules -->
+    <script type="module" crossorigin="anonymous" src="app/ui.js"></script>
+    <!-- end scripts -->
+	<script src="app/jquery-1.9.1.min.js"></script>
+	<script src="app/jquery.cookie.js"></script>
+</head>
+
+<body>
+
+    <div id="noVNC_fallback_error" class="noVNC_center">
+        <div>
+            <div>Ecountered an error:</div>
+            <br>
+            <div id="noVNC_fallback_errormsg"></div>
+        </div>
+    </div>
+    <div id="toggleKeyBoard">
+        <div class="keyboardBox" id="keyboard">
+            <div class="line gap_t">
+                <div class="keys keys_d t-a-l" data-kid="126" shift-data-id="96"><div>~</div><div>`</div></div>
+                <div class="keys keys_d t-a-l" data-kid="49" shift-data-id="33"><div>!</div><div>1</div></div>
+                <div class="keys keys_d t-a-l" data-kid="50" shift-data-id="64"><div>@</div><div>2</div></div>
+                <div class="keys keys_d t-a-l" data-kid="51" shift-data-id="35"><div>#</div><div>3</div></div>
+                <div class="keys keys_d t-a-l" data-kid="52" shift-data-id="36"><div>$</div><div>4</div></div>
+                <div class="keys keys_d t-a-l" data-kid="53" shift-data-id="37"><div>%</div><div>5</div></div>
+                <div class="keys keys_d t-a-l" data-kid="54" shift-data-id="94"><div>^</div><div>6</div></div>
+                <div class="keys keys_d t-a-l" data-kid="55" shift-data-id="38"><div>&amp;</div><div>7</div></div>
+                <div class="keys keys_d t-a-l" data-kid="56" shift-data-id="42"><div>*</div><div>8</div></div>
+                <div class="keys keys_d t-a-l" data-kid="57" shift-data-id="40"><div>(</div><div>9</div></div>
+                <div class="keys keys_d t-a-l" data-kid="48" shift-data-id="41"><div>)</div><div>0</div></div>
+                <div class="keysCmd keys_d t-a-l" data-kid="95" shift-data-id="45"><div>_</div><div>-</div></div>
+                <div class="keysCmd keys_d t-a-l" data-kid="61" shift-data-id="61"><div>+</div><div>=</div></div>
+                <div class="keysCmd k-w-80 l-h-40 f-s-14" data-kid="8">Backspace</div>
+            </div>
+            <div class="line">
+                <div class="keysCmd k-w-50" data-kid="9">Tab</div>
+                <div class="keys data-letter" data-kid="113" shift-data-id="81">q</div>
+                <div class="keys data-letter" data-kid="119" shift-data-id="87">w</div>
+                <div class="keys data-letter" data-kid="101" shift-data-id="69">e</div>
+                <div class="keys data-letter" data-kid="114" shift-data-id="82">r</div>
+                <div class="keys data-letter" data-kid="116" shift-data-id="84">t</div>
+                <div class="keys data-letter" data-kid="121" shift-data-id="89">y</div>
+                <div class="keys data-letter" data-kid="117" shift-data-id="85">u</div>
+                <div class="keys data-letter" data-kid="105" shift-data-id="73">i</div>
+                <div class="keys data-letter" data-kid="111" shift-data-id="79">o</div>
+                <div class="keys data-letter" data-kid="112" shift-data-id="80">p</div>
+                <div class="keys keys_d t-a-l" data-kid="91" shift-data-id="123"><div>{</div><div>[</div></div>
+                <div class="keys keys_d t-a-l" data-kid="93" shift-data-id="125"><div>}</div><div>]</div></div>
+                <div class="keys keys_d k-w-75 t-a-l" data-kid="92" shift-data-id="124"><div>|</div><div>\</div></div>
+            </div>
+            <div class="line">
+                <div class="keysCmd k-w-70 f-s-14" data-kid="229" changeCase="lowerCase">CapsLock</div>
+                <div class="keys data-letter" data-kid="97" shift-data-id="65">a</div>
+                <div class="keys data-letter" data-kid="115" shift-data-id="83">s</div>
+                <div class="keys data-letter" data-kid="100" shift-data-id="68">d</div>
+                <div class="keys data-letter" data-kid="102" shift-data-id="70">f</div>
+                <div class="keys data-letter" data-kid="103" shift-data-id="71">g</div>
+                <div class="keys data-letter" data-kid="104" shift-data-id="72">h</div>
+                <div class="keys data-letter" data-kid="106" shift-data-id="74">j</div>
+                <div class="keys data-letter" data-kid="107" shift-data-id="75">k</div>
+                <div class="keys data-letter" data-kid="108" shift-data-id="76">l</div>
+                <div class="keys keys_d t-a-l" data-kid="59" shift-data-id="58"><div>:</div><div>;</div></div>
+                <div class="keys keys_d t-a-l" data-kid="39" shift-data-id="34"><div>"</div><div>'</div></div>
+                <div class="keysCmd key_enter" data-kid="13">Enter</div>
+            </div>
+            <div class="line">
+                <div class="k-w-100 keysCommon" data-kid="225" style="width:100px;">Shift</div>
+                <div class="keys data-letter" data-kid="122" shift-data-id="90">z</div>
+                <div class="keys data-letter" data-kid="120" shift-data-id="88">x</div>
+                <div class="keys data-letter" data-kid="99" shift-data-id="67">c</div>
+                <div class="keys data-letter" data-kid="118" shift-data-id="86">v</div>
+                <div class="keys data-letter" data-kid="98" shift-data-id="66">b</div>
+                <div class="keys data-letter" data-kid="110" shift-data-id="78">n</div>
+                <div class="keys data-letter" data-kid="109" shift-data-id="77">m</div>
+                <div class="keys keys_d t-a-l" data-kid="44"><div></div><div>,</div></div>
+                <div class="keys keys_d t-a-l" data-kid="46" shift-data-id="62"><div>></div><div>.</div></div>
+                <div class="keys keys_d t-a-l" data-kid="47" shift-data-id="63"><div>?</div><div>/</div></div>
+                <div class="k-w-120 keysCommon" data-kid="225" style="width:120px;">Shift</div>
+            </div>
+            <div class="line">
+                <div class="keysCmd k-w-50" data-kid="227">Ctrl</div>
+                <div class="keysCmd k-w-50" data-kid="91">Win</div>
+                <div class="keysCmd k-w-50" data-kid="233">Alt</div>
+                <div class="keysCmd k-w-50" data-kid="27">Esc</div>
+                <div class="keys k-w-704" data-kid="32">&nbsp;</div>
+
+                <div class="keysCmd k-w-50" data-kid="81">←</div>
+                <div class="keysCmd k-w-50" style="background-color:#26254d;border:none;">
+                    <div class="keysCmd k-w-50" data-kid="82" style="height:20px;line-height:20px;margin-bottom:3px;margin-left:0;">↑</div>
+                    <div class="keysCmd k-w-50" data-kid="84" style="height:20px;line-height:20px;margin-bottom:3px;margin-left:0;">↓</div>
+                </div>
+                <div class="keysCmd k-w-50" data-kid="83">→</div>
+                <div class="keysCmd keysPPT keysCmd k-w-50" data-kid="80">Home</div>
+                <div class="keysCmd keysPPT keysCmd k-w-50" data-kid="87">End</div>
+            </div>
+        </div>
+    </div>
+    <!-- Control Bar -->
+    <div id="noVNC_control_bar_anchor" class="noVNC_vcenter">
+
+        <div id="noVNC_control_bar">
+            <div id="noVNC_control_bar_handle" title="Hide/Show the control bar"><div></div></div>
+
+            <div class="noVNC_scroll">
+
+                <h1 class="noVNC_logo" translate="no">WisePeak</h1>
+
+                <!-- Drag/Pan the viewport -->
+                <input type="image" alt="Drag" src="app/images/drag.svg"
+                       id="noVNC_view_drag_button" class="noVNC_button noVNC_hidden"
+                       title="Move/Drag Viewport">
+
+                <!--Touch Device only buttons-->
+                <div id="noVNC_mobile_buttons">
+                    <input type="image" alt="No mousebutton" src="app/images/mouse_none.svg"
+                           id="noVNC_mouse_button0" class="noVNC_button"
+                           title="Active Mouse Button">
+                    <input type="image" alt="Left mousebutton" src="app/images/mouse_left.svg"
+                           id="noVNC_mouse_button1" class="noVNC_button"
+                           title="Active Mouse Button">
+                    <input type="image" alt="Middle mousebutton" src="app/images/mouse_middle.svg"
+                           id="noVNC_mouse_button2" class="noVNC_button"
+                           title="Active Mouse Button">
+                    <input type="image" alt="Right mousebutton" src="app/images/mouse_right.svg"
+                           id="noVNC_mouse_button4" class="noVNC_button"
+                           title="Active Mouse Button">
+                    <input type="image" alt="Keyboard" src="app/images/keyboard.svg"
+                           id="noVNC_keyboard_button" class="noVNC_button" title="Show Keyboard">
+                </div>
+
+                <!-- Extra manual keys -->
+                <input type="image" alt="Extra keys" src="app/images/toggleextrakeys.svg"
+                       id="noVNC_toggle_extra_keys_button" class="noVNC_button"
+                       title="Show Extra Keys">
+                <div class="noVNC_vcenter">
+                    <div id="noVNC_modifiers" class="noVNC_panel">
+                        <input type="image" alt="Ctrl" src="app/images/ctrl.svg"
+                               id="noVNC_toggle_ctrl_button" class="noVNC_button"
+                               title="Toggle Ctrl">
+                        <input type="image" alt="Alt" src="app/images/alt.svg"
+                               id="noVNC_toggle_alt_button" class="noVNC_button"
+                               title="Toggle Alt">
+                        <input type="image" alt="Windows" src="app/images/windows.svg"
+                               id="noVNC_toggle_windows_button" class="noVNC_button"
+                               title="Toggle Windows">
+                        <input type="image" alt="Tab" src="app/images/tab.svg"
+                               id="noVNC_send_tab_button" class="noVNC_button"
+                               title="Send Tab">
+                        <input type="image" alt="Esc" src="app/images/esc.svg"
+                               id="noVNC_send_esc_button" class="noVNC_button"
+                               title="Send Escape">
+                        <!--<input type="image" alt="F5" src="app/images/f5.png"
+                        id="noVNC_send_F5_button" class="noVNC_button"
+                        title="Send F5">-->
+                        <input type="image" alt="Ctrl+Alt+Del" src="app/images/ctrlaltdel.svg"
+                               id="noVNC_send_ctrl_alt_del_button" class="noVNC_button"
+                               title="Send Ctrl-Alt-Del">
+                        <input type="image" alt="Enter" src="app/images/ent.png"
+                               id="noVNC_send_Enter_button" class="noVNC_button"
+                               title="Send Enter">
+                        <input type="image" alt="Alt+F4" src="app/images/alt.png"
+                               id="noVNC_send_Alt_F4_button" class="noVNC_button"
+                               title="Send Alt+F4">
+                        <input type="image" alt="Right+Mouse" src="app/images/rightmouse.png"
+                               id="noVNC_mouse_button5" class="noVNC_button noVNC_hidden"
+                               title="Send RightMouse">
+                        <input type="image" alt="Left+Mouse" src="app/images/rightmouse.png"
+                               id="noVNC_mouse_button6" class="noVNC_button"
+                               title="Send RightMouse" onclick="rightMouse()">
+                        <input type="image" alt="login" src="app/images/login.png"
+                               id="noVNC_Login" class="noVNC_button"
+                               title="Send login" onclick="onClickLogin()">
+                        <!--noVNC_send_Right_Mouse_button-->
+                    </div>
+                </div>
+
+                <!-- Shutdown/Reboot -->
+                <input type="image" alt="Shutdown/Reboot" src="app/images/power.svg"
+                       id="noVNC_power_button" class="noVNC_button"
+                       title="Shutdown/Reboot...">
+                <div class="noVNC_vcenter">
+                    <div id="noVNC_power" class="noVNC_panel">
+                        <div class="noVNC_heading">
+                            <img alt="" src="app/images/power.svg"> Power
+                        </div>
+                        <input type="button" id="noVNC_shutdown_button" value="Shutdown">
+                        <input type="button" id="noVNC_reboot_button" value="Reboot">
+                        <input type="button" id="noVNC_reset_button" value="Reset">
+                    </div>
+                </div>
+
+                <!-- Clipboard -->
+                <input type="image" alt="Clipboard" src="app/images/clipboard.svg"
+                       id="noVNC_clipboard_button" class="noVNC_button"
+                       title="Clipboard">
+                <input type="image" alt="F5" src="app/images/nof5.png"
+                       id="noVNC_send_F5_button" class="noVNC_button"
+                       title="Send F5" rate="0">
+                <input type="image" alt="F5" src="app/images/f5.png"
+                       id="noVNC_toggle_F5_button" class="noVNC_button"
+                       title="change F5" rate="0">
+                <!--<input type="image" alt="changeF5" src="app/images/100.png"
+                id="noVNC_send_100_button" class="noVNC_button"
+                title="change fresh">-->
+                <input type="image" alt="changeColor" src="app/images/24.png"
+                       id="noVNC_send_24_button" class="noVNC_button"
+                       title="change Colors" colors="24">
+                <input type="image" alt="softKeyboard" src="app/images/keyboard.png"
+                       id="noVNC_soft_keyBoard" class="noVNC_button"
+                       title="open keyBoard" status="close">
+                <input type="image" alt="changControl" src="app/images/control.png"
+                       id="noVNC_send_viewonly_button" class="noVNC_button"
+                       title="viewonly" viewonly="0">
+                <div class="noVNC_vcenter">
+                    <div id="noVNC_clipboard" class="noVNC_panel">
+                        <div class="noVNC_heading">
+                            <img alt="" src="app/images/clipboard.svg"> Clipboard
+                        </div>
+                        <textarea id="noVNC_clipboard_text" rows=5></textarea>
+                        <br>
+                        <input id="noVNC_clipboard_clear_button" type="button"
+                               value="Clear" class="noVNC_submit">
+                    </div>
+                </div>
+
+                <!-- Toggle fullscreen -->
+                <input type="image" alt="Fullscreen" src="app/images/fullscreen.svg"
+                       id="noVNC_fullscreen_button" class="noVNC_button noVNC_hidden"
+                       title="Fullscreen">
+
+                <!-- Settings -->
+                <input type="image" alt="Settings" src="app/images/settings.svg"
+                       id="noVNC_settings_button" class="noVNC_button"
+                       title="Settings" style="display:none;">
+                <div class="noVNC_vcenter">
+                    <div id="noVNC_settings" class="noVNC_panel">
+                        <ul>
+                            <li class="noVNC_heading">
+                                <img alt="" src="app/images/settings.svg"> Settings
+                            </li>
+                            <li>
+                                <label><input id="noVNC_setting_shared" type="checkbox"> Shared Mode</label>
+                            </li>
+                            <li>
+                                <label><input id="noVNC_setting_view_only" type="checkbox"> View Only</label>
+                            </li>
+                            <li><hr></li>
+                            <li>
+                                <label><input id="noVNC_setting_view_clip" type="checkbox"> Clip to Window</label>
+                            </li>
+                            <li>
+                                <label for="noVNC_setting_resize">Scaling Mode:</label>
+                                <select id="noVNC_setting_resize" name="vncResize">
+                                    <option value="off">None</option>
+                                    <option value="scale">Local Scaling</option>
+                                    <option value="remote">Remote Resizing</option>
+                                </select>
+                            </li>
+                            <li><hr></li>
+                            <li>
+                                <div class="noVNC_expander">Advanced</div>
+                                <div>
+                                    <ul>
+                                        <li>
+                                            <label for="noVNC_setting_quality">Quality:</label>
+                                            <input id="noVNC_setting_quality" type="range" min="0" max="9" value="6">
+                                        </li>
+                                        <li>
+                                            <label for="noVNC_setting_compression">Compression level:</label>
+                                            <input id="noVNC_setting_compression" type="range" min="0" max="9" value="2">
+                                        </li>
+                                        <li><hr></li>
+                                        <li>
+                                            <label for="noVNC_setting_repeaterID">Repeater ID:</label>
+                                            <input id="noVNC_setting_repeaterID" type="text" value="">
+                                        </li>
+                                        <li>
+                                            <div class="noVNC_expander">WebSocket</div>
+                                            <div>
+                                                <ul>
+                                                    <li>
+                                                        <label><input id="noVNC_setting_encrypt" type="checkbox"> Encrypt</label>
+                                                    </li>
+                                                    <li>
+                                                        <label for="noVNC_setting_host">Host:</label>
+                                                        <input id="noVNC_setting_host">
+                                                    </li>
+                                                    <li>
+                                                        <label for="noVNC_setting_port">Port:</label>
+                                                        <input id="noVNC_setting_port" type="number">
+                                                    </li>
+                                                    <li>
+                                                        <label for="noVNC_setting_path">Path:</label>
+                                                        <input id="noVNC_setting_path" type="text" value="websockify">
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <li><hr></li>
+                                        <li>
+                                            <label><input id="noVNC_setting_reconnect" type="checkbox"> Automatic Reconnect</label>
+                                        </li>
+                                        <li>
+                                            <label for="noVNC_setting_reconnect_delay">Reconnect Delay (ms):</label>
+                                            <input id="noVNC_setting_reconnect_delay" type="number">
+                                        </li>
+                                        <li><hr></li>
+                                        <li>
+                                            <label><input id="noVNC_setting_show_dot" type="checkbox"> Show Dot when No Cursor</label>
+                                        </li>
+                                        <li><hr></li>
+                                        <!-- Logging selection dropdown -->
+                                        <li>
+                                            <label>
+                                                Logging:
+                                                <select id="noVNC_setting_logging" name="vncLogging">
+                                                </select>
+                                            </label>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="noVNC_version_separator"><hr></li>
+                            <li class="noVNC_version_wrapper">
+                                <span>Version:</span>
+                                <span class="noVNC_version"></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Connection Controls -->
+                <input type="image" alt="Disconnect" src="app/images/25.png"
+                       id="noVNC_disconnect_button" class="noVNC_button"
+                       title="Disconnect">
+
+            </div>
+        </div>
+
+        <div id="noVNC_control_bar_hint"></div>
+
+    </div> <!-- End of noVNC_control_bar -->
+    <!-- Status Dialog -->
+    <div id="noVNC_status"></div>
+
+    <!-- Connect button -->
+    <div class="noVNC_center">
+        <div id="noVNC_connect_dlg">
+            <div class="noVNC_logo" translate="no" style="display:none;">WisePeak</div>
+            <div id="noVNC_connect_button">
+                <div>
+                    <img alt="" src="app/images/connect.svg"> Connect
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Dialog -->
+    <div class="noVNC_center noVNC_connect_layer">
+        <div id="noVNC_credentials_dlg" class="noVNC_panel">
+            <form>
+                <ul>
+                    <li id="noVNC_username_block">
+                        <label>Username:</label>
+                        <input id="noVNC_username_input">
+                    </li>
+                    <li id="noVNC_password_block">
+                        <label>Password:</label>
+                        <input id="noVNC_password_input" type="password">
+                    </li>
+                    <li style="text-align:center;margin-top:5px;">
+                        <input id="noVNC_credentials_button" type="submit" value="确定" class="noVNC_submit">
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+
+    <!-- Transition Screens -->
+    <div id="noVNC_transition">
+        <div id="noVNC_transition_text"></div>
+        <div>
+            <input type="button" id="noVNC_cancel_reconnect_button" value="Cancel" class="noVNC_submit">
+        </div>
+        <div class="noVNC_spinner"></div>
+    </div>
+
+    <!-- This is where the RFB elements will attach -->
+    <div id="noVNC_container">
+        <!-- Note that Google Chrome on Android doesn't respect any of these,
+             html attributes which attempt to disable text suggestions on the
+             on-screen keyboard. Let's hope Chrome implements the ime-mode
+             style for example -->
+        <textarea id="noVNC_keyboardinput" autocapitalize="off"
+                  autocomplete="off" spellcheck="false" tabindex="-1"></textarea>
+        <div class="changeSize">
+            <div>
+                <button id="addSize">
+                    <span style="margin-right:5px;width:100%;height100%;">
+                        <img src="app/images/addPic.png" style="height:100%" />
+                    </span>
+                    <!--<span class="showSize">100%</span>-->
+                </button>
+                <span class="showSize">100%</span>
+                <button id="reduceSize">
+                    <span style="margin-right: 5px; width: 100%; height:100%;">
+                        <img src="app/images/reducePic.png" style="height:100%" />
+                    </span>
+                    <!--<span class="showSize">100%</span>-->
+                </button>
+            </div>
+            
+        </div>
+    </div>
+
+    <audio id="noVNC_bell">
+        <source src="app/sounds/bell.oga" type="audio/ogg">
+        <source src="app/sounds/bell.mp3" type="audio/mpeg">
+    </audio>
+    <div class="onClickLogin">
+        <div class="topLogin">
+            <span class="loginTitle language">一键登录</span>
+            <img src="app/images/closeLogin.png" />
+        </div>
+        <div class="contentLogin">
+            <p style="text-align:center;"><b style="color:red">*</b>提交前先执行以下键盘操作</p>
+            <div class="contentLoginTop">
+                <label>
+                    <input type="checkbox" checked="checked" />
+                    <span>Ctrl+A</span>
+                </label>
+                <label>
+                    <input type="checkbox" checked="checked" />
+                    <span>Del</span>
+                </label>
+                <label>
+                    <input type="checkbox" />
+                    <span>Bkspace</span>
+                </label>
+                <!-- <label>
+                     <input type="checkbox" checked="checked">
+                     <span>Tab</span>
+                 </label>-->
+            </div>
+            <div class="contentLoginMain">
+                <p>
+                    <span class="topleftlogin language">名称:</span>
+
+                    <select id="saveName" onchange="selectLoginName();">
+                        <!--onclick="showNameCookie();"-->
+                        <!--<option value=""></option>-->
+                    </select>
+                    <input type="text" class="inputvalue inputNameValue" style=" border-radius: 5px 0px 0px 5px;font-size:12px;" />
+                    <input type="button" class="language" value="提交" onclick="submitLogin(this, '0')" style="margin-right:3px;margin-left:18px;" />
+                    <input type="button" class="language" value="提交+Tab" onclick="submitLogin(this, '1')" />
+                </p>
+                <p>
+                    <span class="topleftlogin language">口令:</span>
+                    <input type="password" class="inputvalue" />
+                    <!-- <select>
+                         <option value="aaa"> aaa</option>
+                     </select>-->
+                    <input type="button" class="language" value="提交" onclick="submitLogin(this, '0')" style="margin-right:3px;" />
+                    <input type="button" class="language" value="提交+Tab" onclick="submitLogin(this, '1')" />
+                </p>
+                <p>
+                    <span class="topleftlogin language">验证码:</span>
+                    <input type="text" class="inputvalue" />
+                    <!--<select>
+                        <option value="aaa"> aaa</option>
+                    </select>-->
+                    <input type="button" class="language" value="提交" onclick="submitLogin(this, '0')" style="margin-right:3px;" />
+                    <input type="button" class="language" value="提交+Tab" onclick="submitLogin(this, '1')" />
+                </p>
+            </div>
+            <div class="contentLoginBottom">
+                <input type="button" value="恢复" onclick="docmd('keycode', '0xFF1A');" />
+                <input type="button" value="Tab" onclick="docmd('keycode', '0xFF09');" />
+                <input type="button" value="F5" onclick="docmd('keycode', '0xFF74');" />
+                <input type="button" class="language" value="回车" onclick="docmd('keycode', '0xFF0D');" />
+                <input type="button" class="language" value="全提交" onclick="submitAll()" />
+            </div>
+        </div>
+    </div>
+    <script>
+        //声明变量存储一键登录的cookie
+        var loginName = [];
+        $(function () {
+            $(".contentLoginTop label").eq(1).click(function () {
+                if ($(".contentLoginTop input[type='checkbox']").eq(2).prop("checked") == true) {
+                    $(".contentLoginTop input[type='checkbox']").eq(2).prop("checked", false)
+                }
+            })
+            $(".contentLoginTop label").eq(2).click(function () {
+                if ($(".contentLoginTop input[type='checkbox']").eq(1).prop("checked") == true) {
+                    $(".contentLoginTop input[type='checkbox']").eq(1).prop("checked", false)
+                }
+            })
+            $(".topLogin img").click(function () {
+                $(".onClickLogin").hide();
+            })
+            $(".keys").click(function () {
+                var keyCode = "";
+                if ($(".keysCommon").attr("mackUp") == "mackUp") {
+                    //A-Z a-z发送指令时不加ff
+                    if ($(this).attr("shift-data-id") != undefined) {
+                        keyCode = ("0X" + (parseInt($(this).attr("shift-data-id")).toString(16).length > 1 ? parseInt($(this).attr("shift-data-id")).toString(16) : "0" + parseInt($(this).attr("shift-data-id")).toString(16))).toUpperCase();
+                    } else {
+                        keyCode = ("0X" + (parseInt($(this).attr("data-kid")).toString(16).length > 1 ? parseInt($(this).attr("data-kid")).toString(16) : "0" + parseInt($(this).attr("data-kid")).toString(16))).toUpperCase();
+                    }
+                } else {
+                    keyCode = ("0X" + (parseInt($(this).attr("data-kid")).toString(16).length > 1 ? parseInt($(this).attr("data-kid")).toString(16) : "0" + parseInt($(this).attr("data-kid")).toString(16))).toUpperCase();
+                }
+                // keyCode = ("0X" + (parseInt($(this).attr("data-kid")).toString(16).length > 1 ? parseInt($(this).attr("data-kid")).toString(16) : "0" + parseInt($(this).attr("data-kid")).toString(16))).toUpperCase();
+                docmd('keycode', keyCode);
+            })
+            $(".keysCmd ").click(function () {
+                var keyCode = "";
+                if ($(".keysCommon").attr("mackUp") == "mackUp") {
+                    if ($(this).attr("shift-data-id") != undefined) {
+                        keyCode = ("0XFF" + (parseInt($(this).attr("shift-data-id")).toString(16).length > 1 ? parseInt($(this).attr("shift-data-id")).toString(16) : "0" + parseInt($(this).attr("shift-data-id")).toString(16))).toUpperCase();
+                    } else {
+                        keyCode = ("0XFF" + (parseInt($(this).attr("data-kid")).toString(16).length > 1 ? parseInt($(this).attr("data-kid")).toString(16) : "0" + parseInt($(this).attr("data-kid")).toString(16))).toUpperCase();
+                    }
+                } else {
+                    keyCode = ("0XFF" + (parseInt($(this).attr("data-kid")).toString(16).length > 1 ? parseInt($(this).attr("data-kid")).toString(16) : "0" + parseInt($(this).attr("data-kid")).toString(16))).toUpperCase();
+                }
+                if ($(this).attr("changeCase") != undefined && $(this).attr("changeCase") == "lowerCase") {
+
+                    for (var i = 0; i < $(".data-letter").length; i++) {
+                        $(".data-letter").eq(i).html($(".data-letter").eq(i).html().toUpperCase())
+                    }
+                    $(this).attr("changeCase", "upperCase");
+                } else if ($(this).attr("changeCase") != undefined && $(this).attr("changeCase") == "upperCase") {
+                    for (var i = 0; i < $(".data-letter").length; i++) {
+                        $(".data-letter").eq(i).html($(".data-letter").eq(i).html().toLowerCase())
+                    }
+                    $(this).attr("changeCase", "lowerCase");
+                }
+                docmd('keycode', keyCode);
+            })
+            $(".keysPPT").click(function () {
+                var keyCode = "urlplayer%20-keyevent%200xFF" + ((parseInt($(this).attr("data-kid")).toString(16).length > 1 ? parseInt($(this).attr("data-kid")).toString(16) : "0" + parseInt($(this).attr("data-kid")).toString(16))).toUpperCase();
+                docmd('keycode', keyCode);
+            })
+            $(".keysCommon").click(function () {
+                if ($(".keysCommon").attr("mackUp") == "mackUp") {
+                    $(".keysCommon").css("background", "#333");
+                    $(".keysCommon").attr("mackUp", "nomackUp");
+                } else {
+                    $(".keysCommon").css("background", "#dedede");
+                    $(".keysCommon").attr("mackUp", "mackUp");
+                }
+            })
+        })
+        window.onload = function () {
+        
+            setTimeout(function () {
+                $("#noVNC_connect_button img").click()
+            }, 2000);
+        }
+        //右键
+        function rightMouse() {
+            var mouseUrl = "http://" + window.location.search.split("host=")[1].split(";")[0]+"/wpsendkeys.asp?wpsendkeys=-mouseevent 132_-1_-1;0_-1_-1";
+            $.ajax({
+                url: mouseUrl,
+                dataType: 'html',
+                type: 'GET',
+                timeout: 5000,		//超时时间
+                error: function (xml) {
+                    //timeShowMsg("title","发送失败",500);		//失败报错
+                    //topTrip(getLanguageMsg("发送是啊比", $.cookie("yuyan")), 2);
+                },
+                success: function (xml) {
+                    if (xml) {
+                        //timeShowMsg("title", getLanguageMsg("发送成功", $.cookie("yuyan")), 500);		//发送成功
+                        //topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
+
+                    }
+                }
+
+            })
+        }
+        //显示一键登录的模块
+        function onClickLogin() {
+            $(".onClickLogin").show();
+            $(".contentLoginMain input[type=text]").val("");
+            $(".onClickLogin").css("marginTop", (document.documentElement.clientHeight - $(".onClickLogin").height()) / 2);
+            $(".contentLogin").css("width", $(".onClickLogin").width() - 40);
+            $(".contentLoginMain p input[type='text']").css("width", $(".contentLoginMain p").width() - $(".topleftlogin").width() - $(".contentLoginMain p input[type='button']").width() * 2 - 100);
+            $(".contentLoginMain p input[type='password']").css("width", $(".contentLoginMain p").width() - $(".topleftlogin").width() - $(".contentLoginMain p input[type='button']").width() * 2 - 120);
+            $(".contentLoginMain p input[type='text']").eq(1).css("width", $(".contentLoginMain p").width() - $(".topleftlogin").width() - $(".contentLoginMain p input[type='button']").width() * 2 - 120);
+            $(".inputNameValue").width($(".contentLoginMain p input[type='text']").width() - 40);
+            if (document.documentElement.clientWidth < 768) {
+                $("#saveName").css("width", $(".inputNameValue").width() + 25);
+            } else {
+                $("#saveName").css("width", $(".inputNameValue").width() + 30);
+            }
+
+            $(".contentLoginBottom input[type='button']:last").css("marginRight", "0px");
+            $(".contentLoginBottom input[type='button']").css("width", ($(".contentLoginBottom").width() - 40) / 5);
+            showNameCookie();
+
+        }
+        //一键登录的单个提交事件
+        function submitLogin(thisvalue, ops) {
+            var op1 = $(".contentLoginTop input").eq(0).prop("checked") ? 1 : 0;
+            var op2 = $(".contentLoginTop input").eq(1).prop("checked") ? 1 : 0;
+            var op3 = $(".contentLoginTop input").eq(2).prop("checked") ? 1 : 0;
+            var op4 = ops;
+            var submitVal = $(thisvalue).parent().find(".inputvalue").val();
+            $.ajax({
+                url: "http://" + window.location.search.split("host=")[1].split(";")[0]+"/wpinputstring.asp",
+                type: "get",
+                dataType: "html",
+                data: {
+                    wpinputstring: encodeURI(submitVal),
+                    op: op1.toString() + op2.toString() + op3.toString() + "1" + op4.toString(),
+                    ret: "0",
+                    utf8: "1"
+                }, success: function (data) {
+                    var t = $(data).find("wpretstr").text();
+
+                    if (t.indexOf("200 OK") >= 0) {
+                        //topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
+                        saveSelectNameCookie();
+
+                    } else {
+                        // topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
+                    }
+                    //loginName
+                }, error: function (data) {
+                    // topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
+                }
+            })
+        }
+        //提交+Tab
+        function submitLogin1(thisVal) {
+            var op1 = $(".contentLoginTop input").eq(0).prop("checked") ? 1 : 0;
+            var op2 = $(".contentLoginTop input").eq(1).prop("checked") ? 1 : 0;
+            var op3 = $(".contentLoginTop input").eq(2).prop("checked") ? 1 : 0;
+            var op4 = $(".contentLoginTop input").eq(3).prop("checked") ? 1 : 0;
+            $.ajax({
+                url: "http://" + window.location.search.split("host=")[1].split(";")[0] + "/wpinputstring.asp",
+                type: "get",
+                dataType: "html",
+                data: {
+                    wpinputstring: encodeURI($(thisvalue).prev().val()),
+                    op: op1.toString() + op2.toString() + op3.toString() + "1" + op4.toString(),
+                    ret: "0",
+                    utf8: "1"
+                }, success: function (data) {
+                    var t = $(data).find("wpretstr").text();
+                    if (t.indexOf("200 OK") >= 0) {
+                        //topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
+                        saveSelectNameCookie();
+
+                    } else {
+                        // topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
+                    }
+                }, error: function (data) {
+                    // topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
+                }
+            })
+        }
+        //一键登录
+        function submitAll() {
+            var op1 = $(".contentLoginTop input").eq(0).prop("checked") ? 1 : 0;
+            var op2 = $(".contentLoginTop input").eq(1).prop("checked") ? 1 : 0;
+            var op3 = $(".contentLoginTop input").eq(2).prop("checked") ? 1 : 0;
+            var op4 = $(".contentLoginTop input").eq(3).prop("checked") ? 1 : 0;
+            var strq = $(".contentLoginMain p").eq(0).find("input[type='text']").val() + String.fromCharCode(0x1b) + $(".contentLoginMain p").eq(1).find("input[type='password']").val() + String.fromCharCode(0x1b) + $(".contentLoginMain p").eq(2).find("input[type='text']").val();
+            $.ajax({
+                url: "http://" + window.location.search.split("host=")[1].split(";")[0]+"/wpinputstring.asp",
+                type: "get",
+                dataType: "html",
+                data: {
+                    wpinputstring: encodeURI(strq),
+                    op: op1.toString() + op2.toString() + op3.toString() + "1" + op4.toString(),
+                    ret: "1",
+                    utf8: "1"
+                }, success: function (data) {
+                    var t = $(data).find("wpretstr").text();
+                    if (t.indexOf("200 OK") >= 0) {
+                        //topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
+                        saveSelectNameCookie();
+
+                    } else {
+                        //topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
+                    }
+                }, error: function (data) {
+                    //topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
+                }
+            })
+        }
+        //从cookie中读取数据后在select中显示
+        function showNameCookie() {
+            var optionLoginStr = '<option value=" "></option>';
+            var cookieStr = "";
+            if ($.cookie("loginName") != null && $.cookie("loginName") != undefined && $.cookie("loginName") != "") {
+                if ($.cookie("loginName").indexOf(";") >= 0) {
+                    cookieStr = $.cookie("loginName").split(";");
+                    loginName = cookieStr;
+                    for (var i = 0; i < cookieStr.length; i++) {
+                        optionLoginStr += "<option value=" + cookieStr[i] + ">" + cookieStr[i] + "</option>";
+                    }
+                } else {
+                    loginName.push($.cookie("loginName"));
+                    cookieStr = $.cookie("loginName");
+                    optionLoginStr += "<option value=" + cookieStr + ">" + cookieStr + "</option>"
+                }
+                $("#saveName").html(optionLoginStr);
+                console.log($("#saveName").html());
+            }
+        }
+        //点击提交按钮后存储cookie
+        function saveSelectNameCookie() {
+            var newCookieArry = [];
+            if ($.cookie("loginName") != null && $.cookie("loginName") != "" && $.cookie("loginName") != undefined) {
+                if ($.cookie("loginName").indexOf(";") >= 0) {//则表明当前的cookie的 数据至少有两条
+                    var cookieName = $.cookie("loginName").split(";");
+                    for (var i = 0; i < cookieName.length; i++) {//声明一个新的数组，如果新添加的数据和当前cookie的数组有不同的则正常添加至cookie,若有相同的则不向新数组中添加
+                        if (cookieName[i] != $(".inputvalue").val()) {
+                            newCookieArry.push(cookieName[i]);
+                        } else {
+                        }
+                    }
+
+                    if (newCookieArry.length > loginName.length) {
+                        loginName = newCookieArry;
+                    } else if (newCookieArry.length < loginName.length) {//当新的数据与原有的数据有重合时用以下方式处理
+                        newCookieArry.unshift($(".inputvalue").val());//此处的处理是就算数组中已有新添加的数据，则会将数组中的数据删除，将新添加的数据在最前显示
+                        loginName = newCookieArry;
+                    } else if (newCookieArry.length = loginName.length) {//当新的数据与原有数据没有重合时
+                        loginName.unshift($(".inputvalue").val());
+                    }
+                    if (loginName.length > 5) {//如果数据的长度大于5则删除数组最后的一个元素即最开始添加的一条数据
+                        loginName.pop()
+                    }
+                    loginNameStr = loginName.join(";");
+                    $.cookie("loginName", loginNameStr);
+                } else {
+                    loginName.unshift($(".inputvalue").val());
+                    loginNameStr = loginName.join(";");
+                    $.cookie("loginName", loginNameStr);
+                }
+
+            } else {
+                $.cookie("loginName", $(".inputvalue").val());
+            }
+            showNameCookie();//存储cookie立马存储到select中，这样在展开select的时候不会出现延迟的情况
+        }
+        //将下拉框选中的内容填充到输入框中
+        function selectLoginName() {
+            $(".inputNameValue").val($("#saveName").val());
+        }
+        //发送指令函数
+        var controlUrl = window.location.search.split("&")[0].split("=")[1].split(":")[0];
+        function docmd(cmdtype, cmdData) {
+            var url = controlUrl + ":8080";
+            var cmdType = "" + cmdtype + "";
+            var sendcmdurl = url + "/wpsendclientmsg.asp?rnd=" + (Math.floor(Math.random() * (9999 - 1000)) + 1000);
+            if (!isNaN(cmdtype)) {//执行显示端命令
+                cmdstr = cmdtype + "_" + cmdData;
+                $.ajax({
+                    data: { wpsendclientmsg: cmdstr },
+                    url: sendcmdurl,
+                    dataType: 'html',
+                    type: 'GET',
+                    timeout: 15000,		//超时时间
+                    error: function (a, b, c) {
+                        if (b == "timeout") {
+                            alert("请求超时,请重试");
+                        } else {
+
+                        }
+                    },
+                    success: function (xml) {
+                        if (xml) {
+                            //timeShowMsg("title","发送成功",500);		//发送成功
+                            if (cmdType.indexOf("3009") < 0 && cmdType.indexOf("29") < 0 && cmdType.indexOf("3001") < 0) {
+
+                            }
+                        }
+                    }
+                });
+            }
+            if (cmdtype == "keycode") {//发送键盘动作
+                if (cmdData.indexOf("-keyevent") >= 0) {
+                    ;
+                } else {
+
+                    cmdData = "-keyevent " + cmdData;
+                }
+                $.ajax({
+                    data: { wpsendkeys: cmdData },
+                    url: sendcmdurl,
+                    dataType: 'html',
+                    type: 'GET',
+                    timeout: 5000,		//超时时间
+                    error: function (a, b, c) {
+                        if (b == "timeout") {
+                            alert("请求超时,请重试");
+                        } else {
+
+                        }
+                    },
+                    success: function (xml) {
+                        if (xml) {
+
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>
