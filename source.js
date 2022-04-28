@@ -45,7 +45,7 @@ if ($.cookie("'" + encodeURI("窗口号") + "'") != null) {
 var urlArr = [];
 if ($.cookie("'" + encodeURI("网址") + "'") != null) {
     if ($.cookie("'" + encodeURI("网址") + "'").indexOf(",") >= 0) {
-        var urlArry = $.cookie("'" + encodeURI("网址") + "'").split(","); 
+        var urlArry = $.cookie("'" + encodeURI("网址") + "'").split(",");
         urlArr = urlArry;
     } else {
         urlArr.unshift($.cookie("'" + encodeURI("网址") + "'"));
@@ -58,7 +58,7 @@ $(function () {
     $(".top .tab .moreFile").css("marginTop", ($(".top .tab").height() - $(".top .tab .moreFile").height()) / 2);
     //引入swiper插件，鼠标滑动时触发content()函数，切换样式
     $(".logo").click(function () {
-        window.location.href = $.cookie("reseturl");
+        window.location.href = controlroom;
     })
     $(".bangDIv img").css("marginTop", ($(".bangDIv").height() - $(".bangDIv img").height()) / 2);
     $(".searchImg").click(function () {
@@ -86,18 +86,18 @@ $(function () {
             $(".fileContent").animate({
                 "marginLeft": "-170px"
             })
-            $(".fileShadowContent").fadeOut();
+            $(".fileShadowContent").hide();
            
         } else {
-            $(".fileShadowContent").fadeIn();
+            $(".fileShadowContent").show();
             $(".fileContent").animate({
                 "marginLeft": "0"
             })
         }
     })
     //根据链接的url判断要跳转到第几个选项
-    if (winLocation.indexOf("Tab=") >= 0) {
-        var thisTab = winLocation.split("Tab=")[1];
+    if (winLocation.indexOf("?Tab=") >= 0) {
+        var thisTab = winLocation.split("?Tab=")[1];
         mySwiper.slideTo(thisTab, 1000, false);//切换到第一个slide，速度为1秒
         $.cookie("sourceTab", thisTab);
         content();
@@ -129,12 +129,12 @@ window.onload = function () {
         saveCurrentCookie = "";
         getData("", $(this).parent().parent().attr("typevalue"));
     })
-    //$(".okBang").click(function () {
-    //    addBang(this, "yes");
-    //})
-    //$(".noBang").click(function () {
-    //    addBang(this, "no");
-    //})
+    $(".okBang").click(function () {
+        addBang(this, "yes");
+    })
+    $(".noBang").click(function () {
+        addBang(this, "no");
+    })
     $("#checkPictureTitle img").click(function () {
         $("#checkPicture").hide();
     })
@@ -199,10 +199,14 @@ function content() {
 function getData(dataurl,typeval,thissubpath,className1) {
     var URL = "";
     var sortType = 4;
-    
+    if (window.location.href.indexOf("?") >= 0) {
+        if (window.location.href.indexOf("sort") >= 0) {
+            sortType = parseInt(window.location.href.split("sort=")[1]);
+        }
+    }
    // var uriTitle = window.location.href.split("typeIp=")[1];
     var className = $(".swiper-slide-active").children().attr("class");
-    //var sourceType = ""
+    var sourceType = ""
     var itemType = "";
     var str1 = "";
     var taskid = 50000;
@@ -223,10 +227,10 @@ function getData(dataurl,typeval,thissubpath,className1) {
             taskid = 50000;
 
             if (thissubpath != "" && thissubpath != undefined) {
-                str1 = '<div class="programBtn"><div class="showRate"><span id="rateValue">00:00</span><div id="rangeRate1" class="clearfix11"><div id="rangeLeft"></div><div id="rangeRate2"></div></div><span id="rateProgressValue" style="font-size:12px;display:block;float:left;width:12%;margin-left:1%;margin-top:5px;height:20px;line-height:20px;">00:00</span></div><ul class="moreFunction"><li><img src="../images/newSource/yinliang.png" class="materialSound soundNum" onclick="meterialSound(this);"/></li><li> <img class="before image" src="images/newSource/shangshou.png" onclick="docmd(14,0,1)"/></li><li><img class="start" src="images/newSource/zanting.png" onclick="pause(this)"/></li><li><img class="next image" src="images/newSource/xiashou.png" onclick="docmd(13,0,1)"/></li><li><img class="pause image" src="images/newSource/zanting_1.png" onclick="docmd(26,0,0)"/></li><li><img class="pause image" src="images/newSource/playScreen.png" onclick="playScreenProgram()"/></li><li><img class="befoeHis" src="images/newSource/goHistory.png" onclick="gobefore(this)"/></li></ul><div id="meterial"><input class="range2" type="range" min="0" max="255" value="" onchange="change(this)" style="width:80%;display:block;float:left;margin-top:12px;"><span class="value2">5</span></div></div>';
+                str1 = '<div class="programBtn"><div class="showRate"><span id="rateValue">00:00</span><div id="rangeRate1" class="clearfix11"><div id="rangeLeft"></div><div id="rangeRate2"></div></div><span id="rateProgressValue" style="font-size:12px;display:block;float:left;width:12%;margin-left:1%;margin-top:5px;height:20px;line-height:20px;">00:00</span></div><ul class="moreFunction"><li><img src="../images/newSource/yinliang.png" class="materialSound soundNum" onclick="meterialSound(this);"/></li><li> <img class="before image" src="images/newSource/shangshou.png" onclick="docmd(14,0,1)"/></li><li><img class="start" src="images/newSource/zanting.png" onclick="pause(this)"/></li><li><img class="next image" src="images/newSource/xiashou.png" onclick="docmd(13,0,1)"/></li><li><img class="pause image" src="images/newSource/zanting_1.png" onclick="docmd(70,0,0)"/></li><li><img class="pause image" src="images/newSource/playScreen.png" onclick="playScreenProgram()"/></li><li><img class="befoeHis" src="images/newSource/goHistory.png" onclick="gobefore(this)"/></li></ul><div id="meterial"><input class="range2" type="range" min="0" max="255" value="" onchange="change(this)" style="width:80%;display:block;float:left;margin-top:12px;"><span class="value2">5</span></div></div>';
 
             } else {
-                str1 = '<div class="programBtn"><div class="showRate"><span id="rateValue">00:00</span><div id="rangeRate1" class="clearfix11"><div id="rangeLeft"></div><div id="rangeRate2"></div></div><span id="rateProgressValue" style="font-size:12px;display:block;float:left;width:12%;margin-left:1%;margin-top:5px;height:20px;line-height:20px;">00:00</span></div><ul class="moreFunction"><li><img src="../images/newSource/yinliang.png" class="materialSound soundNum" onclick="meterialSound(this);"/></li><li> <img class="before image" src="images/newSource/shangshou.png" onclick="docmd(14,0,1)"/></li><li><img class="start" src="images/newSource/zanting.png" onclick="pause(this)"/></li><li><img class="next image" src="images/newSource/xiashou.png" onclick="docmd(13,0,1)"/></li><li><img class="pause image" src="images/newSource/zanting_1.png" onclick="docmd(26,0,0)"/></li><li><img class="pause image" src="images/newSource/playScreen.png" onclick="playScreenProgram()"/></li></ul><div id="meterial"><input class="range2" type="range" min="0" max="255" value="" onchange="change(this)" style="width:80%;display:block;float:left;margin-top:12px;"><span class="value2">5</span></div></div>';
+                str1 = '<div class="programBtn"><div class="showRate"><span id="rateValue">00:00</span><div id="rangeRate1" class="clearfix11"><div id="rangeLeft"></div><div id="rangeRate2"></div></div><span id="rateProgressValue" style="font-size:12px;display:block;float:left;width:12%;margin-left:1%;margin-top:5px;height:20px;line-height:20px;">00:00</span></div><ul class="moreFunction"><li><img src="../images/newSource/yinliang.png" class="materialSound soundNum" onclick="meterialSound(this);"/></li><li> <img class="before image" src="images/newSource/shangshou.png" onclick="docmd(14,0,1)"/></li><li><img class="start" src="images/newSource/zanting.png" onclick="pause(this)"/></li><li><img class="next image" src="images/newSource/xiashou.png" onclick="docmd(13,0,1)"/></li><li><img class="pause image" src="images/newSource/zanting_1.png" onclick="docmd(70,0,0)"/></li><li><img class="pause image" src="images/newSource/playScreen.png" onclick="playScreenProgram()"/></li></ul><div id="meterial"><input class="range2" type="range" min="0" max="255" value="" onchange="change(this)" style="width:80%;display:block;float:left;margin-top:12px;"><span class="value2">5</span></div></div>';
 
             }
         } else if ($(".swiper-slide-active").attr("class").indexOf("image") >= 0) {
@@ -235,10 +239,10 @@ function getData(dataurl,typeval,thissubpath,className1) {
             chinName = "图片";
             taskid = 51000;
             if (thissubpath != "" && thissubpath != undefined) {
-                str1 = '<div class="programBtn"><ul class="moreFunction"><li> <img class="before image" src="images/newSource/shangshou.png" onclick="docmd(14,0,1)"/></li><li><img class="next image" src="images/newSource/xiashou.png" onclick="docmd(13,0,1)"/></li><li><img class="pause image" src="images/newSource/zanting_1.png" onclick="docmd(26,0,0)"/></li><li><img class="pause image" src="images/newSource/playScreen.png" onclick="playScreenProgram()"/></li><li><img src="../images/newSource/shangfan.png" class="page_up" onclick="docmd(\'keycode\',\'0xFF55\',0)"/></li><li><img src="../images/newSource/xiafan.png" class="page_down"  onclick="docmd(\'keycode\',\'0xFF9B\',0)" /></li><li><img src="../images/newSource/zuiqian.png" class="page_Home" onclick="docmd(\'keycode\',\'0xFF50\',0)"/></li><li><img src="../images/newSource/zuihou.png" class="page_End" onclick="docmd(\'keycode\',\'0xFF57\',0)"/></li><li><img class="start" src="images/newSource/goHistory.png" onclick="gobefore(this)"/></li></ul></div>';
+                str1 = '<div class="programBtn"><ul class="moreFunction"><li> <img class="before image" src="images/newSource/shangshou.png" onclick="docmd(14,0,1)"/></li><li><img class="next image" src="images/newSource/xiashou.png" onclick="docmd(13,0,1)"/></li><li><img class="pause image" src="images/newSource/zanting_1.png" onclick="docmd(70,0,0)"/></li><li><img class="pause image" src="images/newSource/playScreen.png" onclick="playScreenProgram()"/></li><li><img src="../images/newSource/shangfan.png" class="page_up" onclick="docmd(\'keycode\',\'0xFF55\',0)"/></li><li><img src="../images/newSource/xiafan.png" class="page_down"  onclick="docmd(\'keycode\',\'0xFF9B\',0)" /></li><li><img src="../images/newSource/zuiqian.png" class="page_Home" onclick="docmd(\'keycode\',\'0xFF50\',0)"/></li><li><img src="../images/newSource/zuihou.png" class="page_End" onclick="docmd(\'keycode\',\'0xFF57\',0)"/></li><li><img class="start" src="images/newSource/goHistory.png" onclick="gobefore(this)"/></li></ul></div>';
 
             } else {
-                str1 = '<div class="programBtn"><ul class="moreFunction"><li> <img class="before image" src="images/newSource/shangshou.png" onclick="docmd(14,0,1)"/></li><li><img class="next image" src="images/newSource/xiashou.png" onclick="docmd(13,0,1)"/></li><li><img class="pause image" src="images/newSource/zanting_1.png" onclick="docmd(26,0,0)"/></li><li><img class="pause image" src="images/newSource/playScreen.png" onclick="playScreenProgram()"/></li><li><img src="../images/newSource/shangfan.png" class="page_up" onclick="docmd(\'keycode\',\'0xFF55\',0)"/></li><li><img src="../images/newSource/xiafan.png" class="page_down"  onclick="docmd(\'keycode\',\'0xFF9B\',0)" /></li><li><img src="../images/newSource/zuiqian.png" class="page_Home" onclick="docmd(\'keycode\',\'0xFF50\',0)"/></li><li><img src="../images/newSource/zuihou.png" class="page_End" onclick="docmd(\'keycode\',\'0xFF57\',0)"/></li></ul></div>';
+                str1 = '<div class="programBtn"><ul class="moreFunction"><li> <img class="before image" src="images/newSource/shangshou.png" onclick="docmd(14,0,1)"/></li><li><img class="next image" src="images/newSource/xiashou.png" onclick="docmd(13,0,1)"/></li><li><img class="pause image" src="images/newSource/zanting_1.png" onclick="docmd(70,0,0)"/></li><li><img class="pause image" src="images/newSource/playScreen.png" onclick="playScreenProgram()"/></li><li><img src="../images/newSource/shangfan.png" class="page_up" onclick="docmd(\'keycode\',\'0xFF55\',0)"/></li><li><img src="../images/newSource/xiafan.png" class="page_down"  onclick="docmd(\'keycode\',\'0xFF9B\',0)" /></li><li><img src="../images/newSource/zuiqian.png" class="page_Home" onclick="docmd(\'keycode\',\'0xFF50\',0)"/></li><li><img src="../images/newSource/zuihou.png" class="page_End" onclick="docmd(\'keycode\',\'0xFF57\',0)"/></li></ul></div>';
 
             }
         } else if ($(".swiper-slide-active").attr("class").indexOf("music") >= 0) {
@@ -247,10 +251,10 @@ function getData(dataurl,typeval,thissubpath,className1) {
             chinName = "音乐";
             taskid = 52000;
             if (thissubpath != "" && thissubpath != undefined) {
-                str1 = '<div class="programBtn"><div class="showRate"><span id="rateValue">00:00</span><div id="rangeRate1" class="clearfix11"><div id="rangeLeft"></div><div id="rangeRate2"></div></div><span id="rateProgressValue" style="font-size:12px;display:block;float:left;width:12%;margin-left:1%;margin-top:5px;height:20px;line-height:20px;">00:00</span></div><ul class="moreFunction"><li><img src="../images/newSource/yinliang.png" class="materialSound soundNum" onclick="meterialSound(this);"/></li><li> <img class="before image" src="images/newSource/shangshou.png" onclick="docmd(14,0,1)"/></li><li><img class="start" src="images/newSource/zanting.png" onclick="pause(this)"/></li><li><img class="next image" src="images/newSource/xiashou.png" onclick="docmd(13,0,1)"/></li><li><img class="pause image" src="images/newSource/zanting_1.png" onclick="docmd(26,0,0)"/></li></li><img class="pause image" src="images/newSource/playScreen.png" onclick="playScreenProgram()"/></li><li><img class="befoeHis" src="images/newSource/goHistory.png" onclick="gobefore(this)"/></li></ul><div id="meterial"><input class="range2" type="range" min="0" max="255" value="" onchange="change(this)" style="width:80%;display:block;float:left;margin-top:15px;"><span class="value2">5</span></div></div>';
+                str1 = '<div class="programBtn"><div class="showRate"><span id="rateValue">00:00</span><div id="rangeRate1" class="clearfix11"><div id="rangeLeft"></div><div id="rangeRate2"></div></div><span id="rateProgressValue" style="font-size:12px;display:block;float:left;width:12%;margin-left:1%;margin-top:5px;height:20px;line-height:20px;">00:00</span></div><ul class="moreFunction"><li><img src="../images/newSource/yinliang.png" class="materialSound soundNum" onclick="meterialSound(this);"/></li><li> <img class="before image" src="images/newSource/shangshou.png" onclick="docmd(14,0,1)"/></li><li><img class="start" src="images/newSource/zanting.png" onclick="pause(this)"/></li><li><img class="next image" src="images/newSource/xiashou.png" onclick="docmd(13,0,1)"/></li><li><img class="pause image" src="images/newSource/zanting_1.png" onclick="docmd(70,0,0)"/></li></li><img class="pause image" src="images/newSource/playScreen.png" onclick="playScreenProgram()"/></li><li><img class="befoeHis" src="images/newSource/goHistory.png" onclick="gobefore(this)"/></li></ul><div id="meterial"><input class="range2" type="range" min="0" max="255" value="" onchange="change(this)" style="width:80%;display:block;float:left;margin-top:15px;"><span class="value2">5</span></div></div>';
 
             } else {
-                str1 = '<div class="programBtn"><div class="showRate"><span id="rateValue">00:00</span><div id="rangeRate1" class="clearfix11"><div id="rangeLeft"></div><div id="rangeRate2"></div></div><span id="rateProgressValue" style="font-size:12px;display:block;float:left;width:12%;margin-left:1%;margin-top:5px;height:20px;line-height:20px;">00:00</span></div><ul class="moreFunction"><li><img src="../images/newSource/yinliang.png" class="materialSound soundNum" onclick="meterialSound(this);"/></li><li> <img class="before image" src="images/newSource/shangshou.png" onclick="docmd(14,0,1)"/></li><li><img class="start" src="images/newSource/zanting.png" onclick="pause(this)"/></li><li><img class="next image" src="images/newSource/xiashou.png" onclick="docmd(13,0,1)"/></li><li><img class="pause image" src="images/newSource/zanting_1.png" onclick="docmd(26,0,0)"/></li><li><img class="pause image" src="images/newSource/playScreen.png" onclick="playScreenProgram()"/></li></ul><div id="meterial"><input class="range2" type="range" min="0" max="255" value="" onchange="change(this)" style="width:80%;display:block;float:left;margin-top:15px;"><span class="value2">5</span></div></div>';
+                str1 = '<div class="programBtn"><div class="showRate"><span id="rateValue">00:00</span><div id="rangeRate1" class="clearfix11"><div id="rangeLeft"></div><div id="rangeRate2"></div></div><span id="rateProgressValue" style="font-size:12px;display:block;float:left;width:12%;margin-left:1%;margin-top:5px;height:20px;line-height:20px;">00:00</span></div><ul class="moreFunction"><li><img src="../images/newSource/yinliang.png" class="materialSound soundNum" onclick="meterialSound(this);"/></li><li> <img class="before image" src="images/newSource/shangshou.png" onclick="docmd(14,0,1)"/></li><li><img class="start" src="images/newSource/zanting.png" onclick="pause(this)"/></li><li><img class="next image" src="images/newSource/xiashou.png" onclick="docmd(13,0,1)"/></li><li><img class="pause image" src="images/newSource/zanting_1.png" onclick="docmd(70,0,0)"/></li><li><img class="pause image" src="images/newSource/playScreen.png" onclick="playScreenProgram()"/></li></ul><div id="meterial"><input class="range2" type="range" min="0" max="255" value="" onchange="change(this)" style="width:80%;display:block;float:left;margin-top:15px;"><span class="value2">5</span></div></div>';
 
             }
         } else if ($(".swiper-slide-active").attr("class").indexOf("net") >= 0) {
@@ -259,10 +263,10 @@ function getData(dataurl,typeval,thissubpath,className1) {
             chinName = "网页";
             taskid = 53000;
             if (thissubpath != "" && thissubpath != undefined) {
-                str1 = '<div class="programBtn"><ul class="moreFunction"><li> <img class="edit image" src="images/source/edit.png" onclick="editNet(this)"/><li> <img class="before image" src="images/newSource/shangshou.png" onclick="docmd(14,0,1)"/></li><li><img class="next image" src="images/newSource/xiashou.png" onclick="docmd(13,0,1)"/></li><li><img class="pause image" src="images/newSource/zanting_1.png" onclick="docmd(26,0,0)"/></li><li><img src="../images/newSource/shangfan.png" class="page_up" onclick="docmd(\'keycode\',\'0xFF55\',0)"/></li><li><img src="../images/newSource/xiafan.png" class="page_down"  onclick="docmd(\'keycode\',\'0xFF9B\',0)" /></li><li><img src="../images/newSource/zuiqian.png" class="page_Home" onclick="docmd(\'keycode\',\'0xFF50\',0)"/></li><li><img src="../images/newSource/zuihou.png" class="page_End" onclick="docmd(\'keycode\',\'0xFF57\',0)"/></li><li><img class="start" src="images/newSource/goHistory.png" onclick="gobefore(this)"/></li></ul></div>';
+                str1 = '<div class="programBtn"><ul class="moreFunction"><li> <img class="edit image" src="images/source/edit.png" onclick="editNet(this)"/><li> <img class="before image" src="images/newSource/shangshou.png" onclick="docmd(14,0,1)"/></li><li><img class="next image" src="images/newSource/xiashou.png" onclick="docmd(13,0,1)"/></li><li><img class="pause image" src="images/newSource/zanting_1.png" onclick="docmd(70,0,0)"/></li><li><img src="../images/newSource/shangfan.png" class="page_up" onclick="docmd(\'keycode\',\'0xFF55\',0)"/></li><li><img src="../images/newSource/xiafan.png" class="page_down"  onclick="docmd(\'keycode\',\'0xFF9B\',0)" /></li><li><img src="../images/newSource/zuiqian.png" class="page_Home" onclick="docmd(\'keycode\',\'0xFF50\',0)"/></li><li><img src="../images/newSource/zuihou.png" class="page_End" onclick="docmd(\'keycode\',\'0xFF57\',0)"/></li><li><img class="start" src="images/newSource/goHistory.png" onclick="gobefore(this)"/></li></ul></div>';
 
             } else {
-                str1 = '<div class="programBtn""><ul class="moreFunction"><li> <img class="edit image" src="images/source/edit.png" onclick="editNet(this)"/><li> <img class="before image" src="images/newSource/shangshou.png" onclick="docmd(14,0,1)"/></li><li><img class="next image" src="images/newSource/xiashou.png" onclick="docmd(13,0,1)"/></li><li><img class="pause image" src="images/newSource/zanting_1.png" onclick="docmd(26,0,0)"/></li><li><img src="../images/newSource/shangfan.png" class="page_up" onclick="docmd(\'keycode\',\'0xFF55\',0)"/></li><li><img src="../images/newSource/xiafan.png" class="page_down"  onclick="docmd(\'keycode\',\'0xFF9B\',0)" /></li><li><img src="../images/newSource/zuiqian.png" class="page_Home" onclick="docmd(\'keycode\',\'0xFF50\',0)"/></li><li><img src="../images/newSource/zuihou.png" class="page_End" onclick="docmd(\'keycode\',\'0xFF57\',0)"/></li></ul></div>';
+                str1 = '<div class="programBtn""><ul class="moreFunction"><li> <img class="edit image" src="images/source/edit.png" onclick="editNet(this)"/><li> <img class="before image" src="images/newSource/shangshou.png" onclick="docmd(14,0,1)"/></li><li><img class="next image" src="images/newSource/xiashou.png" onclick="docmd(13,0,1)"/></li><li><img class="pause image" src="images/newSource/zanting_1.png" onclick="docmd(70,0,0)"/></li><li><img src="../images/newSource/shangfan.png" class="page_up" onclick="docmd(\'keycode\',\'0xFF55\',0)"/></li><li><img src="../images/newSource/xiafan.png" class="page_down"  onclick="docmd(\'keycode\',\'0xFF9B\',0)" /></li><li><img src="../images/newSource/zuiqian.png" class="page_Home" onclick="docmd(\'keycode\',\'0xFF50\',0)"/></li><li><img src="../images/newSource/zuihou.png" class="page_End" onclick="docmd(\'keycode\',\'0xFF57\',0)"/></li></ul></div>';
 
             }
         } else if ($(".swiper-slide-active").attr("class").indexOf("word") >= 0) {
@@ -271,18 +275,14 @@ function getData(dataurl,typeval,thissubpath,className1) {
             chinName = "文档";
             taskid = 54000;
             if (thissubpath != "" && thissubpath != undefined) {
-                str1 = '<div class="programBtn"><ul class="moreFunction"><li> <img class="before image" src="images/newSource/shangshou.png" onclick="docmd(14,0,1)"/></li><li><img class="startPPT image" src="images/newSource/zanting.png" onclick="docmd(\'keycode\',\'screenClass -keyevent 0x53\')"/></li><li><img class="next image" src="images/newSource/xiashou.png" onclick="docmd(13,0,1)"/></li><li><img class="pause image" src="images/newSource/zanting_1.png" onclick="docmd(26,0,0)"/></li><li><img class="pause image" src="images/newSource/playScreen.png" onclick="playScreenProgram()"/></li><li><img class="beforePage image" src="images/newSource/shangye.png" onclick="docmd(\'keycode\',\'screenClass -keyevent 0xFF55\',0)"/></li><li><img class="nextPage image" src="images/newSource/xiaye.png"  onclick="docmd(\'keycode\',\'screenClass -keyevent 0xFF9B\',0)" /></li><li><img src="../images/newSource/shouye.png" class="headPage" onclick="docmd(\'keycode\',\'screenClass -keyevent 0xFF50\',0)"/></li><li><img src="../images/newSource/weiye.png" class="endPage" onclick="docmd(\'keycode\',\'screenClass -keyevent 0xFF57\',0)" ></li><li><img class="beforeHis" src="images/newSource/goHistory.png" onclick="gobefore(this)"/></li></ul></div>';
+                str1 = '<div class="programBtn"><ul class="moreFunction"><li> <img class="before image" src="images/newSource/shangshou.png" onclick="docmd(14,0,1)"/></li><li><img class="startPPT image" src="images/newSource/zanting.png" onclick="docmd(\'keycode\',\'screenClass -keyevent 0x53\')"/></li><li><img class="next image" src="images/newSource/xiashou.png" onclick="docmd(13,0,1)"/></li><li><img class="pause image" src="images/newSource/zanting_1.png" onclick="docmd(70,0,0)"/></li><li><img class="pause image" src="images/newSource/playScreen.png" onclick="playScreenProgram()"/></li><li><img class="beforePage image" src="images/newSource/shangye.png" onclick="docmd(\'keycode\',\'screenClass -keyevent 0xFF55\',0)"/></li><li><img class="nextPage image" src="images/newSource/xiaye.png"  onclick="docmd(\'keycode\',\'screenClass -keyevent 0xFF9B\',0)" /></li><li><img src="../images/newSource/shouye.png" class="headPage" onclick="docmd(\'keycode\',\'screenClass -keyevent 0xFF50\',0)"/></li><li><img src="../images/newSource/weiye.png" class="endPage" onclick="docmd(\'keycode\',\'screenClass -keyevent 0xFF57\',0)" ></li><li><img class="beforeHis" src="images/newSource/goHistory.png" onclick="gobefore(this)"/></li></ul></div>';
             } else {
-                str1 = '<div class="programBtn"><ul class="moreFunction"><li> <img class="before image" src="images/newSource/shangshou.png" onclick="docmd(14,0,1)"/></li><li><img class="startPPT image" src="images/newSource/zanting.png" onclick="docmd(\'keycode\',\'screenClass -keyevent 0x53\')"/></li><li><img class="next image" src="images/newSource/xiashou.png" onclick="docmd(13,0,1)"/></li><li><img class="pause image" src="images/newSource/zanting_1.png" onclick="docmd(26,0,0)"/></li><li><img class="pause image" src="images/newSource/playScreen.png" onclick="playScreenProgram()"/></li><li><img class="beforePage image" src="images/newSource/shangye.png" onclick="docmd(\'keycode\',\'screenClass -keyevent 0xFF55\',0)"/></li><li><img class="nextPage image" src="images/newSource/xiaye.png"  onclick="docmd(\'keycode\',\'screenClass -keyevent 0xFF9B\',0)" /></li><li><img src="../images/newSource/shouye.png" class="headPage" onclick="docmd(\'keycode\',\'screenClass -keyevent 0xFF50\',0)"/></li><li><img src="../images/newSource/weiye.png" class="endPage" onclick="docmd(\'keycode\',\'screenClass -keyevent 0xFF57\',0)" ></li></ul></div>';
+                str1 = '<div class="programBtn"><ul class="moreFunction"><li> <img class="before image" src="images/newSource/shangshou.png" onclick="docmd(14,0,1)"/></li><li><img class="startPPT image" src="images/newSource/zanting.png" onclick="docmd(\'keycode\',\'screenClass -keyevent 0x53\')"/></li><li><img class="next image" src="images/newSource/xiashou.png" onclick="docmd(13,0,1)"/></li><li><img class="pause image" src="images/newSource/zanting_1.png" onclick="docmd(70,0,0)"/></li><li><img class="pause image" src="images/newSource/playScreen.png" onclick="playScreenProgram()"/></li><li><img class="beforePage image" src="images/newSource/shangye.png" onclick="docmd(\'keycode\',\'screenClass -keyevent 0xFF55\',0)"/></li><li><img class="nextPage image" src="images/newSource/xiaye.png"  onclick="docmd(\'keycode\',\'screenClass -keyevent 0xFF9B\',0)" /></li><li><img src="../images/newSource/shouye.png" class="headPage" onclick="docmd(\'keycode\',\'screenClass -keyevent 0xFF50\',0)"/></li><li><img src="../images/newSource/weiye.png" class="endPage" onclick="docmd(\'keycode\',\'screenClass -keyevent 0xFF57\',0)" ></li></ul></div>';
             }
         }
         $(".controlBottom").html(str1);
     }
-    if (window.location.href.indexOf("?") >= 0) {
-        if (window.location.href.indexOf("sort") >= 0) {
-            sortType = parseInt(window.location.href.split("sort=")[1]);
-        }
-    }
+
     if (thissubpath != "" && thissubpath != undefined) {
         if (dataurl == undefined || dataurl == "") {
             URL = "/wpdigitalcontent.asp?type=" + sourceType + "&utf8=1&pageno=0&pagesize=1000&sort=" + sortType + "4&desc=0&pathindex=" + typeval + "&subpath=" + thissubpath + "&displaydate="
@@ -302,12 +302,7 @@ function getData(dataurl,typeval,thissubpath,className1) {
         }
     } else {
         if (dataurl == undefined || dataurl == "") {
-            if (window.location.href.indexOf("?") >= 0) {
-                URL = "/wpdigitalcontent.asp?type=" + sortType + "&utf8=1&pageno=0&pagesize=1000&sort=" + sortType + "&desc=0&pathindex=" + typeval + "&subpath=&displaydate="
-            } else {
-                URL = "/wpdigitalcontent.asp?type=" + sourceType + "&utf8=1&pageno=0&pagesize=1000&sort=" + sortType + "&desc=0&pathindex=" + typeval + "&subpath=&displaydate="
-            }
-           
+            URL = "/wpdigitalcontent.asp?type=" + sourceType + "&utf8=1&pageno=0&pagesize=1000&sort=" + sortType + "&desc=0&pathindex=" + typeval + "&subpath=&displaydate="
         } else {
             if (dataurl.indexOf("?") >= 0) {
                 URL = dataurl + "&type=" + sourceType + "&utf8=1&pageno=0&pagesize=1000&sort=" + sortType + "&desc=0&pathindex=" + typeval + "&subpath=&displaydate=";
@@ -334,7 +329,7 @@ function getData(dataurl,typeval,thissubpath,className1) {
         async: false,
         scriptCharset:"utf-8",
         success: function (data) {
-            controlroom = "http://" + $(data).find("clientInfo").attr("controlroom") + ":8080";
+            controlroom = "http://" + $(data).find("clientInfo").attr("controlroom") + ":8080/pctrl.html";
            
             var sourceCount = 0;
             var folderCount = 0;
@@ -343,45 +338,9 @@ function getData(dataurl,typeval,thissubpath,className1) {
             var sdelectPlay = '<div class="sdelectPlay"><img src="images/newSource/0_10.png" onclick="showControl(this)"></div>';
             var dataType = "";
             var path = $(data).find("clientInfo").attr("contentpath");
-			var subPath="";
-			if($(data).find("clientInfo").attr("subpath")!=undefined){
-				subPath=$(data).find("clientInfo").attr("subpath");
-			}
-            var clientInfo = $(data).find("clientInfo");
-            var udisk = clientInfo.attr("udisk");
-            var str = "";
-            var typeLevel = 3;
-            if (udisk == "") {
-            } else {
-                var diskarr = udisk.split(";");
-                for (var i = 0; i < diskarr.length; i++) {
-                    if (diskarr[i] != "") {
-                        var diskName = "";
-                        if (diskarr[i].split("=")[1] != "") {
-                            diskName = diskarr[i].split("=")[1] + "(" + diskarr[i].split(":")[0] + ":)"
-                        } else {
-                            diskName = "U盘(" + diskarr[i].split(":")[0] + ":)";
-                        }
-                        if (($(".fileContent").html()).indexOf(diskName) < 0) {
-                            str += `<div class="MobileSave1 sourceCommon" typeValue="` + typeLevel + `">
-                                    <div class="sourceContentTitle">
-                                        <img src="images/newSource/MobileSave.png" class="titleIcon"/>
-                                        <span class="titleName">`+ diskName + `</span>
-                                        <img class="slideicon" src="images/newSource/slideUp.png" />
-                                    </div>
-                                    <ul class="fileFolderUl">
-                                    </ul>
-                                </div>`;
-                            typeLevel++;
-                        }
-                       
-                    }
+            
+             $(".logo").attr("subpath", $(data).find("clientInfo").attr("subpath"));
 
-                }
-                $(".fileContent").append(str);
-            }
-            //$(".logo").attr("subpath", $(data).find("clientInfo").attr("subpath"));
-			$(".logo").attr("subpath", subPath);
             if ($(data).find("clientInfo").attr("retnumber") == "0" && ($(data).find("clientInfo").attr("desc").indexOf("301") >= 0 || $(data).find("clientInfo").attr("desc").indexOf("301") >= 0)) {
                 var thisnewurl = $(data).find("clientInfo").attr("desc").split("=")[1];
                 //getData(thisnewurl);//跨域问题，拒绝访问
@@ -411,14 +370,9 @@ function getData(dataurl,typeval,thissubpath,className1) {
                         taskid++;
                         sourceCount++;
                         if (dataType == "0") {
-                            sourceStr += "<li taskid=" + taskid + " sourceName=" + sourceName + "><img class='thumbnailImg' src='" + baseAddress + "$$" + path+subPath + sourceImage + "' imgsrc='" + baseAddress + "$$" + path +subPath+ courceUrl + "' onclick='checkFileImage(this)'/><div class='descBottom'><div class='sourceDec1'><span class='sourceName'>" + sourceName + "</span><span class='sourceDec'>aaaa</span></div><div class='judege' bangtitle=" + courceUrl + "><span class='okBang bang' onclick='addBang(this, \"yes\");'><div class='bangDIv'><img src='images/newSource/00_38.png' /></div><span class='okCount'>0</span></span><span class='noBang bang' onclick='addBang(this, \"no\");'><div class='bangDIv'><img src='images/newSource/00_40.png' /></div><span class='noCount'>0</span></span></div></div>" + sdelectPlay + "</li>";
+                            sourceStr += "<li taskid=" + taskid + " sourceName=" + sourceName + "><img class='thumbnailImg' src='" + baseAddress + "$$" + path + sourceImage + "' imgsrc='" + baseAddress + "$$" + path + courceUrl + "' onclick='checkFileImage(this)'/><div class='descBottom'><div class='sourceDec1'><span class='sourceName'>" + sourceName + "</span><span class='sourceDec'>aaaa</span></div><div class='judege' bangtitle=" + courceUrl + "><span class='okBang bang'><div class='bangDIv'><img src='images/newSource/00_38.png' /></div><span class='okCount'>0</span></span><span class='noBang bang'><div class='bangDIv'><img src='images/newSource/00_40.png' /></div><span class='noCount'>0</span></span></div></div>" + sdelectPlay + "</li>";
                         } else {
-                            if ($(data).find("d1").eq(i).text().indexOf("@_@") >= 0) {
-                                sourceStr += "<li taskid=" + taskid + " sourceName=" + sourceName + "><p class='sourceContent'>" + sourceName.split("@_@")[0] + "</p><div class='descBottom'><div class='sourceDec1'><span class='sourceName'>" + sourceName + "</span><span class='sourceDec'>aaaa</span></div><div class='judege' bangtitle=" + courceUrl + "><span class='okBang bang' onclick=' addBang(this, \"yes\");'><div class='bangDIv'><img src='images/newSource/00_38.png' /></div><span class='okCount'>0</span></span><span class='noBang bang' onclick=' addBang(this, \"no\");'><div class='bangDIv'><img src='images/newSource/00_40.png' /></div><span class='noCount'>0</span></span></div></div>" + sdelectPlay + "</li>";
-                            } else {
-                                sourceStr += "<li taskid=" + taskid + " sourceName=" + sourceName + "><img class='thumbnailImg' src='" + baseAddress + "$$"  + path+subPath + sourceImage + "' imgsrc='" + baseAddress + "$$" + path +subPath + courceUrl + "' onclick='checkFile(this)'/><div class='descBottom'><div class='sourceDec1'><span class='sourceName'>" + sourceName + "</span><span class='sourceDec'>aaaa</span></div><div class='judege' bangtitle=" + courceUrl + "><span class='okBang bang'><div class='bangDIv'><img src='images/newSource/00_38.png' /></div><span class='okCount'>0</span></span><span class='noBang bang'><div class='bangDIv'><img src='images/newSource/00_40.png' /></div><span class='noCount'>0</span></span></div></div>" + sdelectPlay + "</li>";
-                            }
-                           
+                            sourceStr += "<li taskid=" + taskid + " sourceName=" + sourceName + "><img class='thumbnailImg' src='" + baseAddress + "$$" + path + sourceImage + "' imgsrc='" + baseAddress + "$$" + path + courceUrl + "' onclick='checkFile(this)'/><div class='descBottom'><div class='sourceDec1'><span class='sourceName'>" + sourceName + "</span><span class='sourceDec'>aaaa</span></div><div class='judege' bangtitle=" + courceUrl + "><span class='okBang bang'><div class='bangDIv'><img src='images/newSource/00_38.png' /></div><span class='okCount'>0</span></span><span class='noBang bang'><div class='bangDIv'><img src='images/newSource/00_40.png' /></div><span class='noCount'>0</span></span></div></div>" + sdelectPlay + "</li>";
                         }
                     }
                     if (saveCurrentCookie == "") {
@@ -459,16 +413,55 @@ function styleContent() {
     $(".swiper-slide ul li ").css("marginLeft", (document.documentElement.clientWidth - numCount * $(".swiper-slide ul li ").width()) / (numCount + 1));
     $(".descBottom").css("marginLeft", $(".thumbnailImg").css("marginLeft"));
     $(".bangDIv img").css("paddingTop", ($(".bangDIv").height() - $(".bangDIv img").height()) / 2);
-    //debugger;
-    //$(".bangDIv img").css("marginLeft", ($(".bangDIv").width() - $(".bangDIv img").width()) / 2);
+    $(".bangDIv img").css("marginLeft", ($(".bangDIv").width() - $(".bangDIv img").width()) / 2);
     $(".swiper-slide ul li:nth-child(2n+1) .sdelectPlay").css("right", $(".swiper-slide ul li:nth-child(2n+1)").width() - parseFloat($(".swiper-slide ul li:nth-child(2n+1) .thumbnailImg").css("marginLeft")) - $(".swiper-slide ul li:nth-child(2n+1) .thumbnailImg").width());
     $(".swiper-slide ul li:nth-child(2n) .sdelectPlay").css("right", $(".swiper-slide ul li:nth-child(2n)").width() - parseFloat($(".swiper-slide ul li:nth-child(2n) .thumbnailImg").css("marginLeft")) - $(".swiper-slide ul li:nth-child(2n) .thumbnailImg").width());
     //$(".swiper - slide").css("height",)
     $(".swiper-container").css("height", document.documentElement.clientHeight - $(".top").height() - $(".content").height());
-    $(".shadowDiv").css("width", "20em");
+    $(".shadowDiv").width("20em");
+    if (document.documentElement.clientWidth > 375 && document.documentElement.clientWidth < 768) {
+        
+
+    } else if (document.documentElement.clientWidth >= 768 && document.documentElement.clientWidth < 1024) {
+       
+        $(".addContent .windowsNum").css("width", "46%");
+        $(".addContent select").css("width", "43%");
+        $(".addContent select").css("marginLeft", "24%");
+        $(".addContent p span").css("width", "24%");
+
+        $(".addUrlContent .inputText").css("width", "46%");
+        //$(".addUrlContent textarea").css("width", "46%");
+        $(".addUrlContent select").css("width", "43%");
+        $(".addUrlContent select").css("marginLeft", "24%");
+        $(".shadowDiv select").css("height", "22px");
+        $(".urlContent").css("marginTop", "6%");
+        $(".urlAddress").css("width", "24%");
+        
+    } else if (document.documentElement.clientWidth >= 1024) {
+        
+        $(".addContent .windowsNum").css("width", "47%");
+        $(".addContent select").css("width", "42%");
+        //$(".addContent select").css("marginLeft", "24.5%");
+
+        $(".addUrlContent .inputText").css("width", "47%");
+        //$(".addUrlContent textarea").css("width", "47%");
+        $(".addUrlContent select").css("width", "42%");
+        // $(".addUrlContent select").css("marginLeft", "24.5%");
+        $(".shadowDiv select").css("height", "24px");
+
+        $(".urlContent").css("marginTop", "1%");
+
+        
+    } else if (document.documentElement.clientWidth <= 375) {
+        $(".shadowDiv").css("width", "25em");
+        
+        $(".addContent p input").css("width", $(".addContent p select").width() - 15);
+        //$(".addContent p textarea").css("width", $(".addContent p input").width());
+        $(".addUrlContent p input").css("width", $(".addUrlContent p select").width() - 15);
+
+    }
     //此处是为了适配苹果手机和安卓手机
     var ua = navigator.userAgent.toLowerCase();
-    $(".shadowDiv select").css("width", $(".shadowDiv").width() - 100-20);
     if (/iphone|ipad|ipod/.test(ua)) {
         $(".inputText").css("width", parseInt($(".addContent p select").width()) - 10);
 		$(".addContent p .cleartext").css("left", $(".addContent").width()-15);
@@ -476,6 +469,8 @@ function styleContent() {
         $(".inputText").css("width", parseInt($(".addContent p select").width()) - 18);
 		$(".addContent p .cleartext").css("left", $(".addContent").width()-20);
     }
+   
+    
     $(".addContent textarea").next().css("height", $("textarea").height() + 2);
    
     $(".addUrlContent p .cleartext").css("left", $(".addUrlContent").width()-25);
@@ -484,7 +479,7 @@ function styleContent() {
    // alert($(".swiper-slide-active ul li").css("marginLeft"));
     $.cookie("sourceTab", mySwiper.realIndex + 1);
 }
-//显示评论按钮
+//显示平评论按钮
 function showJudge() {
     for (var u = 0; u < $(".swiper-slide-active li").length; u++) {
         if ($(".swiper-slide-active li ").eq(u).attr("sourceName").indexOf("@_@") >= 0 || $(".swiper-slide-active li").eq(u).attr("sourceName").indexOf("@~@") >= 0) {
@@ -519,8 +514,7 @@ function showControl(thisItem) {
     }
 }
 function playNowPro() {
-   //$(".swiper-slide-active ul li").removeClass("currentTask");
-   $(".swiper-slide ul li").removeClass("currentTask");
+    $(".swiper-slide-active ul li").removeClass("current");
     for (var i = 0; i < $(".swiper-slide-active ul li").length; i++) {
         var itemType = $(".swiper-slide-active").children().attr("itemtype");
         var name = $(".swiper-slide-active ul li").eq(i).find(".thumbnailImg").attr("imgsrc");
@@ -528,7 +522,7 @@ function playNowPro() {
        
         
         if ($(".swiper-slide-active ul li").eq(i).find(".sdelectPlay img").attr("src").indexOf("images/newSource/0_07.png") >= 0) {
-            $(".swiper-slide-active ul li").eq(i).addClass("currentTask");
+            $(".swiper-slide-active ul li").eq(i).addClass("current");
             startUp(itemType, name, taskId);
            
             return false;
@@ -538,19 +532,19 @@ function playNowPro() {
 function startUp(itemType, contentName, taskID) {
     var des = contentName.split("/")[contentName.split("/").length - 1];
     var sunttype = 1;
-    if ($(".currentTask").parent().parent().attr("class").indexOf("video") >= 0) {
+    if ($(".current").parent().parent().attr("class").indexOf("video") >= 0) {
         sunttype = 1;
         timer = setInterval("getRate()", 1000);
         changeNowRate();
-    } else if ($(".currentTask").parent().parent().attr("class").indexOf("music") >= 0) {
+    } else if ($(".current").parent().parent().attr("class").indexOf("music") >= 0) {
         sunttype = 1;
         timer = setInterval("getRate()", 1000);
         changeNowRate();
-    } else if ($(".currentTask").parent().parent().attr("class").indexOf("word") >= 0) {
+    } else if ($(".current").parent().parent().attr("class").indexOf("word") >= 0) {
         sunttype = 1;
         clearInterval(timer);
-    } else if ($(".currentTask").parent().parent().attr("class").indexOf("image") >= 0) {
-        sunttype = 0;
+    } else if ($(".current").parent().parent().attr("class").indexOf("image") >= 0) {
+        sunttype = 99;
         clearInterval(timer);
     } else {
         sunttype = 1;
@@ -558,7 +552,7 @@ function startUp(itemType, contentName, taskID) {
     }
    // $(".swiper-slide-active").attr("sunttype", sunttype);
     $.ajax({
-		url:"/wpsendclientmsg.asp?wpsendclientmsg=76_-starttemptask <id>"+taskID+"</id><sunt>"+sunttype+"</sunt><sdly>15</sdly><des>"+des+"</des><url>"+contentName+" -t</url><ttype>"+itemType+"</ttype><dur>36000</dur><win>0-全屏窗口</win><wstate>100</wstate><loop>1</loop>&utf8=1",
+		url:"/wpsendclientmsg.asp?wpsendclientmsg=76_-starttemptask <id>"+taskID+"</id><sunt"+sunttype+"</sunt><sdly>15</sdly><des>"+des+"</des><url>"+contentName+" -t</url><ttype>"+itemType+"</ttype><dur>36000</dur><win>0            -全屏窗口</win><wstate>100</wstate>&utf8=1",
 		dataType:"text",
 		type: 'GET',
 		success: function(){
@@ -946,9 +940,6 @@ function docmd(cmdtype, cmdData, tempTask) {
     if (cmdtype == 70) {
         clearInterval(timer);
     }
-	if (cmdtype == 26) {
-        clearInterval(timer);
-    }
     if (cmdtype == 16) {
        
     }
@@ -1101,9 +1092,9 @@ function editNet(thisnet) {
                     //    str = "<p><span style='display:block;width:30%;float:left;'>" + contentArray[j] + "：</span><input type='text' class='inputText' tabindex ='0'/><select></select><span class='cleartext' style='width:20px;display:none;'><img src='images/source/clear.png' /></span></p>";
                     //}
                     if (contentCount == 0) {
-                        str = "<p><span style='display:block;width:100px;float:left;'>" + getitem + "：</span><textarea type='text' class='inputText' tabindex ='0' rows='3' style='resize:none'></textarea><select style='height:32px;'></select><span class='cleartext' style='width:20px;display:none;'><img src='images/source/clear.png' /></span></p>";
+                        str = "<p><span style='display:block;width:30%;float:left;'>" + getitem + "：</span><textarea type='text' class='inputText' tabindex ='0' rows='3' style='resize:none'></textarea><select style='height:32px;'></select><span class='cleartext' style='width:20px;display:none;'><img src='images/source/clear.png' /></span></p>";
                     } else {
-                        str = "<p><span style='display:block;width:100px;float:left;'>" + getitem + "：</span><input type='text' class='inputText' tabindex ='0'/><select></select><span class='cleartext' style='width:20px;display:none;'><img src='images/source/clear.png' /></span></p>";
+                        str = "<p><span style='display:block;width:30%;float:left;'>" + getitem + "：</span><input type='text' class='inputText' tabindex ='0'/><select></select><span class='cleartext' style='width:20px;display:none;'><img src='images/source/clear.png' /></span></p>";
                     }
                     $(".addContent").append(str);
                     
@@ -1678,8 +1669,7 @@ function showNowPlayScreen() {
 //显示选择窗口页面
 function playScreenProgram() {
     $(".playScreenShadow").show();
-   //$(".swiper-slide-active ul li").removeClass("currentTask");
-   $(".swiper-slide ul li").removeClass("currentTask");
+    $(".swiper-slide-active ul li").removeClass("currentTask");
     for (var i = 0; i < $(".swiper-slide-active ul li").length; i++) { 
 
         if ($(".swiper-slide-active ul li").eq(i).find(".sdelectPlay img").attr("src").indexOf("images/newSource/0_07.png") >= 0) {
@@ -1690,15 +1680,12 @@ function playScreenProgram() {
     $(".playScreenShadowContent ul").css("height", $(".playScreenShadowContent").height() - 40 - 40);
 }
 function playScreenShadowContent(thisContentWindow) {
-	//alert("aaa");
     var playWindow = $(thisContentWindow).text();
     var playWinTask = $(".currentTask").attr("taskid");
-	//alert(playWindow,playWinTask);
     playScreenContent(playWindow,playWinTask);
 }
 //播放节目单里的内容到指定窗口
 function playScreenContent(win, taskID) {
-	//alert("bbb");
     var itemType = $(".swiper-slide-active").find("div").eq(0).attr("itemtype");
     var name = $(".swiper-slide-active ul .currentTask").find(".thumbnailImg").attr("imgsrc");
     var des = name.split("/")[name.split("/").length - 1];
@@ -1715,32 +1702,24 @@ function playScreenContent(win, taskID) {
         sunttype = 1;
         clearInterval(timer);
     } else if ($(".currentTask").parent().parent().attr("class").indexOf("image") >= 0) {
-        sunttype = 0;
+        sunttype = 99;
         clearInterval(timer);
     } else {
         sunttype = 1;
         clearInterval(timer);
     }
-   $.ajax({
-       url: "/wpsendclientmsg.asp?wpsendclientmsg=76_-starttemptask <id>" + taskID + "</id><sunt>" + sunttype + "</sunt><sdly>15</sdly><des>" + des + "</des><url>" + name + " -t</url><ttype>" + itemType + "</ttype><dur>36000</dur><win>" + win + "</win><wstate>100</wstate><loop>1</loop>&utf8=1",
+    $.ajax({
+        url: "/wpsendclientmsg.asp?wpsendclientmsg=76_-starttemptask <id>" + taskID + "</id><sunt>" + sunttype + "</sunt><sdly>15</sdly><des>" + des + "</des><url>" + name + " -t</url><ttype>" + itemType + "</ttype><dur>36000</dur><win>" + win + "</win><wstate>100</wstate>&utf8=1",
         type: "get",
-        dataType: "html",
+        dataType: "text",
         success: function (data) {
-			//alert("成功");
            // topTrip("发送成功", 1);
             $(".playScreenShadow").hide();
-        }, error: function (a,b,c) {
-			alert(a,b,c);
+        }, error: function (data) {
            // topTrip("发送失败", 2);
 
         }
     })
-	/*var senMsg="76_-starttemptask<id>" + taskID + "</id><sunt>" + sunttype + "</sunt><sdly>15</sdly><des>" + des + "</des><url>" + name + " -t</url><ttype>" + itemType + "</ttype><dur>36000</dur><win>" + win + "</win><wstate>100</wstate>&utf8=1";
-	///wpsendclientmsg.asp?wpsendclientmsg=76_-starttemptask <id>" + taskID + "</id><sunt>" + sunttype + "</sunt><sdly>15</sdly><des>" + des + "</des><url>" + name + " -t</url><ttype>" + itemType + "</ttype><dur>36000</dur><win>" + win + "</win><wstate>100</wstate>&utf8=1
-	$.get("/wpsendclientmsg.asp?wpsendclientmsg=76_-starttemptask <id>" + taskID + "</id><sunt>" + sunttype + "</sunt><sdly>15</sdly><des>" + des + "</des><url>" + name + " -t</url><ttype>" + itemType + "</ttype><dur>36000</dur><win>" + win + "</win><wstate>100</wstate>&utf8=1",function(data){
-		//alert(data);
-		$(".playScreenShadow").hide();
-	})*/
 }
 function stopScreenProgramOther(thisWindowNum) {
     var stopWindowNum = $(thisWindowNum).prev().text().split("-")[0];

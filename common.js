@@ -1,4 +1,4 @@
-﻿// JavaScript Document
+// JavaScript Document
 //获取终端列表
 var expreDate = 7;
 var onlyoneCutScreen = 0;
@@ -13,24 +13,15 @@ var heightRate = 0;
 var wholeSize = 0;
 var touchStartTime1 = "";//双击事件第一次抬起的时间
 var touchStartTime1 = "";//双击事件第二次按下的时间 
-//获取终端列表
-function getClientList(divClient) {
-    showLoading();
+function getClientList(divClient){
 	$.ajax({
 		url:"clientList.xml?rnd="+(Math.floor(Math.random()*(9999-1000))+1000)+"&utf8=1",
 		dataType:"xml",
 		type:'GET',
-        success: function (xml) {
-
+		success:function(xml){
 			$(xml).find("item").each(function(i){
 				var clientName=$(this).find("name").text();
-                var ipName = $(this).find("ip").text();
-                var port = $(this).find("port").text();
-                var color = $(this).find("color").text();//颜色值
-                var onlyview = $(this).find("onlyview").text();//是否是只允许预览
-                var usegate = $(this).find("usegate").text();//是否是多个服务器进行转发指令
-                var gateip = $(this).find("gateip").text();//进行转发的多个服务器的ip地址，以;分割
-                var gateport = $(this).find("gateport").text();//目的服务器的显示端的端口号
+				var ipName=$(this).find("ip").text();
 				if(ipName.indexOf(":")>0){
 					ipName="http://"+ipName;
 				}else{
@@ -41,33 +32,32 @@ function getClientList(divClient) {
 				var strIp = " ";
                 if (divClient == "#top") {
                     strIp = '<p style="clear:both; color:#b9b9b9;font-size:12px;text-align:center;position:relative;top:-46px;text-align:right;">' + ipName.split("://")[1].split(":")[0] + '&nbsp;</p>';
-                    clientNameListStr = '<li class="cc" port="' + port+'" color="' + color + '" onlyview="' + onlyview + '" usegate="' + usegate + '" gateip="' + gateip + '" gateport="' + gateport+'" src="' + ipName + '" indexClient="' + i + '" macname="' + macName + '" clientname="' + clientName + '"><b style="height: 28px;width:28px;display:block;float:left;margin-left:5px;margin-right:5px;"></b><span style="display:block;float:left;text-overflow: ellipsis;overflow: hidden;">' + clientName + '</span>' + strIp + '</li>';
+                    clientNameListStr = '<li class="cc" src="' + ipName + '" indexClient="' + i + '" macname="' + macName + '" clientname="' + clientName + '"><b style="height: 28px;width:28px;display:block;float:left;margin-left:5px;margin-right:5px;"></b><span style="display:block;float:left;text-overflow: ellipsis;overflow: hidden;">' + clientName + '</span>' + strIp + '</li>';
 					
 				}else{
-                    clientNameListStr = '<li class="cc" port="' + port +'" color="' + color + '" onlyview="' + onlyview + '" usegate="' + usegate + '" gateip="' + gateip + '" gateport="' + gateport +'" src="' + ipName + '" indexClient="' + i + '" macname="' + macName + '" clientname="' + clientName + '"><p>' + clientName +"<br>" + ipName.split("://")[1].split(":")[0] + '</p></li>';
+				    clientNameListStr = '<li class="cc" src="' + ipName + '" indexClient="' + i + '" macname="' + macName + '" clientname="' + clientName + '"><p>' + clientName +"<br>" + ipName.split("://")[1].split(":")[0] + '</p></li>';
 				}
+
 				$(divClient).append(clientNameListStr);
 				$(".cc").eq(i).find("span").css("maxWidth",parseInt($(".cc").eq(i).css("width"))-28);
 				$(".cc").eq(i).find("b").css("marginTop",(parseInt($(".cc").eq(i).css("height"))-28)/2);
 				if (divClient == "#top") {
-				    $(".cc span").css("maxWidth", (parseInt($(".cc").width()) - 20 - parseInt($(".cc b").width())) + "px");
+				    $(".cc span").css("maxWidth", (parseInt($(".cc").width()) - 10 - parseInt($(".cc b").width())) + "px");
 				}
-            });
-            hideLoading();
+			});
 			
-        }, error: function (a, b, c) {
-            //当没有终端列表时，则认为是只访问当前显示端的内容
-            hideLoading();
+		},error:function(a,b,c){
 			if(c=="Not Found"){
 				if(divClient=="#top"){
 					clientNameListStr='<li class="cc" homeid="home" src="" indexClient="" macname="" clientname=""><b style="height: 28px;width:28px;display:block;float:left;"></b><span id="localIP" style="display:block;float:left;text-overflow: ellipsis;overflow: hidden;">返回中控页</span></li>';
 					
 				}else{
-                    clientNameListStr = '<li class="cc" id="localIP" homeid="home" src="" indexClient="" macname="" clientname="">返回中控页</li>';
+				    clientNameListStr = '<li class="cc" homeid="home" src="" indexClient="" macname="" clientname="">返回中控页</li>';
 				}
 				$(divClient).html(clientNameListStr)
 				$(".cc").find("span").css("maxWidth",parseInt($(".cc").css("width"))-28);
-				$(".cc").find("b").css("marginTop",(parseInt($(".cc").css("height"))-28)/2);	
+				$(".cc").find("b").css("marginTop",(parseInt($(".cc").css("height"))-28)/2);
+				
 			}
 		}
 	});
@@ -85,89 +75,82 @@ function touchPanel(){
 	$(".touchMouseTitle").css("marginLeft", ($(".closeTouchMouse").width() - $(".touchMouseTitle").width()) / 2)
 }
 //打开浏览器
-function openClient() {
-    showLoading();
+function openClient(){
 	$.ajax({
 		url:newurl+"/wpsendclientmsg.asp?wpsendclientmsg=102_http://www.satall.cn",
 		dataType:'text',
 		type: 'GET',
-        success: function (data) {
-            hideLoading();
+		success:function(data){
+			//timeShowMsg("title","发送成功",500);
 		    topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
 		},
-        error: function (data) {
-            hideLoading();
+		error:function(data){
+			//timeShowMsg("title","发送失败",500);
 		    topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
 		}
 		
-    });
+	});
 }
 //关闭浏览器
-function closeClient() {
-    showLoading();
+function closeClient(){
 	$.ajax({
 		url:newurl+"/wpsendclientmsg.asp?wpsendclientmsg=103",
 		dataType:'text',
 		type: 'GET',
-        success: function (data) {
-            hideLoading();
+		success:function(data){
+			//timeShowMsg("title","发送成功",500)
 		    topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);;
 		},
-        error: function (data) {
-            hideLoading();
+		error:function(data){
+			//timeShowMsg("title","发送失败",500);
 		    topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
 		}
 		
 	});
 }
 //打开/关闭软键盘
-function openKeyBoard() {
-    showLoading();
+function openKeyBoard(){
 	$.ajax({
 		url:newurl+"/wpsendclientmsg.asp?wpsendclientmsg=101",
 		dataType:'text',
 		type: 'GET',
-        success: function (data) {
-            hideLoading();
+		success:function(data){
+			//timeShowMsg("title","发送成功",500);
 		    topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
 		},
-        error: function (data) {
-            hideLoading();
-		    topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
+		error:function(data){
+			//timeShowMsg("title","发送失败",500)
+		    topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);;
 		}
 		
 	});
 }
 //新增紧急通知、紧急疏散、重启临时任务、停止临时任务、触发数据获取
-function emergentInform(tasknum) {
-    showLoading();
+function emergentInform(tasknum){
 	$.ajax({
 		url:newurl+"/wpsendclientmsg.asp?wpsendclientmsg="+tasknum,
 		dataType:'text',
 		type: 'GET',
-        success: function (data) {
-            hideLoading();
+		success:function(data){
+			//timeShowMsg("title","发送成功",500);
 		    topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
 		},
-        error: function (data) {
-            hideLoading();
+		error:function(data){
+			//timeShowMsg("title","发送失败",500);
 		    topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
 		}
 		
 	});
 }
 //全开
-function openAll() {
-    showLoading();
+function openAll(){
     var str = '';
     var ipstr = "";
 	for(var i=0;i<$("#top .cc").length;i++){
 	    var ttstrarr;
 	    var ttstr = "";
-        var ttmac = "";
-        if ($(".cc").eq(i).attr("clientname").indexOf("!$") < 0) {
-            str += $(".cc").eq(i).attr("clientname") + ";"
-        }
+	    var ttmac = "";
+	    str += $(".cc").eq(i).attr("clientname") + ";"
 	    ttstrarr = $(".cc").eq(i).attr("src").split("://");
 	    if (ttstrarr.length > 1) {
 	        ttstr = ttstrarr[1];
@@ -179,64 +162,70 @@ function openAll() {
 	    ttmac = $(".cc").eq(i).attr("macname");
 	    ipstr += (ttstr + ":" + ttmac) + ";";
 	}
-	$.ajax({
-	    url: "wpcontrolcenter.asp?wpcontrolcenter=&maintype=5&subtype=45&companyid=wisepeak&utf8=1&cnlist=" + str + "&commandparam=-f " + ipstr + "&rnd=" + (Math.floor(Math.random() * (9999 - 1000)) + 1000),
-	    data: "text",
-	    dataType: 'text',
-	    type: 'GET',
-        success: function (data) {
-            hideLoading();
-	        topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
-	        $(".topConfirm").attr("messageTip", "");
-	    },
-        error: function (data) {
-            hideLoading();
-	        topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
-	        $(".topConfirm").attr("messageTip", "");
-	    }
-	})
+	//var truthBeTold = window.confirm("确定要开机吗?");
+    //if (truthBeTold) {
+	//if ($(".topConfirm").attr("messageTip") == "ok") {
+	    $.ajax({
+	        url: "wpcontrolcenter.asp?wpcontrolcenter=&maintype=5&subtype=45&companyid=wisepeak&utf8=1&cnlist=" + str + "&commandparam=-f " + ipstr + "&rnd=" + (Math.floor(Math.random() * (9999 - 1000)) + 1000),
+	        data: "text",
+	        dataType: 'text',
+	        type: 'GET',
+	        success: function (data) {
+	            //timeShowMsg("title","发送成功",500);
+	            topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
+	            $(".topConfirm").attr("messageTip", "");
+	        },
+	        error: function (data) {
+	            //timeShowMsg("title","发送失败",500);
+	            topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
+	            $(".topConfirm").attr("messageTip", "");
+	        }
+	    })
+	//} else {
+	//    tipMessage("确定要全开吗?", "openAll");
+	//}
+	    
+	//}
+	
 }
 //控制室分发
 function controlRoomDistribute() {
-    showLoading();
     $.ajax({
         url: "wpcontrolcenter.asp?wpcontrolcenter=&maintype=5&subtype=98&companyid=wisepeak&utf8=1&cnlist=",
         data: "text",
         dataType: 'text',
         type: 'GET',
         success: function (data) {
-            hideLoading();
+            //timeShowMsg("title","发送成功",500);
             topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
             $(".topConfirm").attr("messageTip", "");
         },
         error: function (data) {
-            hideLoading();
+            //timeShowMsg("title","发送失败",500);
             topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
             $(".topConfirm").attr("messageTip", "");
         }
     })
 }
 //全关
-function closeAll() {   
+function closeAll(){
 	var str1='';
-    for (var i = 0; i < $("#top .cc").length; i++){
-        if ($(".cc").eq(i).attr("clientname").indexOf("!$") < 0) {
-            str1 += $(".cc").eq(i).attr("clientname") + ";"
-        }	
+	for(var i=0;i<$("#top .cc").length;i++){	
+		str1+=$(".cc").eq(i).attr("clientname")+";"
 	}
-    if ($(".topConfirm").attr("messageTip") == "ok") {
-        showLoading();
+	//var truthBeTold = window.confirm("确定要关机吗?");
+    //if (truthBeTold) {
+	if ($(".topConfirm").attr("messageTip") == "ok") {
 	    $.ajax({
 	        url: "wpcontrolcenter.asp?wpcontrolcenter=&maintype=5&subtype=0&companyid=wisepeak&utf8=1&cnlist=" + str1 + "&commandparam=&rnd=" + (Math.floor(Math.random() * (9999 - 1000)) + 1000),
 	        dataType: 'text',
 	        type: 'GET',
-            success: function (data) {
-                hideLoading();
+	        success: function (data) {
+	            //timeShowMsg("title","发送成功",500);
 	            topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
 	            $(".topConfirm").attr("messageTip", "");
 	        },
-            error: function (data) {
-                hideLoading();
+	        error: function (data) {
 	            //timeShowMsg("title","发送失败",500);
 	            topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
 	            $(".topConfirm").attr("messageTip", "");
@@ -245,6 +234,9 @@ function closeAll() {
 	} else {
 	    tipMessage(getLanguageMsg("确定要全关吗?", $.cookie("yuyan")), "closeAll");
 	}
+	    
+	//}
+	
 }
 //LED开
 function openLED(){
@@ -253,20 +245,21 @@ function openLED(){
 		
 		str+=$(".cc").eq(i).attr("clientname")+";"
 	}
-    if ($(".topConfirm").attr("messageTip") == "ok") {
-        showLoading();
+	//var truthBeTold = window.confirm("确定要打开LED吗?");
+    //if (truthBeTold) {
+	if ($(".topConfirm").attr("messageTip") == "ok") {
 	    $.ajax({
 	        url: "wpsendudpdata.asp?wpsendudpdata=1000_0X3A0X300X300X310X300X300X300X420X300X300X300X300X310X300X300X300X310X330X450X0D0X0A&destip=&destport=6666&rnd=" + (Math.floor(Math.random() * (9999 - 1000)) + 1000),
 	        data: "text",
 	        dataType: 'text',
 	        type: 'GET',
-            success: function (data) {
-                hideLoading();
+	        success: function (data) {
+	            //timeShowMsg("title","发送成功",500);
 	            topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
 	            $(".topConfirm").attr("messageTip", "")
 	        },
-            error: function (data) {
-                hideLoading();
+	        error: function (data) {
+	            //timeShowMsg("title","发送失败",500);
 	            topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
 	            $(".topConfirm").attr("messageTip", "")
 	        }
@@ -274,6 +267,9 @@ function openLED(){
 	} else {
 	    tipMessage("确定要打开LED吗?", "openLED");
 	}
+	    
+	//}
+	
 } 
 //LED关
 function closeLED(){
@@ -281,19 +277,20 @@ function closeLED(){
 	for(var i=0;i<$(".cc").length;i++){	
 		str1+=$(".cc").eq(i).attr("clientname")+";"
 	}
-    if ($(".topConfirm").attr("messageTip") == "ok") {
-        showLoading();
+	//var truthBeTold = window.confirm("确定要关闭LED吗?");
+    //if (truthBeTold) {
+	if ($(".topConfirm").attr("messageTip") == "ok") {
 	    $.ajax({
 	        url: "wpsendudpdata.asp?wpsendudpdata=1000_0X3A0X300X300X310X300X300X300X420X300X300X300X300X310X300X300X300X320X330X440X0D0X0A&destip=&destport=6666&rnd=" + (Math.floor(Math.random() * (9999 - 1000)) + 1000),
 	        dataType: 'text',
 	        type: 'GET',
-            success: function (data) {
-                hideLoading();
+	        success: function (data) {
+	            //timeShowMsg("title","发送成功",500);
 	            topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
 	            $(".topConfirm").attr("messageTip", "")
 	        },
-            error: function (data) {
-                hideLoading();
+	        error: function (data) {
+	            //timeShowMsg("title","发送失败",500);
 	            topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
 	            $(".topConfirm").attr("messageTip","")
 	        }
@@ -301,20 +298,20 @@ function closeLED(){
 	} else {
 	    tipMessage(getLanguageMsg("确定要关闭LED吗?", $.cookie("yuyan")), "closeLED");
 	}
+	    
+	//}
+	
 }
 //LCD开
 function openOrCloseLCD(type) {
-    showLoading();
     var cn = $("#top").attr("clientname");
     $.ajax({
         url: "wpcontrolcenter.asp?wpcontrolcenter=" + type + "&maintype=6&subtype=0&companyid=wisepeak&utf8=1&cnlist=" + cn + "&commandparam=-must&dohere=0",
         type: "get",
         dataType: "text",
         success: function (data) {
-            hideLoading();
             topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
         }, error: function (data) {
-            hideLoading();
             topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
         }
     })
@@ -347,7 +344,8 @@ function SendMSGBar(id, type) {
 
 	        $("#selectCode").html("<option value=''></option>" + selectcodeStr + "<option id='clearCookie' value='' onclick='clearCookie(\"codeContent\")'>清除</option>");
 	    }
-	}else if (type == "send" || type == "send1") {		//发送信息
+	}
+	else if (type == "send" || type == "send1") {		//发送信息
 	    //http://localhost:8081/wpsubmitmsg.asp?wpsubmitmsg=我爱你&icon=0&sid=过客&pmt= 
 	    //wpsubmitmsg为发布的内容，icon为选择的头像0-30，sid为发布人自己标记，pmt为是否也在屏上悬浮显示（=0只参与网页中滚动显示，〉1表示消息在屏上显示）。
 	
@@ -439,39 +437,37 @@ function changeContent() {
    
 }
 //拍照
-function takePhoto() {
-    showLoading();
+function takePhoto(){
 	var photourl=$("#tabscreen").attr("src");
 		photourl=photourl+"/wpsendclientmsg.asp?wpsendclientmsg=3049_1&rnd="+(Math.floor(Math.random()*(9999-1000))+1000);
 	$.ajax({
 		url:photourl,
 		dataType:'text',
 		type: 'GET',
-        success: function (data) {
-            hideLoading();
+		success:function(data){
+			//timeShowMsg("title","发送成功",500);
 		    topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
 		},
-        error: function (data) {
-            hideLoading();
+		error:function(data){
+			//timeShowMsg("title","发送失败",500);
 		    topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
 		}
 	})
 }
 //启动显示端
-function openOwnerClient() {
-    showLoading();
+function openOwnerClient(){
 	$.ajax({
 		url: newurl+"/wpsendclientmsg.asp?wpsendclientmsg=31",
 		dataType:'html',
 		type: 'GET',
 		timeout: 5000,		//超时时间
-        error: function (xml) {
-            hideLoading();
+		error:function(xml){
+				//timeShowMsg("title","发送失败",500);		//失败报错
 		    topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
-		},
-        success: function (xml) {
-            hideLoading();
+			},
+		success:function(xml){
 			if(xml){
+				//timeShowMsg("title","发送成功",500);		//发送成功
 			    topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
 			}
 		}
@@ -479,20 +475,19 @@ function openOwnerClient() {
 	})
 }
 //重启显示端
-function reopenClient() {
-    showLoading();
+function reopenClient(){
 	$.ajax({
 		url: newurl+"/wpsendclientmsg.asp?wpsendclientmsg=31_31",
 		dataType:'html',
 		type: 'GET',
 		timeout: 5000,		//超时时间
-        error: function (xml) {
-            hideLoading();
+		error:function(xml){
+				//timeShowMsg("title","发送失败",500);		//失败报错
 		    topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
-		},
-        success: function (xml) {
-            hideLoading();
+			},
+		success:function(xml){
 			if(xml){
+				//timeShowMsg("title","发送成功",500);		//发送成功
 			    topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
 			}
 		}
@@ -500,21 +495,18 @@ function reopenClient() {
 	})
 }
 //右键
-function rightMouse() {
-    showLoading();
+function rightMouse(){
 	var mouseUrl=newurl+"/wpsendkeys.asp?wpsendkeys=-mouseevent 132_-1_-1;0_-1_-1";
 	$.ajax({
 		url: mouseUrl,
 		dataType:'html',
 		type: 'GET',
 		timeout: 5000,		//超时时间
-        error: function (xml) {
-            hideLoading();
+		error:function(xml){
 				//timeShowMsg("title","发送失败",500);		//失败报错
 		    topTrip(getLanguageMsg("发送是啊比", $.cookie("yuyan")), 2);
-		},
-        success: function (xml) {
-            hideLoading();
+			},
+		success:function(xml){
 			if(xml){
 			    timeShowMsg("title", getLanguageMsg("发送成功", $.cookie("yuyan")), 500);		//发送成功
 			    topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
@@ -524,17 +516,15 @@ function rightMouse() {
 		
 	})
 }
-//双击 连续发送两次左键
-function twoMouse() {
-    showLoading();
+//双击
+function twoMouse(){
 	var mouseUrl=newurl+"/wpsendkeys.asp?wpsendkeys=-mouseevent 129_-1_-1;0_-1_-1"
 	$.ajax({
 		url: mouseUrl,
 		dataType:'html',
 		type: 'GET',
 		timeout: 5000,		//超时时间
-        error: function (xml) {
-            hideLoading();
+		error:function(xml){
 		    topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);		//失败报错
 		},
 		success:function(xml){
@@ -544,24 +534,24 @@ function twoMouse() {
 					dataType:'html',
 					type: 'GET',
 					timeout: 5000,		//超时时间
-                    error: function (xml) {
-                        hideLoading();
-						topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
-					},
-                    success: function (xml) {
-                        hideLoading();
+					error:function(xml){
+							t//imeShowMsg("title","发送失败",500);		//失败报错
+							topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
+						},
+					success:function(xml){
 						if(xml){
+							//timeShowMsg("title","发送成功",500);		//发送成功
 						    topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
 						}
 					}
 				});
+				//timeShowMsg("title","发送成功",500);		//发送成功
 				topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 2);
 			}
 		}
 		
 	})
 }
-//提示信息弹框
 function topTrip(title,status){
     $(".topTrip").show();
     setTimeout('$(".topTrip").hide()', 1000);
@@ -591,10 +581,10 @@ function changeSound(){
 	$(".musicContent").css("display","block");
 	$(".musicTK").css("marginTop",($(".musicContent").height()-$(".musicTK").height())/2);
 	$(".recScreen p").css("marginTop",($(".musicTK").height()-$(".musicTitle").height()-1-$(".recScreen p").height()*2-4)/3);
+	//getIPName();
 }
 //选择视频源
-function getVideoSource(thisValue) {
-    showLoading();
+function getVideoSource(thisValue){
 	if(thisValue==99){
 		$(".videoContent").css("display","none");
 	}
@@ -606,13 +596,15 @@ function getVideoSource(thisValue) {
 		type:"GET",
 		dataType:"html",
 		timeout: 15000,
-        error: function (a, b, c) {
-            hideLoading();
+		error:function(a,b,c){
+			//timeShowMsg("title","发送失败",500);		//失败报错
 		    topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
+			//$(".videoContent").css("display","none");
 		},
-        success: function (xml) {
-            hideLoading();
+		success:function(xml){
 			if(xml){
+				//timeShowMsg("title","发送成功",500);		//发送成功
+				
 			    topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
 				$(".videoContent").css("display","none");
 				
@@ -621,20 +613,20 @@ function getVideoSource(thisValue) {
 	})
 }
 //选择网络摄像头
-function getIPName() {
-    showLoading();
+function getIPName(){
 	$.ajax({
 		url:"ipName.xml?rnd="+(Math.floor(Math.random()*(9999-1000))+1000)+"&utf8=1",		
 		type:"GET",
 		dataType:"xml",
 		timeout: 15000,
-        error: function (data) {
-            hideLoading();
+		error:function(data){
+			//timeShowMsg("title","发送失败",500);		//失败报错
 			topTrip("发送失败",2);
 		},
 		success:function(data){
 			if(data){
 				var str=""
+				//timeShowMsg("title","发送成功",500);		//发送成功
 				$(data).find("item").each(function(i){
 					
 					var valArr=$(this).find("val").text().split(".");
@@ -647,13 +639,14 @@ function getIPName() {
 					
 				})
 				$(".netArr").html('<option value="" disabled selected hidden>'+getLanguageMsg("网络摄像头", $.cookie("yuyan"))+'</option>' + str);
-            }
-            hideLoading();
+				/*topTrip("发送成功",1);*/
+			}
 		}
 	})
 }
 //当放大倍数改变时应执行的操作
-function getNowSize(thisInput,num) { 
+function getNowSize(thisInput,num) {
+    
     if (num != undefined) {
         drawResizeImage(parseInt($(thisInput).val()) * (0.05), num); 
         $("#nowPictureSize").html($(thisInput).val());
@@ -663,7 +656,6 @@ function getNowSize(thisInput,num) {
     }
     
 }
-//将放大的canvas显示到页面中
 function drawResizeImage(size,numSize) {
     canvaswindowWidth = document.documentElement.clientWidth * (1 + size);
     if (numSize != undefined) {
@@ -674,8 +666,11 @@ function drawResizeImage(size,numSize) {
         $(".loadpng").css("width", canvaswindowWidth + "px");
         $(".loadpng").css("height", (canvaswindowWidth / whRate) + "px");
         resizeCanvasSize(canvaswindowWidth, size);
-    }   
+    }
+  
+   
 }
+
 //当canvas图片大小改变时，调用此函数
 //size为放大缩小的倍数，float型，当页面第一次加载次函数时，size=0;可正负，负表示缩小
 //当num==2时，说明当前函数是鼠标抬起时调用的
@@ -692,6 +687,7 @@ function drawImage(size,num) {
         "display": "block",
         "marginTop": (document.documentElement.clientHeight - 30) / 2
     });
+    //$(".screentitle").css("marginLeft", ($("#loadmask").width() - $(".screentitle").width()) / 2)
     wholeSize = size;//将现在放大的倍数赋值给全局变量，方便以后使用
     $(".loadpng").css("display","block");
     $("#loadmask").css("display", "block");
@@ -699,7 +695,11 @@ function drawImage(size,num) {
     $(".moreDrag").css("top", parseFloat($(".slideImage").css("top")) + $(".slideImage").height());
     $(".moreKeyBoard").css("top", parseFloat($(".slideImage").css("top")) + $(".slideImage").height() + $(".moreDrag").height() + parseFloat($(".moreDrag").css("marginTop")));
     var ua = navigator.userAgent.toLowerCase();
-   
+    //if (/iphone|ipad|ipod/.test(ua)) {
+    //    $(".moreDrag ").css("marginTop", "2.1rem");
+    //} else {
+    //    $(".moreDrag ").css("marginTop", "2.1rem");
+    //}
     //对canvas图片动态装载的处理
     //对图片放大缩小时不对图片重新装载，如果之前在缓存中已经有一张截图也不进行重新装载
     if (size!=0 && screenimg != undefined && screenimg != 0) {
@@ -708,28 +708,28 @@ function drawImage(size,num) {
         var tmpscreenimg = screenimg;
             imgW = tmpscreenimg.width;
             imgH = tmpscreenimg.height;
-        if (size != undefined) {
-            if (Math.abs(size) == 0.1) {
-                //allWidth为网页显示区域的宽度
-                canvaswindowWidth = allWidth + (allWidth * size)
-            } else {
-                if (size == 0 && $("#points").val() != 0) {
+            if (size != undefined) {
+                if (Math.abs(size) == 0.1) {
+                    //allWidth为网页显示区域的宽度
+                    canvaswindowWidth = allWidth + (allWidth * size)
                 } else {
-                    canvaswindowWidth = document.documentElement.clientWidth * (1 + size);
-                }
+                    if (size == 0 && $("#points").val() != 0) {
+                    } else {
+                        canvaswindowWidth = document.documentElement.clientWidth * (1 + size);
+                    }
 
+                }
+                allWidth = canvaswindowWidth;
             }
-            allWidth = canvaswindowWidth;
-        }
-        document.getElementsByClassName("loadImage")[1].width = canvaswindowWidth;
-        document.getElementsByClassName("loadImage")[1].height = imgH * canvaswindowWidth / imgW;
+            document.getElementsByClassName("loadImage")[1].width = canvaswindowWidth;
+            document.getElementsByClassName("loadImage")[1].height = imgH * canvaswindowWidth / imgW;
            
-        /*
-            此时图片加载完成，去掉动态加载图
-        */
-        $(".loadingDiv").css("display", "none");
-        resizeCanvasSize(canvaswindowWidth, size);
-        tempContext.drawImage(tmpscreenimg, 0, 0, canvaswindowWidth, imgH * canvaswindowWidth / imgW);
+            /*
+                此时图片加载完成，去掉动态加载图
+            */
+            $(".loadingDiv").css("display", "none");
+            resizeCanvasSize(canvaswindowWidth, size);
+            tempContext.drawImage(tmpscreenimg, 0, 0, canvaswindowWidth, imgH * canvaswindowWidth / imgW);
     }
     else {
         var tmpscreenimg = new Image();
@@ -770,25 +770,24 @@ function drawImage(size,num) {
             }
         }
     }
+    //widthRate = screenWidth / $(".loadImage").width();
+    //heightRate = screenHeight / $(".loadImage").height();
     widthRate = screenWidth / $(".loadImage").eq(1).width();
     heightRate = screenHeight / $(".loadImage").eq(1).height();
     onlyoneCutScreen = 0;
 }
 //截屏，在平板上模拟鼠标在显示端的操作
-// function getScreen(){
-//     drawImage(0);
-//     loadPicture(1);
-//     canvaswindowWidth = document.documentElement.clientWidth;
-//     $("#points").val(0);
-//     $(".loadpng").css("left", "0px");
-//     $("#nowSize").html("0");
-// } 
+function getScreen(){
+    drawImage(0);
+    loadPicture(1);
+    canvaswindowWidth = document.documentElement.clientWidth;
+    $("#points").val(0);
+    $(".loadpng").css("left", "0px");
+    $("#nowSize").html("0");
+} 
 function getLen(v){
 	return Math.sqrt(v.x * v.x + v.y * v.y)
 }
-//笔触和拖动切换
-//拖动不能在前端进行操作，但是可以实现点击的事件
-//笔触可以在显示端操作在canvas的轨迹
 function changeFlage(){
 	if($(".moreDrag").attr("pentype")=="pen"){
 		$(".moreDrag").attr("pentype","pendrag");
@@ -818,6 +817,8 @@ function minusSize(thisIndex){
 //窗口尺寸相应改变（修改canvas大小）
 function resizeCanvasSize(cwidth, csize) {//, cheight, csize
     $(".loadpng").css("width", cwidth);
+   
+   
 	if(csize!=undefined){
 	    //if(Math.abs(csize)>=0.1){
 	    if (Math.abs(csize) >0) {
@@ -834,13 +835,18 @@ function resizeCanvasSize(cwidth, csize) {//, cheight, csize
 	    loadpngH = cheight;
 	}
 	//设置canvas的偏移量以便于在显示端精确定位到目前操作的坐标
-	$(".loadpng").css("left", canvaswindowLeft);	
+	$(".loadpng").css("left", canvaswindowLeft);
+	//$(".loadpng").css("top", canvaswindowTop);
+	
 };
 
 //窗口尺寸相应改变（修改canvas大小）
 function resizeCanvasSize1(cwidth, csize) {//, cheight, csize
     $(".loadpng1").css("width", cwidth);
+
+
     if (csize != undefined) {
+        //if(Math.abs(csize)>=0.1){
         if (Math.abs(csize) > 0) {
             canvaswindowLeft = ($("#checkPicture").width() - canvaswindowWidth) / 2;
         } else if (Math.abs(csize) == 0) {
@@ -859,6 +865,8 @@ function resizeCanvasSize1(cwidth, csize) {//, cheight, csize
     }
     //设置canvas的偏移量以便于在显示端精确定位到目前操作的坐标
     $(".loadpng1").css("left", canvaswindowLeft);
+    //$(".loadpng").css("top", canvaswindowTop);
+
 };
 
 //将所截取的图片重新绘制到canvas中
@@ -1018,7 +1026,8 @@ function loadPicture(num) {
 
                     dragStartjt = false;
                     var loadpngLeft = parseInt($(".loadpng").css("left"));//marginLeft  
-                  
+                    //(moveX-lastedMoveX)
+                    //$("#textID").html(moveX+"-"+lastedMoveX+"__"+parseInt($(".loadpng").css("right"))+"__"+parseInt($(".loadpng").css("left"))+"__"+$(".loadpng").width());
                     var offsetLeft = document.getElementsByClassName("loadpng")[0].offsetLeft;
                     _x_move = event.touches[0].screenX;
                     _y_move = event.touches[0].screenY;
@@ -1053,6 +1062,7 @@ function loadPicture(num) {
                                 if ($(".drawSync").attr("sync") == "sync") {
                                     //tempContext.lineTo(event.touches[0].clientX-canvaswindowLeft,event.touches[0].clientY-canvaswindowTop-40);  
                                     tempContext.lineTo(event.touches[0].clientX - canvaswindowLeft, event.touches[0].clientY - canvaswindowTop);
+
                                     tempContext.stroke();
                                 }
                             }
@@ -1204,11 +1214,14 @@ function loadPicture(num) {
             socket1.send(targeturlhead + historysendstr + "0_" + lastMoveX + "_" + lastMoveY);
         } else if (event.targetTouches.length == 0) {//当前进行的操作是单指或者双指同时抬起
             if (penFlag == 0) {
-              
+                // alert("eeee");
+               // $(".drawSync").html(date2 -date1);
                 if (onemousemove == false) {//当不进行move操作时，则认为是进行了单指点击的事件，模拟start事件向后台发送指令
                     if (date2 - date1 > 0 && date2- date1 < 500) {
-                      
+                        //startMoveX = doubleTouchStartX;
+                        //startMoveY = doubleTouchStartY;
                         socket1.send(targeturlhead + "129_" + doubleTouchStartX + "_" + doubleTouchStartY + ";" + "0_" + doubleTouchStartX + "_" + doubleTouchStartY);
+                       //alert(doubleTouchStartX + "_" + doubleTouchStartY);
                     } else {
                         socket1.send(targeturlhead + "129_" + startMoveX + "_" + startMoveY + ";" + "0_" + startMoveX + "_" + startMoveY);
                     }
@@ -1224,16 +1237,18 @@ function loadPicture(num) {
                 if (dragStartjt) {
                     dragStartjt = false;
                     onemousemove = false;
-                   
+                    //var moveX=parseInt((screenWidth/$(".loadImage").width())*(event.changedTouches[0].screenX-canvaswindowLeft));
+                    //var moveY = parseInt((screenHeight / $(".loadImage").height()) * (event.changedTouches[0].clientY- canvaswindowTop));
                     var moveX = parseInt(widthRate * (event.changedTouches[0].screenX - canvaswindowLeft));
                     var moveY = parseInt(heightRate * (event.changedTouches[0].clientY - canvaswindowTop));
-                  
+                    //var moveY = parseInt((screenHeight / $(".loadImage").height()) * (event.changedTouches[0].screenY - canvaswindowTop));
+
                     if (socket1 != null && socket1.readyState == 1) {
 
-                        socket1.send(targeturlhead + historysendstr + "0_" + lastMoveX + "_" + lastMoveY);
-                        //若用moveX,moveY则会有差异
+                        socket1.send(targeturlhead + historysendstr + "0_" + lastMoveX + "_" + lastMoveY);//若用moveX,moveY则会有差异
                         //抬起鼠标后，操控界面自动刷新，回显当前显示端的界面显示
                         //当前设置延时900ms是防止指令没有发送完毕就重新回显了页面，出现误差
+                        //clearInterval(slideCount);
                         setTimeout("drawImage(0,2)", 900);
 
                     }
@@ -1245,6 +1260,7 @@ function loadPicture(num) {
 
     }, false);
 }
+//})
 $('body').on('touchmove', function (event) { event.preventDefault(); });
 //打开上传文件的选项
 function uploadFile(thistagename) {
@@ -1258,6 +1274,7 @@ function uploadFile(thistagename) {
     $("#fileSubmit").css("display", "block");
     $("#proTask").css("display", "none");
     $("#hideUploadFile").val("");
+    //$("#chooseFile").val("选择文件");
     if ($.cookie("yuyan") == "" || $.cookie("yuyan") == undefined || $.cookie("yuyan") == null) {
         $("#chooseFile").val("选择文件");
     } else {
@@ -1269,98 +1286,133 @@ function uploadFile(thistagename) {
 function chooseotherFile(thistext) {
     $("#hideUploadFile").click();
 }
+//将选择后的文件添加到页面中的文本框中
+function changevalue() {
+    
+    if ($("#hideUploadFile").val() == "") {
+        // $("#chooseFile").val("选择文件");
+        $("#chooseFile").val(getLanguageMsg("选择文件", $.cookie("yuyan")));
+    } else {
+        var showFileValue = $("#hideUploadFile").val().split("\\")[$("#hideUploadFile").val().split("\\").length - 1];
+        $("#chooseFile").val(showFileValue);
+    }
+    $("#postName").val($("#hideUploadFile").val());
+}
+var uploadInterval = "";
+//上传文件时判断是否为空
+function onCmdOk() {
+    var rndomStr = Math.floor(Math.random() * 100000);
+    $("input[name=rndmark]").val(rndomStr);
+   
+    $(".uploadRateShadow").css("height", $(".fileTK").height() - $(".fileTitle").height());
+    $(".uploadRateShadow").css("top", parseInt($(".fileTK").css("marginTop")) + parseInt($(".fileTitle").height()));
+    
+   
+   // $("#fileSubmit").attr("action", $("#fileSubmit").attr("action") + "&rndmark=" + rndomStr);
+    if ($("#hideUploadFile").val() == "") {
+        //alert("请选择要上传的文件");
+        return false;
+    } else {
+        if ($(".cc").eq(0).attr("homeid") == "home") {
+            $("#fileSubmit").attr("action", "wpfileupload.asp?utf8=1&rndmark=" + rndomStr);
+
+        } else {
+            $("#fileSubmit").attr("action", newurl + "/wpfileupload.asp?utf8=1&rndmark=" + rndomStr);
+        }
+        $(".uploadRateShadow").show();
+    }
+    $("#uploadRate").css("marginTop", ($(".uploadRateShadow").height() - $("#uploadRate").height()) / 2);
+    $("#uploadValue").css("marginTop", ($(".uploadRateShadow").height() - $("#uploadValue").height()) / 2)
+   //setTimeout("getUpProgress()",500);
+   uploadInterval=setInterval("getUpProgress()",1000);
+   return true;
+}
+//获取上传进度
+function getUpProgress() {
+    debugger;
+    var dataRate = 0;
+    if ($("form").attr("uploadResult") == "ok") {
+        clearInterval(uploadInterval);
+        $("form").attr("uploadResult", "no");
+        $(".uploadRateShadow").hide();
+        $("#uploadRateLeft").css("width", "100%");
+        $("#uploadValue").html(dataRate + "100%");
+    }
+    if ($("#proTask").css("display") == "block") {
+        $(".uploadRateShadow").hide();
+        $("#uploadRateLeft").css("width", "100%");
+        $("#uploadValue").html(dataRate + "%");
+    }
+    
+    $.ajax({
+        url: newurl + "/wpuploadprocess.asp",
+        type: "get",
+        dataType: "html",
+        data: {
+            "wpuploadprocess": $("input[name=rndmark]").val(),
+            "utf8":"1",
+            "json":"1"
+        },
+        scriptCharset: "utf-8",
+        contentType: "application/x-www-form-urlencoded; charset=utf-8",
+        success: function (data) {
+            
+            if (data.indexOf("200") >= 0) {
+                dataRate = parseInt(data.split(";")[1].split("}")[0].split(":")[1]);
+                $("#uploadRateLeft").css("width", dataRate + "%");
+                $("#uploadValue").html(dataRate + "%");
+            } else if (data.indexOf("301") >= 0) {
+                $(".uploadRateShadow").hide();
+                $("#uploadRateLeft").css("width", "0%");
+                $("#uploadValue").html(dataRate + "0%");
+            }
+             console.log(data);
+           // if(data)
+        }, error: function () {
+        }
+    })
+}
+//当数据上传成功后，需要在上传数据的弹出框中显示对当前上传数据的播放操作按钮。
+function showplay() {
+    $("#fileSubmit").css("display", "none");
+    $("#proTask").css("display", "block");
+    $(".proName").css("width", $(".playTask").width() - 60);
+}
 //根据上传的文件的类型，显示相应的控制按钮
 function showProCtrl(type, desc) {
     var str1 = "";
     
     if (type =="0") {
-        str1 = '<div class="programBtn" style="background:#fff; box-shadow: 0px 1px 5px 5px #e0dede;"><ul class="moreFunction"><li><img src="../images/bottomPlay/page_up.png" class="page_up" onclick="docmd(\'keycode\',\'0xFF55\',0)" style="height:100%;"/></li><li><img style="height:100%;" src="../images/bottomPlay/page_down.png" class="page_down"  onclick="docmd(\'keycode\',\'0xFF9B\',0)" /></li></ul></div>';
+        str1 = '<div class="programBtn" style="height:90px; background:#fff; box-shadow: 0px 1px 5px 5px #e0dede;"><ul class="moreFunction"><li><img src="../images/bottomPlay/page_up.png" class="page_up" onclick="docmd(\'keycode\',\'0xFF55\',0)"/></li><li><img src="../images/bottomPlay/page_down.png" class="page_down"  onclick="docmd(\'keycode\',\'0xFF9B\',0)" /></li></ul></div>';
     }else if (type == "1") {
-        str1 = '<div class="programBtn" style="background:#fff; box-shadow: 0px 1px 5px 5px #e0dede;"><div class="playRate" style="height:40px;width:100%;"><div class="startProTask"  onclick="pauseprotask()"><img class="start" style="height:75%;margin-top:7.5%;" src="images/bottomPlay/tingzhi.png" /></div><div class="showRate" style="width:90%"><span class="fileName1" style="font-size:14px;line-height:20px;width:100%;"></span><div id="rangeRate1" class="clearfix11" style="width:80%"><div id="rangeLeft"></div> <div id="rangeRate2"></div></div> <span id="rateProgressValue" style="font-size:16px;display:block;float:left;width:15%;margin-left:1%;margin-top:5px;height:20px;line-height:20px;">00:00</span></div></div><div class="proSound"><div style="display:block;float:left;width:10%;height:100%;"><img src="images/leftControl/quanjuyinliang.png"></div><div class="proSystemSound" style="display: block;"><input id="prorange" class="prorange" type="range" min="0" max="255" value="" onchange="change(\'prorange\',\'provalue\')"><span id="provalue" clas="provalue" style="line-height:25px;display:block;float:left;width:10%;">128</span></div></div></div>';
+        str1 = '<div class="programBtn" style="height:90px; background:#fff; box-shadow: 0px 1px 5px 5px #e0dede;"><div class="playRate" style="height:40px;width:100%;"><div class="startProTask"  onclick="pauseprotask()"><img class="start" style="width:75%;margin-left:7.5%;" src="images/bottomPlay/tingzhi.png" /></div><div class="showRate" style="width:90%"><span class="fileName1" style="font-size:14px;line-height:20px;width:100%;"></span><div id="rangeRate1" class="clearfix11" style="width:80%"><div id="rangeLeft"></div> <div id="rangeRate2"></div></div> <span id="rateProgressValue" style="font-size:16px;display:block;float:left;width:15%;margin-left:1%;margin-top:5px;height:20px;line-height:20px;">00:00</span></div></div><div class="proSound"><img src="images/leftControl/quanjuyinliang.png"><div class="proSystemSound" style="display: block;"><input id="prorange" class="prorange" type="range" min="0" max="255" value="" onchange="change(\'prorange\',\'provalue\')"><span id="provalue" clas="provalue" style="line-height:25px;display:block;float:left;width:10%;">128</span></div></div></div>';
     } else if (type == "2") {
-        str1 = '<div class="programBtn" style="background:#fff; box-shadow: 0px 1px 5px 5px #e0dede;"><div class="playRate" style="height:40px;width:100%;"><div class="startProTask"  onclick="pauseprotask()"><img class="start" style="height:75%;margin-top:7.5%;" src="images/bottomPlay/tingzhi.png" /></div><div class="showRate" style="width:90%"><span class="fileName1" style="font-size:14px;line-height:20px;width:100%;"></span><div id="rangeRate1" class="clearfix11" style="width:80%"><div id="rangeLeft"></div> <div id="rangeRate2"></div></div> <span id="rateProgressValue" style="font-size:16px;display:block;float:left;width:15%;margin-left:1%;margin-top:5px;height:20px;line-height:20px;">00:00</span></div></div><div class="proSound"><div style="display:block;float:left;width:10%;height:100%;"><img src="images/leftControl/quanjuyinliang.png"></div><div class="proSystemSound" style="display: block;"><input id="prorange" class="prorange" type="range" min="0" max="255" value="" onchange="change(\'prorange\',\'provalue\')"><span id="provalue" class="provalue" style="line-height:25px;display:block;float:left;width:10%;">128</span></div></div></div>';
+        str1 = '<div class="programBtn" style="height:90px; background:#fff; box-shadow: 0px 1px 5px 5px #e0dede;"><div class="playRate" style="height:40px;width:100%;"><div class="startProTask"  onclick="pauseprotask()"><img class="start" style="width:75%;margin-left:7.5%;" src="images/bottomPlay/tingzhi.png" /></div><div class="showRate" style="width:90%"><span class="fileName1" style="font-size:14px;line-height:20px;width:100%;"></span><div id="rangeRate1" class="clearfix11" style="width:80%"><div id="rangeLeft"></div> <div id="rangeRate2"></div></div> <span id="rateProgressValue" style="font-size:16px;display:block;float:left;width:15%;margin-left:1%;margin-top:5px;height:20px;line-height:20px;">00:00</span></div></div><div class="proSound"><img src="images/leftControl/quanjuyinliang.png"><div class="proSystemSound" style="display: block;"><input id="prorange" class="prorange" type="range" min="0" max="255" value="" onchange="change(\'prorange\',\'provalue\')"><span id="provalue" class="provalue" style="line-height:25px;display:block;float:left;width:10%;">128</span></div></div></div>';
     } else if (type = "3") {
-        str1 = '<div class="programBtn" style="background:#fff; box-shadow: 0px 1px 5px 5px #e0dede;"><ul class="moreFunction"><li><img style="height:100%;" src="../images/bottomPlay/shangyiye.png" class="page_up" onclick="docmd(\'keycode\',\'0xFF55\',0)"/></li><li><img style="height:100%;" src="../images/bottomPlay/xiayiye.png" class="page_down"  onclick="docmd(\'keycode\',\'0xFF9B\',0)" /></li></ul></div>';
+        str1 = '<div class="programBtn" style="height:90px; background:#fff; box-shadow: 0px 1px 5px 5px #e0dede;"><ul class="moreFunction"><li><img src="../images/bottomPlay/shangyiye.png" class="page_up" onclick="docmd(\'keycode\',\'0xFF55\',0)"/></li><li><img src="../images/bottomPlay/xiayiye.png" class="page_down"  onclick="docmd(\'keycode\',\'0xFF9B\',0)" /></li></ul></div>';
     } else if (type = "4") {
-        str1 = '<div class="programBtn" style="background:#fff; box-shadow: 0px 1px 5px 5px #e0dede;margin-bottom:10px;"><ul class="moreFunction"><li><img style="height:100%;" class="beforePage image" src="../images/bottomPlay/shangyiye.png" onclick="docmd(\'keycode\',\'screenClass -keyevent 0xFF55\',0)"/></li><li><img class="nextPage image" style="height:100%;" src="../images/bottomPlay/xiayiye.png"  onclick="docmd(\'keycode\',\'screenClass -keyevent 0xFF9B\',0)" /></li></ul></div>';
+        str1 = '<div class="programBtn" style="height:90px; background:#fff; box-shadow: 0px 1px 5px 5px #e0dede;margin-bottom:10px;"><ul class="moreFunction"><li><img class="beforePage image" src="../images/bottomPlay/shangyiye.png" onclick="docmd(\'keycode\',\'screenClass -keyevent 0xFF55\',0)"/></li><li><img class="nextPage image" src="../images/bottomPlay/xiayiye.png"  onclick="docmd(\'keycode\',\'screenClass -keyevent 0xFF9B\',0)" /></li></ul></div>';
     }
     $(".proOperBtn").html(str1);
-    $(".proOperBtn .programBtn").append('<ul class="programPrintBtn"><li class="wordPrint" onclick="printReceipt()">小票打印</li><li class="wordPrint" onclick="printPictutre(\'4寸图片打印模板\')">4寸图片</li><li class="wordPrint" onclick="printPictutre(\'6寸图片打印模板\')">6寸图片</li><li class="wordPrint" onclick="printDefault()">默认模板</li></ul>');
     $(".fileTK .programBtn").css("display", "block");
     if (document.documentElement.clientHeight < 700) {
         
-        $(".proSound img").css("height", "45%");
-        $(".startProTask .start").css("height", "45%");
-        $(".proOperBtn .start").css("marginTop", ($(".proOperBtn .playRate").height() - $(".proOperBtn .start").height()) / 2);
-        $(".proOperBtn .showRate").css("marginTop", ($(".proOperBtn .playRate").height() - $(".proOperBtn .showRate").height()) / 2)
+        $(".proSound img").css("height", "25%");
+        $(".proOperBtn .start").css("marginTop", ($(".proOperBtn .showRate").height() - $(".proOperBtn .start").width()) / 2);
         $(".proSound img").css("marginTop", ($(".proSound .proSystemSound").height() - $(".proSound img").height()) / 2);
         $("#rateProgressValue").css("fontSize", "12px");
         $("#provalue").css("fontSize", "12px");
-        //$("#rangeRate1").css("marginLeft", "0px");
+        $("#rangeRate1").css("marginLeft", "0px");
         $(".fileTitle").css("fontSize", "16px");
         $(".proName").css({ "fontSize": "16px", "lineHeight": $(".playTask").height() + "px" });
         if (document.documentElement.clientHeight < 400) {
             $(".fileTK").css("height", "50%");
         }
     }
-    changeUploadRate();
     $(".moreProTask span").css("marginLeft", (parseInt($(".moreProTask").width()) - parseInt($(".moreProTask span").width()))/2)
 }
-function changeUploadRate() {
-    var rangeRate1 = document.getElementById("rangeRate1");
-    var rangeRate2 = document.getElementById("rangeRate2");
-    var changeFlage = 0;
-
-    var nowSecond = 0;
-
-    rangeRate2.addEventListener('touchstart', function (event) {
-        changeFlage = 1;
-
-        clearInterval(timer);
-    })
-    rangeRate2.addEventListener('touchmove', function (event) {
-        changeFlage = 1;
-        //console.log("move"+changeFlage);         
-        //event.preventDefault();            
-        var styles = window.getComputedStyle(rangeRate1, null);
-        var width = styles.width;//灰色块的长度，用于计算红色块最大滑动的距离
-        //leftWidth为当前灰色块距离屏幕最左侧的距离
-
-        var leftWidth = parseFloat($(".fileTK").css("marginLeft")) + parseFloat($("#proTask").css("marginLeft")) + $(".startProTask").width() + parseFloat($("#rangeRate1").css("marginLeft"));
-        //var leftWidth = parseFloat($("#functionButton .images").width()) + parseFloat($(".musicOrVideo").css("width")) * 0.04;
-        if (event.targetTouches.length == 1) {
-            var touch = event.targetTouches[0];
-            //计算红色块的left值，pageX是相对于整个页面的坐标，减去10（红色块长度的一半）是为了让鼠标点显示在中间，
-            //可以更改值看看效果，如果灰色块不是紧挨着屏幕，那还需要计算灰色块距离左屏幕的距离，应为pageX！！！                
-            moveleft = touch.pageX - leftWidth - 10;
-            if (moveleft <= 0) {//红色块的left值最小是0；                    
-                moveleft = 0;
-            };
-            if (moveleft >= parseFloat(width) - 20) {////红色块的left值最小是灰色块的width减去红色块的width；                    
-                moveleft = parseFloat(width) - 20;
-            }
-            rangeRate2.style.left = moveleft + "px";//最后把left值附
-            var reteWidth = parseFloat($("#rangeRate1").css("width")) - parseInt($("#rangeRate2").css("width"));
-            var strsMax = parseFloat($("#rangeRate1").attr("max"));
-            var nw = parseInt($("#tabscreen").attr("nowwindow"));
-            nowSecond = moveleft * strsMax / reteWidth;
-            $("#rangeLeft").css("width", moveleft);
-            $("#rateProgressValue").html(secondToMinute(nowSecond));
-        };
-    });
-    rangeRate2.addEventListener('touchend', function (event) {
-        var reteWidth = parseFloat($("#rangeRate1").css("width")) - parseInt($("#rangeRate2").css("width"));
-        var strsMax = parseFloat($("#rangeRate1").attr("max"));
-        var nw = parseInt($("#tabscreen").attr("nowwindow"));
-        nowSecond = moveleft * strsMax / reteWidth
-        timeFlag = 2;
-        docmd(nw * 10000 + 3009, parseInt(nowSecond));
-        changeFlage = 0;
-    }) 
-}
-//点击启动按钮进行插播，为临时任务
+//点击启动按钮进行插播
 function startUp(thisContent) {
-    showLoading();
     var contentName = "";
 	var suntType=1;
     var des = "";
@@ -1392,30 +1444,28 @@ function startUp(thisContent) {
         itemType = "1003";
         des = $(thisContent).parent().attr("proTaskDesc");
         contentName = $(thisContent).parent().attr("proTaskPath") + des;
-		suntType=0;
+		suntType=99;
         clearInterval(timer);
     }else{
 		itemType = "1003";
         des = $(thisContent).parent().attr("proTaskDesc");
         contentName = $(thisContent).parent().attr("proTaskPath") + des;
-		suntType=0;
+		suntType=1;
         clearInterval(timer);
 	}
     $.ajax({
-        url: newurl + "/wpsendclientmsg.asp?wpsendclientmsg=76_-starttemptask <id>32769</id><sunt>" + suntType + "</sunt><sdly>15</sdly><des>" + des + "</des><url>" + contentName + " -t</url><ttype>" + itemType + "</ttype><dur>36000</dur><win>全屏窗口/0</win><wstate>100</wstate><loop>1</loop>&utf8=1",
+        url: newurl+"/wpsendclientmsg.asp?wpsendclientmsg=76_-starttemptask <id>32769</id><sunt>"+suntType+"</sunt><sdly>15</sdly><des>" + des + "</des><url>" + contentName + " -t</url><ttype>" + itemType + "</ttype><dur>36000</dur><win>全屏窗口/0</win><wstate>100</wstate>&utf8=1",
         dataType: "text",
         type: 'GET',
         success: function () {
-            //$(".current span").css("color", "#000");
-            //$(".current span").css("background", "#fff");
-            //$(".proName").css("background", "#f5f5f5");
-            hideLoading();
+            $(".current span").css("color", "#000");
+            $(".current span").css("background", "#fff");
+            $(".proName").css("background", "#f5f5f5");
             if (itemType == "1009" || itemType == "1010") {
                 $(".start").attr("src", "images/bottomPlay/bofang.png");
             }
         },
         error: function () {
-            hideLoading();
         }
     })
 }
@@ -1463,7 +1513,6 @@ function checkFileType(itemtype,downLink) {
 			
 	}
 }
-
 //显示一键登录的模块
 function onClickLogin() {
     $(".onClickLogin").show();
@@ -1485,19 +1534,19 @@ function onClickLogin() {
 
 }
 //一键登录的单个提交事件
-function submitLogin(thisvalue, ops) {
-    showLoading();
+function submitLogin(thisvalue,ops) {
     var op1 = $(".contentLoginTop input").eq(0).prop("checked") ? 1 : 0;
     var op2 = $(".contentLoginTop input").eq(1).prop("checked") ? 1 : 0;
     var op3 = $(".contentLoginTop input").eq(2).prop("checked") ? 1 : 0;
     var op4 = ops;
     var submitVal=$(thisvalue).parent().find(".inputvalue").val();
+   // var op4 = $(".contentLoginTop input").eq(3).prop("checked") ? 1 : 0;
     $.ajax({
         url: newurl + "/wpinputstring.asp",
         type: "get",
         dataType: "html",
         data: {
-            wpinputstring: encodeURI(submitVal),
+            wpinputstring: submitVal,
             op: op1.toString() + op2.toString() + op3.toString() + "1" + op4.toString(),
             ret: "0",
             utf8:"1"
@@ -1511,17 +1560,14 @@ function submitLogin(thisvalue, ops) {
             } else {
                 topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
             }
-            hideLoading();
             //loginName
         }, error: function (data) {
-            hideLoading();
             topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
         }
     })
 }
 //提交+Tab
 function submitLogin1(thisVal) {
-    showLoading();
     var op1 = $(".contentLoginTop input").eq(0).prop("checked") ? 1 : 0;
     var op2 = $(".contentLoginTop input").eq(1).prop("checked") ? 1 : 0;
     var op3 = $(".contentLoginTop input").eq(2).prop("checked") ? 1 : 0;
@@ -1531,12 +1577,11 @@ function submitLogin1(thisVal) {
         type: "get",
         dataType: "html",
         data: {
-            wpinputstring: encodeURI($(thisvalue).prev().val()),
+            wpinputstring: $(thisvalue).prev().val(),
             op: op1.toString() + op2.toString() + op3.toString() + "1" + op4.toString(),
             ret: "0",
             utf8: "1"
         }, success: function (data) {
-            hideLoading();
             var t = $(data).find("wpretstr").text();
             if (t.indexOf("200 OK") >= 0) {
                 topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
@@ -1546,14 +1591,12 @@ function submitLogin1(thisVal) {
                 topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
             }
         }, error: function (data) {
-            hideLoading();
             topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
         }
     })
 }
 //一键登录
 function submitAll() {
-    showLoading();
     var op1 = $(".contentLoginTop input").eq(0).prop("checked") ? 1 : 0;
     var op2 = $(".contentLoginTop input").eq(1).prop("checked") ? 1 : 0;
     var op3 = $(".contentLoginTop input").eq(2).prop("checked") ? 1 : 0;
@@ -1564,12 +1607,11 @@ function submitAll() {
         type: "get",
         dataType: "html",
         data: {
-            wpinputstring: encodeURI(strq),
+            wpinputstring: strq,
             op: op1.toString() + op2.toString() + op3.toString() + "1" + op4.toString(),
             ret: "1",
             utf8:"1"
         }, success: function (data) {
-            hideLoading();
             var t = $(data).find("wpretstr").text();
             if (t.indexOf("200 OK") >= 0) {
                 topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
@@ -1579,7 +1621,6 @@ function submitAll() {
                 topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
             }
         }, error: function (data) {
-            hideLoading();
             topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
         }
     })
@@ -1599,10 +1640,14 @@ function showNameCookie() {
             loginName.push($.cookie("loginName"));
             cookieStr = $.cookie("loginName");
             optionLoginStr += "<option value=" + cookieStr + ">"+cookieStr+"</option>"
-        } 
+        }
+       
+        
         $("#saveName").html(optionLoginStr);
-      
+        console.log($("#saveName").html());
     }
+    
+
 }
 //点击提交按钮后存储cookie
 function saveSelectNameCookie() {
@@ -1660,20 +1705,18 @@ function tipMessage(message,functionName,messageNum) {
 }
 //ios启动停止投屏
 function startScreen(typeNum) {
-    showLoading();
     $.ajax( {
         url: newurl + "/wpplaycontrol.asp?wpplaycontrol=airplayer&command=" + typeNum + "&param=0&utf8=1&rnd=" + (Math.floor(Math.random() * (9999 - 1000)) + 1000),
         type: "get",
         dataType: "html",
         success: function (xml) {
-            hideLoading();
+           
             if (xml.indexOf("OK") >= 0) {
                 topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
             } else {
                 topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
             }
         }, error: function (data) {
-            hideLoading();
             topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
         }
     })
@@ -1681,13 +1724,11 @@ function startScreen(typeNum) {
 }
 //其他方式投屏
 function otherScreen(typeScreen) {
-    showLoading();
     $.ajax({
         url: newurl + "/wpsendclientmsg.asp?wpsendclientmsg=" + typeScreen + "&utf8=1&rnd=" + (Math.floor(Math.random() * (9999 - 1000)) + 1000),
         type: "get",
         dataType: "html",
         success: function (xml) {
-            hideLoading();
             var xml = eval("(" + xml + ")");
             if (xml.indexOf("OK") >= 0) {
                 topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
@@ -1695,81 +1736,72 @@ function otherScreen(typeScreen) {
                 topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
             }
         }, error: function (data) {
-            hideLoading();
             topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
         }
     })
 }
 //启动禁用usb
 function startusb(typeusbNum) {
-    showLoading();
     $.ajax({
         url: newurl + "/wpsendclientmsg.asp?wpsendclientmsg=" + typeusbNum+"&rnd="+(Math.floor(Math.random()*(9999-1000))+1000),
         type: "get",
         dataType: "html",
         success: function (xml) {
-            hideLoading();
+            
             if (xml.indexOf("OK") >= 0) {
                 topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
             } else {
                 topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
             }
         }, error: function (data) {
-            hideLoading();
             topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
         }
     })
 }
 //切换分辨率
 function getScreenSize(screenSize) {
-    showLoading();
     $.ajax({
         url: newurl + "/wpsendclientmsg.asp?wpsendclientmsg=107_" + screenSize + "&rnd=" + (Math.floor(Math.random() * (9999 - 1000)) + 1000),
         type: "get",
         dataType: "html",
-        success: function (xml) {
-            hideLoading();
-            var xml = eval("(" + xml + ")");
+        success: function (xml) { var xml = eval("(" + xml + ")");
             if (xml.indexOf("OK") >= 0) {
                 topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
             } else {
                 topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
             }
         }, error: function (data) {
-            hideLoading();
             topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
         }
     })
 }
 //切换HDMI
 function changeHDMI(hNum) {
-    showLoading();
     $.ajax({
         url: newurl + "/wpcontrolcomm.asp?wpcontrolcomm=1000_" + hNum + "&rnd=" + (Math.floor(Math.random() * (9999 - 1000)) + 1000),
         type: "get",
         dataType: "html",
         success: function (xml) {
-            hideLoading();
+           
             if (t.indexOf("OK") >= 0) {
                 topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
             } else {
                 topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
             }
         }, error: function (data) {
-            hideLoading();
             topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
         }
     })
 }
 //切换语言
-function switchLanguage(index, pagename) {    
+function switchLanguage(index, pagename) {
     var url = "js/language.json";//多语言数据路径
     $.ajax({
         url: url,
         type: "get",
         dataType: "text",
-        async:'false',
         success: function (data) {
+            // alert("ok");
             var data = eval("(" + data + ")");
             for (var i = 0; i < data[index].content[pagename].length; i++) {
                 var json = data[index].content[pagename][i];
@@ -1784,7 +1816,6 @@ function switchLanguage(index, pagename) {
                 } else {
                     obj.html(json.word);
                 }
-             
             }
             if (index ==1) {
                 $(".bar .cmdBar li").css("height","80px");
@@ -1794,14 +1825,9 @@ function switchLanguage(index, pagename) {
             $(".bar .cmdBar li img").css("marginTop", ($(".bar .cmdBar li").height() - $(".bar .cmdBar li img").height()) / 2);
         }, error: function (a, b, c) {
             console.log(a, b, c);
-        } 
-    }).done(function(e){
-        getbtn(pagename.split(".html")[0], index);
-        setTimeout(function () {
-            $(".controlImage img").eq(0).click();
-        }, 1000)
+        }
+
     })
-   
 }
 //预览图片
 function checkImageFile(thisHref) {
@@ -1916,18 +1942,22 @@ function loadPicture1(num) {
         lastMoveX = moveX;
         lastMoveY = moveY;
         currentX = event.touches[0].screenX;
-        currentY = event.touches[0].screenY;   
-        var loadpngLeft = parseInt($(".loadpng1").css("left"));//marginLeft  
-        var offsetLeft = document.getElementsByClassName("loadpng1")[0].offsetLeft;
-        _x_move = event.touches[0].screenX;
-        _y_move = event.touches[0].screenY;
-      
-        moveleft = parseFloat(_x_move) - parseFloat(_x_start) + parseFloat(left_start);
-       
-        $(".loadpng1").css("left", parseFloat(_x_move) - parseFloat(_x_start) + parseFloat(left_start) + "px");
-        $(".loadpng1").css("right", (parseInt(document.documentElement.clientWidth) - canvaswindowWidth - parseInt($(".loadpng1").css("left"))) - 2 + "px");
+        currentY = event.touches[0].screenY;
 
-        $(".loadpng1").css("top", parseFloat(_y_move) - parseFloat(_y_start) + parseFloat(top_start) + "px");
+       
+        
+           
+            var loadpngLeft = parseInt($(".loadpng1").css("left"));//marginLeft  
+            var offsetLeft = document.getElementsByClassName("loadpng1")[0].offsetLeft;
+            _x_move = event.touches[0].screenX;
+            _y_move = event.touches[0].screenY;
+          
+            moveleft = parseFloat(_x_move) - parseFloat(_x_start) + parseFloat(left_start);
+           
+            $(".loadpng1").css("left", parseFloat(_x_move) - parseFloat(_x_start) + parseFloat(left_start) + "px");
+            $(".loadpng1").css("right", (parseInt(document.documentElement.clientWidth) - canvaswindowWidth - parseInt($(".loadpng1").css("left"))) - 2 + "px");
+
+            $(".loadpng1").css("top", parseFloat(_y_move) - parseFloat(_y_start) + parseFloat(top_start) + "px");
              
             
             
@@ -1939,7 +1969,6 @@ function loadPicture1(num) {
 }
 $('body').on('touchmove', function (event) { event.preventDefault(); });
 function showNowPlayScreen() {
-    showLoading();
     $.ajax({
         url: newurl + "/wpgetxmlids.asp?gettype=2",
         type: "get",
@@ -1953,10 +1982,8 @@ function showNowPlayScreen() {
                 }
                 $(".playScreenShadowContent ul").html(strs);
             }
-            hideLoading();
 
         }, error: function () {
-            hideLoading();
         }
     })
 }
@@ -1971,17 +1998,14 @@ function playScreenShadowContent(thisContentWindow) {
 }
 //播放节目单里的内容到指定窗口
 function playScreenContent(win, id) {
-    showLoading();
     $.ajax({
         url: newurl + "/wpsendclientmsg.asp?wpsendclientmsg=80_-starttemptask%20<id>" + id + "</id><tmpid>" + (91000+parseInt(id))+ "</tmpid><dur>10800</dur><win>" + win + "</win>&utf8=1",
         type: "get",
         dataType: "text",
         success: function (data) {
-            hideLoading();
             topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
             $(".playScreenShadow").hide();
         }, error: function (data) {
-            hideLoading();
             topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
 
         }
@@ -1989,18 +2013,15 @@ function playScreenContent(win, id) {
 }
 //停止指定窗口的临时任务
 function stopScreenProgram() {
-    showLoading();
     var stopWindowNum = $(".current").find(".timeLong i").text().split("-")[0];
     $.ajax({
         url: newurl + "/wpsendclientmsg.asp?wpsendclientmsg=28_" + stopWindowNum,
         type: "get",
         dataType: "text",
         success: function (data) {
-            hideLoading();
             topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
 
         }, error: function (data) {
-            hideLoading();
             topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
         }
     })
@@ -2043,617 +2064,6 @@ function getLanguageMsg(a,c) {
     })
     return returnMsg;
 }
-//音频控制
-function closethisAudio(thisdiv) {
-    $(thisdiv).hide();
-}
-function openTVControl(thisdiv) {
-    $(thisdiv).css("display", "flex");
-}
-//静音,取消静音
-function audioNoSound(controlNum, type) {
-    showLoading();
-    $.ajax({
-        url: "wpsendudpdata.asp?wpsendudpdata=1000_CS0X20" + controlNum + "0X20" + type + "0X0D&destip=&destport=&rnd=" + (Math.floor(Math.random() * (9999 - 1000)) + 1000),
-        dataType: 'text',
-        type: 'GET',
-        timeout: "3000",
-        success: function (data) {
-            hideLoading();
-            topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
-            $(".topConfirm").attr("messageTip", "")
-        },
-        error: function (a, b, c) {
-            hideLoading();
-            if (b == "timeout") {
-                getLanguageMsg("请求超时,请重试");
-            }
-            topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
-            $(".topConfirm").attr("messageTip", "")
-        }
-    })
-}
-//音箱音量加、减
-function changeSound1(num, type) {
-    showLoading();
-    $.ajax({
-        url: "wpsendudpdata.asp?wpsendudpdata=1000_CC0X20" + num + "0X20" + type + "0X207800X0D&destip=&destport=&rnd=" + (Math.floor(Math.random() * (9999 - 1000)) + 1000),
-        dataType: 'text',
-        type: 'GET',
-        timeout: "3000",
-        success: function (data) {
-            hideLoading();
-            //timeShowMsg("title","发送成功",500);
-            topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
-            $(".topConfirm").attr("messageTip", "")
-        },
-        error: function (a, b, c) {
-            hideLoading();
-            if (b == "timeout") {
-                getLanguageMsg("请求超时,请重试");
-            }
-            //timeShowMsg("title","发送失败",500);
-            topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
-            $(".topConfirm").attr("messageTip", "")
-        }
-    })
-}
-//音响组静音/取消静音
-function changeGroupOrder(type, outputNum1, outputNum2, outputNum3) {
-    showLoading();
-    var str = "";
-    if (outputNum3 != "") {
-        str = "0X20" + outputNum1 + "0X20" + type + "0X200X0DfxxfCS0X20" + outputNum2 + "0X20" + type + "0X200X0DfxxfCS0X20" + outputNum3 + "0X20" + type + "0X200X0D";
-    } else {
-        str = "0X20" + outputNum1 + "0X20" + type + "0X200X0DfxxfCS0X20" + outputNum2 + "0X20" + type + "0X200X0D";
-    }
-    $.ajax({
-        url: "wpsendudpdata.asp?wpsendudpdata=1000_CS" + str + "&destip=&destport=&rnd=" + (Math.floor(Math.random() * (9999 - 1000)) + 1000),
-        dataType: 'text',
-        type: 'GET',
-        timeout: "3000",
-        success: function (data) {
-            hideLoading();
-            topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
-            $(".topConfirm").attr("messageTip", "")
-        },
-        error: function (a, b, c) {
-            hideLoading();
-            if (b == "timeout") {
-                getLanguageMsg("请求超时,请重试");
-            }
-            topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
-            $(".topConfirm").attr("messageTip", "")
-        }
-    })
-}
-//音箱组音量加、减
-function changeGroupSound(type, outputNum1, outputNum2, outputNum3) {
-    showLoading();
-    var str = "";
-    if (outputNum3 != "") {
-        str = "0X20" + outputNum1 + "0X20" + type + "0X207800X0DfxxfCC0X20" + outputNum2 + "0X20" + type + "0X207800X0DfxxfCC0X20" + outputNum3 + "0X20" + type + "0X207800X0D";
-    } else {
-        str = "0X20" + outputNum1 + "0X20" + type + "0X207800X0DfxxfCC0X20" + outputNum2 + "0X20" + type + "0X207800X0D";
-    }
-    $.ajax({
-        url: "wpsendudpdata.asp?wpsendudpdata=1000_CC" + str + "&destip=&destport=&rnd=" + (Math.floor(Math.random() * (9999 - 1000)) + 1000),
-        dataType: 'text',
-        type: 'GET',
-        timeout: "3000",
-        success: function (data) {
-            hideLoading();
-            topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
-            $(".topConfirm").attr("messageTip", "")
-        },
-        error: function (a, b, c) {
-            hideLoading();
-            if (b == "timeout") {
-                getLanguageMsg("请求超时,请重试");
-            }
-            topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
-            $(".topConfirm").attr("messageTip", "")
-        }
-    })
-}
-/**
- * 返回值格式：200 OK <result>%s</result>
- * URL参数中增加 needret=1，表示要有返回值
-http://localhost:8080/wpsendudpdata.asp?wpsendudpdata=1000_0X3A0X300X300X310X300X300X300X420X300X300X300X300X310X300X300X300X310X330X450X0D0X0A&destip=192.168.1.254&destport=6666&app=0&close=&sleep=30&needret=
-
- * */
-function getSound1() {
-    showLoading();
-    $.ajax({
-        url: "wpsendudpdata.asp?wpsendudpdata=1000_GSB20X201000X20200X0D&destip=&destport=&app=0&close=&sleep=30&needret=1&rnd=" + (Math.floor(Math.random() * (9999 - 1000)) + 1000),
-        dataType: 'html',
-        type: 'GET',
-        timeout: "3000",
-        success: function (data) {
-            var data1 = data;
-            //var data1=$(data);
-            if ($(data1).find("wpretstr").text().indexOf("200") >= 0) {
-                var str = $(data1).find("wpretstr").find("result").text();
-                $.cookie("yinxiang", str)
-                var strArr = "";
-                if (str != "") {
-                    strArr = str.split(";");
-
-                    for (var i = 0; i < strArr.length; i++) {
-                        if (strArr[i].indexOf("=") >= 0) {
-                            var controlNum = "";
-
-                            var controlG = strArr[i].split("=");
-                            var soundNum = controlG[1];
-                            if (controlG[0].indexOf("#") >= 0) {
-                                controlNum = (controlG[0].split("#"))[1];
-                                if (i == 2) {
-                                    ($("#tvControlShadow2").find(".tv").eq(6)).find("li").eq(4).html(Math.round(parseInt(soundNum) / 780));
-                                } else if (i == 3) {
-                                    ($("#tvControlShadow2").find(".tv").eq(7)).find("li").eq(4).html(Math.round(parseInt(soundNum) / 780));
-                                } else if (i == 4) {
-                                    ($("#tvControlShadow2").find(".tv").eq(5)).find("li").eq(4).html(Math.round(parseInt(soundNum) / 780));
-                                } else if (i == 10) {
-                                    ($("#tvControlShadow2").find(".tv").eq(8)).find("li").eq(4).html(Math.round(parseInt(soundNum) / 780));
-                                } else if (i == 11) {
-                                    ($("#tvControlShadow2").find(".tv").eq(0)).find("li").eq(4).html(Math.round(parseInt(soundNum) / 780));
-                                } else if (i == 12) {
-                                    ($("#tvControlShadow2").find(".tv").eq(4)).find("li").eq(4).html(Math.round(parseInt(soundNum) / 780));
-                                } else if (i == 18) {
-                                    ($("#tvControlShadow2").find(".tv").eq(1)).find("li").eq(4).html(Math.round(parseInt(soundNum) / 780));
-                                } else if (i == 19) {
-                                    ($("#tvControlShadow2").find(".tv").eq(2)).find("li").eq(4).html(Math.round(parseInt(soundNum) / 780));
-                                } else if (i == 20) {
-                                    ($("#tvControlShadow2").find(".tv").eq(3)).find("li").eq(4).html(Math.round(parseInt(soundNum) / 780));
-                                }
-                            }
-                        }
-
-
-
-                    }
-                }
-            }
-            hideLoading();
-        },
-        error: function (a, b, c) {
-            if ($.cookie("xinxiang") != "" && $.cookie("xinxiang") != null) {
-                var strArr = "";
-                var str = $.cookie("xinxiang");
-                if (str != "") {
-                    strArr = str.split(";");
-                    for (var i = 0; i < strArr.length; i++) {
-                        if (strArr[i].indexOf("=") >= 0) {
-                            var controlNum = "";
-
-                            var controlG = strArr[i].split("=");
-                            var soundNum = controlG[1];
-                            if (controlG[0].indexOf("#") >= 0) {
-                                controlNum = (controlG[0].split("#"))[1];
-                                if (i == 2) {
-                                    ($("#tvControlShadow2").find(".tv").eq(6)).find("li").eq(4).html(Math.round(parseInt(soundNum) / 780));
-                                } else if (i == 3) {
-                                    ($("#tvControlShadow2").find(".tv").eq(7)).find("li").eq(4).html(Math.round(parseInt(soundNum) / 780));
-                                } else if (i == 4) {
-                                    ($("#tvControlShadow2").find(".tv").eq(5)).find("li").eq(4).html(Math.round(parseInt(soundNum) / 780));
-                                } else if (i == 10) {
-                                    ($("#tvControlShadow2").find(".tv").eq(8)).find("li").eq(4).html(Math.round(parseInt(soundNum) / 780));
-                                } else if (i == 11) {
-                                    ($("#tvControlShadow2").find(".tv").eq(0)).find("li").eq(4).html(Math.round(parseInt(soundNum) / 780));
-                                } else if (i == 12) {
-                                    ($("#tvControlShadow2").find(".tv").eq(4)).find("li").eq(4).html(Math.round(parseInt(soundNum) / 780));
-                                } else if (i == 18) {
-                                    ($("#tvControlShadow2").find(".tv").eq(1)).find("li").eq(4).html(Math.round(parseInt(soundNum) / 780));
-                                } else if (i == 19) {
-                                    ($("#tvControlShadow2").find(".tv").eq(2)).find("li").eq(4).html(Math.round(parseInt(soundNum) / 780));
-                                } else if (i == 20) {
-                                    ($("#tvControlShadow2").find(".tv").eq(3)).find("li").eq(4).html(Math.round(parseInt(soundNum) / 780));
-                                }
-                            }
-                        }
-                    }
-                }
-
-            }
-            hideLoading();
-        }
-    })
-}
-function getSound2() {
-    showLoading();
-    $.ajax({
-        url: "wpsendudpdata.asp?wpsendudpdata=1000_GSB20X204380X2020X0D&destip=&destport=&app=0&close=&sleep=30&needret=1&rnd=" + (Math.floor(Math.random() * (9999 - 1000)) + 1000),
-        dataType: 'html',
-        type: 'GET',
-        timeout: "3000",
-        success: function (data) {
-            var data1 = data;
-            if ($(data1).find("wpretstr").text().indexOf("200") >= 0) {
-                var str = $(data1).find("wpretstr").find("result").text();
-                $.cookie("zhuji", str);
-                var strArr = "";
-                if (str != "") {
-                    strArr = str.split(";");
-                    for (var i = 0; i < strArr.length; i++) {
-                        var controlG = "";
-                        var controlNum = "";
-                        var soundNum = "";
-                        if (strArr[i].indexOf("=") >= 0) {
-                            controlG = strArr[i].split("=");
-
-                            if (controlG[0].indexOf("#") >= 0) {
-                                controlNum = (controlG[0].split("#"))[1];
-                                soundNum = controlG[1];
-                                if (i == 2) {
-                                    ($("#tvControlShadow4").find(".tv").eq(1)).find("li").eq(4).html(Math.round(parseInt(soundNum) / 780));
-                                } else if (i == 3) {
-                                    ($("#tvControlShadow4").find(".tv").eq(0)).find("li").eq(4).html(Math.round(parseInt(soundNum) / 780));
-                                }
-                            }
-                        }
-                    }
-
-                }
-            }
-            hideLoading();
-        },
-        error: function (a, b, c) {
-            if ($.cookie("zhuji") != "" && $.cookie("zhuji") != null) {
-                var strArr = "";
-                var str = $.cookie("zhuji");
-                if (str != "") {
-                    strArr = str.split(";");
-                    for (var i = 0; i < strArr.length; i++) {
-                        var controlG = "";
-                        var controlNum = "";
-                        var soundNum = "";
-                        if (strArr[i].indexOf("=") >= 0) {
-                            controlG = strArr[i].split("=");
-
-                            if (controlG[2].indexOf("#") >= 0) {
-                                controlNum = (controlG[0].split("#"))[1];
-                                soundNum = controlG[1];
-                                if (i == 3) {
-                                    ($("#tvControlShadow4").find(".tv").eq(1)).find("li").eq(4).html(Math.round(parseInt(soundNum) / 780));
-                                } else if (i == 1) {
-                                    ($("#tvControlShadow4").find(".tv").eq(0)).find("li").eq(4).html(Math.round(parseInt(soundNum) / 780));
-                                }
-                            }
-                        }
-                    }
-
-                }
-            }
-            hideLoading();
-        }
-    })
-}
-//一键打开年轮灯
-function openAllGrowthRing() {
-    lightChange('1000_0X550X010XA00X000X010XA0', 0);
-    setTimeout("lightChange('1000_0X550X010XA00X000X020XA3', 1)", 1000);
-    setTimeout("lightChange('1000_0X550X010XA00X000X030XA2', 2)", 2000);
-    setTimeout("lightChange('1000_0X550X010XA00X000X040XA5', 3)", 3000);
-    setTimeout("lightChange('1000_0X550X010XA00X000X050XA4', 4)", 4000);
-
-
-}
-//一键关闭年轮灯
-function closeAllGrowthRing() {
-    lightChange('1000_0X550X010XA10X000X010XA1', 0);
-    lightChange('1000_0X550X010XA10X000X020XA2', 1);
-    lightChange('1000_0X550X010XA10X000X030XA3', 2);
-    lightChange('1000_0X550X010XA10X000X040XA4', 3);
-    lightChange('1000_0X550X010XA10X000X050XA5', 4);
-}
-//窗帘开
-function opencurtain() {
-    var url1 = "/wpcontrolcomm.asp?wpcontrolcomm=1000_0X550X000X000X030X010XE90X3C";
-    $.get(url1);
-
-}
-//开窗帘指令
-function opencurtainIns(port) {
-    showLoading();
-    $.ajax({
-        url: "wpsendudpdata.asp?wpsendudpdata=1000_0X550X120X340X030X010XAD0X8A&destip=&destport=" + port + "&rnd=" + (Math.floor(Math.random() * (9999 - 1000)) + 1000),
-        data: "text",
-        dataType: 'text',
-        type: 'GET',
-        success: function (data) {
-            hideLoading();
-            topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
-        },
-        error: function (data) {
-            hideLoading();
-            topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
-        }
-    })
-}
-function closecurtain() {
-    var url1 = "/wpcontrolcomm.asp?wpcontrolcomm=1000_0X550X000X000X030X020XA90X3D";
-    $.get(url1);
-}
-//关窗帘指令
-function closecurtainIns(port) {
-    showLoading();
-    $.ajax({
-        url: "wpsendudpdata.asp?wpsendudpdata=1000_0X550X120X340X030X020XED0X8B&destip=&destport=" + port + "&rnd=" + (Math.floor(Math.random() * (9999 - 1000)) + 1000),
-        data: "text",
-        dataType: 'text',
-        type: 'GET',
-        success: function (data) {
-            hideLoading();
-            topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
-        },
-        error: function (data) {
-            hideLoading();
-            topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
-        }
-    })
-}
-function pausecurtain() {
-    var url1 = "/wpcontrolcomm.asp?wpcontrolcomm=1000_0X550X000X000X030X030X380XE5";
-    $.get(url1);
-}
-//暂停窗帘指令
-function pausecurtainIns(port) {
-    showLoading();
-    $.ajax({
-        url: "wpsendudpdata.asp?wpsendudpdata=1000_0X550X120X340X030X030X2C0X4B&destip=&destport=" + port + "&rnd=" + (Math.floor(Math.random() * (9999 - 1000)) + 1000),
-        data: "text",
-        dataType: 'text',
-        type: 'GET',
-        success: function (data) {
-            hideLoading();
-            topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
-        },
-        error: function (data) {
-            hideLoading();
-            topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
-        }
-    })
-}
-//关闭区域1
-function openArea2() {
-    lightChange('1000_0XF50X010XFF0XD30X280X000XFF0X11', 1);
-    //存放发送第一条节目项所对应的终端的url,格式："http://192.168.1.10:8080",有几个终端调用以下函数几次
-    setTimeout('clickFirstPro("http://192.168.1.103:8080")', 1000);
-    setTimeout('clickFirstPro("http://192.168.1.103:8080")', 2000);
-    setTimeout('stopPPT("http://192.168.1.103:8080")', 3000);
-
-    setTimeout('clickFirstPro("http://192.168.1.104:8080")', 4000);
-    setTimeout('clickFirstPro("http://192.168.1.104:8080")', 5000);
-    setTimeout('stopPPT("http://192.168.1.104:8080")', 6000);
-
-    setTimeout('clickFirstPro("http://192.168.1.105:8080")', 6000);
-    setTimeout('clickFirstPro("http://192.168.1.105:8080")', 7000);
-    setTimeout('stopPPT("http://192.168.1.105:8080")', 8000);
-
-    setTimeout('clickFirstPro("http://192.168.1.106:8080")', 10000);
-    setTimeout('clickFirstPro("http://192.168.1.106:8080")', 11000);
-    setTimeout('stopPPT("http://192.168.1.106:8080")', 12000);
-
-    setTimeout('clickFirstPro("http://192.168.1.107:8080")', 12000);
-    setTimeout('clickFirstPro("http://192.168.1.107:8080")', 13000);
-    setTimeout('stopPPT("http://192.168.1.107:8080")', 14000);
-
-    setTimeout('clickFirstPro("http://192.168.1.108:8080")', 14000);
-    setTimeout('clickFirstPro("http://192.168.1.108:8080")', 15000);
-    setTimeout('stopPPT("http://192.168.1.108:8080")', 16000);
-
-    setTimeout('clickFirstPro("http://192.168.1.109:8080")', 17000);
-    setTimeout('clickFirstPro("http://192.168.1.109:8080")', 18000);
-    setTimeout('stopPPT("http://192.168.1.109:8080")', 19000);
-
-    setTimeout('clickFirstPro("http://192.168.1.110:8080")', 20000);
-    setTimeout('clickFirstPro("http://192.168.1.110:8080")', 20000);
-    setTimeout('stopPPT("http://192.168.1.110:8080")', 21000);
-}
-//关闭区域2
-function openArea3() {
-    lightChange('1000_0XF50X010XFF0XD30X280X010XFF0X10', 2);
-    //存放发送第一条节目项所对应的终端的url,格式："http://192.168.1.10:8080",有几个终端调用以下函数几次
-    setTimeout('clickFirstPro("http://192.168.1.101:8080")', 2000);
-    setTimeout('clickFirstPro("http://192.168.1.102:8080")', 4000);
-    setTimeout('clickFirstPro("http://192.168.1.111:8080")', 6000);
-}
-//关闭区域3
-function closeArea3() {
-    lightChange('1000_0XF50X010XFF0XD30X280X020XFF0X0F', 3);
-
-    //存放发送第一条节目项所对应的终端的url,格式："http://192.168.1.10:8080",有几个终端调用以下函数几次
-
-    setTimeout('clickFirstPro("http://192.168.1.112:8080")', 1000);
-    setTimeout('clickFirstPro("http://192.168.1.112:8080")', 2000);
-    setTimeout('stopPPT("http://192.168.1.112:8080")', 3000);
-
-    setTimeout('clickFirstPro("http://192.168.1.113:8080")', 4000);
-    setTimeout('clickFirstPro("http://192.168.1.113:8080")', 5000);
-    setTimeout('stopPPT("http://192.168.1.113:8080")', 6000);
-
-    setTimeout('clickFirstPro("http://192.168.1.114:8080")', 7000);
-    setTimeout('clickFirstPro("http://192.168.1.114:8080")', 8000);
-    setTimeout('stopPPT("http://192.168.1.114:8080")', 9000);
-
-    setTimeout('clickFirstPro("http://192.168.1.115:8080")', 10000);
-    setTimeout('clickFirstPro("http://192.168.1.115:8080")', 11000);
-    setTimeout('stopPPT("http://192.168.1.115:8080")', 12000);
-
-    setTimeout('clickFirstPro("http://192.168.1.116:8080")', 13000);
-    setTimeout('clickFirstPro("http://192.168.1.116:8080")', 14000);
-    setTimeout('stopPPT("http://192.168.1.116:8080")', 15000);
-
-    setTimeout('clickFirstPro("http://192.168.1.117:8080")', 16000);
-    setTimeout('clickFirstPro("http://192.168.1.117:8080")', 17500);
-    setTimeout('stopPPT("http://192.168.1.117:8080")', 18000);
-
-    setTimeout('clickFirstPro("http://192.168.1.118:8080")', 19000);
-    setTimeout('clickFirstPro("http://192.168.1.118:8080")', 20000);
-    setTimeout('stopPPT("http://192.168.1.118:8080")', 21000);
-}
-function clickFirstPro(firstURL) {
-    showLoading();
-    var url = firstURL;
-
-    var sendcmdurl = url + "/wpsendclientmsg.asp?rnd=" + (Math.floor(Math.random() * (9999 - 1000)) + 1000);
-
-    $.ajax({
-        data: { wpsendkeys: 'urlplayer%20-keyevent%200xFF50' },
-        url: sendcmdurl,
-        dataType: 'html',
-        type: 'GET',
-        async: true,
-        timeout: 5000,  //超时时间
-        error: function (xml) {
-            hideLoading();
-            topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
-        },
-        success: function (xml) {
-            hideLoading();
-            if (xml) {
-                topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
-            }
-        }
-    });
-}
-//暂停ppt
-function stopPPT(url) {
-    showLoading();
-    $.ajax({
-        data: { wpsendkeys: 'urlplayer%20-keyevent%200x53' },
-        url: url,
-        dataType: 'html',
-        type: 'GET',
-        async: true,
-        timeout: 5000,  //超时时间
-        error: function (xml) {
-            hideLoading();
-            topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
-        },
-        success: function (xml) {
-            hideLoading();
-            if (xml) {
-                topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
-            }
-        }
-    });
-}
-//发送指令函数,用来处理和窗口号有关的指令
-function docmdex(cmdtype, cmdData) {
-    var cmdTypeNum = "";
-    if ($("#tabscreen").attr("nowwindow") == undefined || $("#tabscreen").attr("nowwindow") == "") {
-        $("#tabscreen").attr("nowwindow", "0");
-    }
-    if ($("#top").attr("nowwindow") != undefined) {
-        cmdTypeNum = 10000 * parseInt($("#top").attr("nowwindow")) + cmdtype;
-    } else {
-        cmdTypeNum = 10000 * parseInt($("#tabscreen").attr("nowwindow")) + cmdtype;
-    } 
-    docmd(cmdTypeNum, cmdData);
-}
-//转到新版本
-function newPadControl(){
-	window.location.href=window.location.href.split(":8080")[0]+":8080/newpctrl.html"
-}
-//十六进制颜色随机
-function color16(winNum) {
-	var color="";
-    if (winNum == 1) {
-        color = "#ffbf02";
-    } else if (winNum == 2) {
-        color = "#61ff02";
-    } else if (winNum == 3) {
-        color = "#02ffde";
-    } else if (winNum == 4) {
-        color = "#027dff";
-    }else if (winNum == 5) {
-        color = "#7102ff";
-    } else if (winNum == 6) {
-        color = "#ff02f5";
-    } else if (winNum == 7) {
-        color = "#ff0269";
-    }
-    return color;
-}
-//小票打印
-function printReceipt() {
-    showLoading();
-    //打印上传的文件
-    $.ajax({
-        url: newurl+"/wpprintdata.asp",
-        type: "get",
-        dataType: 'xml',
-        data: {
-            "wpprintdata": "小票打印模板",
-            "utf8": 1,
-            "value1": "$(needreplacevalue1)",
-            "value2": "$(needreplacevalue2)",
-            "value3": "$(needreplacevalue3)",
-            "value4": "$(needreplacevalue4)",
-            "value5": "$(needreplacevalue5)",
-            "value6": "",
-            "value7": "",
-            "value8": "",
-            "value9": "",
-            "value10": ""
-        },
-        success: function (data) {
-            hideLoading();
-            topTrip("小票打印成功!");
-        }, error: function (a, b, c) {
-            hideLoading();
-            topTrip("小票打印失败!");
-        }
-    })
-    topTrip("暂未开通打印功能");
-}
-//打印照片照片
-function printPictutre(pictureSize) {
-    showLoading();
-    $.ajax({
-        url: newurl + "/wpprintdata.asp",
-        type: "get",
-        dataType: "xml",
-        data: {
-            "wpprintdata": pictureSize,
-            "utf8": "1",
-            "value1": $("#proTask .playTask").attr("protaskdesc")
-        }, success: function (data) {
-            hideLoading();
-            topTrip("打印成功");
-        }, error: function (data) {
-            hideLoading();
-            topTrip("打印失败");
-        }
-    })
-}
-//打印默认模板
-function printDefault() {
-    showLoading();
-    $.ajax({
-        url: newurl + "/wpprintdata.asp",
-        type: "get",
-        dataType: "xml",
-        data: {
-            "wpprintdata": "默认文件打印模板",
-            "utf8": "1",
-            "value1": $("#proTask .playTask").attr("protaskdesc")
-        }, success: function (data) {
-            hideLoading();
-            topTrip("打印成功");
-        }, error: function (data) {
-            hideLoading();
-            topTrip("打印失败");
-        }
-    })
-}
-//上传并打印
-function sPrint1() {
-    $("#hideSubmit").click();
-    printDefault();
-}
-
 //删除数组中的指定元素
 Array.prototype.indexOf = function (val) {
     for (var i = 0; i < this.length; i++) {
@@ -2666,4 +2076,4 @@ Array.prototype.remove = function (val) {
     if (index > -1) {
         this.splice(index, 1);
     }
-}; 
+};

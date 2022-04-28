@@ -18,11 +18,14 @@ var sendding=false;//用于标志当前指令发送是否成功
 var historysendstr="";
 var onemousemove=false;
 var penFlag=0;//当为0时则认为是单指拖动，为1时则认为是单指画
+/*var screenWidth=window.screen.width;
+var screenHeight=window.screen.height;*/
 var screenWidth = window.screen.width;//用来存储要控制终端的宽度
 var screenHeight = window.screen.height;//用来存储要控制终端的高度
 var windowWidth=window.screen.width;
 //声明变量保存canvas的大小，此处使用clientWidth才能获取ios移动端的横竖屏的宽度
 var canvaswindowWidth = document.documentElement.clientWidth;
+//var canvaswindowWidth = document.documentElement.clientHeight;
 var canvaswindowLeft=0;
 var canvaswindowTop=0;
 var canvasMarginLeft=0;
@@ -89,15 +92,11 @@ var count1 = 0;
 var timeFlag = 0;//设置一个变量存储拖动进度条后再度读取数据的时间 防止拖动时出现进度条跳转回原来位置
 var soundFlag = 0;
 
-var indexNumber = "";//获取第几个终端
-var isPrint = 0;//当值为0时则不打印，为1时则打印
-
+var indexNumber ="";//获取第几个终端
 browserRedirect();
 //每一次点击获取相应的url，通过getData()来获取相应url下的数据
-
 $(function(){
     getClientList("#top");
-    getFaceDepart(); //获取人脸识别的部门
     var urlq,username,password,xmldata;
     urlq="wpgetxmlids.asp?utf8=1&rnd="+(Math.floor(Math.random()*(9999-1000))+1000);
 	
@@ -109,7 +108,8 @@ $(function(){
     var cmdLi=$(".openOrClose").height();
     var marTopLi=(cmdLi-cmdImg)/2;
     $(".sendCmd img").css("marginTop",marTopLi);
-    $(".smallbtn img").css("marginTop",marTopLi);	
+    $(".smallbtn img").css("marginTop",marTopLi);
+	
     $("#tabscreen p").css("lineHeight", pLH + "px");
     $("#tabscreen p").css("lineHeight", pLH + "px");
     $("#freshPage img").css("lineHeight",pLH+"px");
@@ -147,27 +147,20 @@ $(function(){
     })
     //点击刷新状态的按钮进行刷新
     $("#freshPage img").click(function () {
-        getData(newurl, clientIndex);//点击刷新按钮，即对列表进行刷新
+        getData(newurl, clientIndex);
     });
     //点击音量图标，音量条显示，点击初次之外的按钮，音量条隐藏
-	//调节音量时，不管是全局音量还是局部音量，显示端必须启动才会生效
-	$(document).on("click", function (e) {
-		//以下两行程序的目的是，点击除了全局音量按钮和局部音量按钮 音量调隐藏
+    $(document).on("click",function (e) {
         var target = $(e.target);
-		if (target.closest(".allSound").length != 0 || target.closest(".materialSound").length != 0) return;
-
+        if(target.closest(".allSound").length != 0||target.closest(".materialSound").length != 0) return;
         $(".systemSound").css("display","none");
         $("#range2").css("display","none");
         $("#value2").css("display","none");
+
     });
     //点击频道获取获取相应的频道
     $("#changeChannel").click(function(){
-		$("#channelBar").slideToggle(600);
-		if ($(".getchannelImg").attr("src") == "images/keysImg/channelUp.png") {
-			$(".getchannelImg").attr("src", "images/keysImg/channelDown.png")
-		} else {
-			$(".getchannelImg").attr("src", "images/keysImg/channelUp.png")
-		}
+        $("#channelBar").slideToggle(600);
         count+=1;
         var channelUrl=$("#tabscreen").attr("src");
         url=channelUrl+"/wpgetxmlids.asp?rnd="+(Math.floor(Math.random()*(9999-1000))+1000);
@@ -191,7 +184,8 @@ $(function(){
 				$(".controlImage img").eq(i).attr("src",oldImgSrc[0]+oldImgSrc[1]);
 			}else{
 				$(".controlImage img").eq(i).attr("src",image);
-			}	
+			}
+			
 		}
 		//点击全部控制的按钮来切换当前按钮的选中状态图标
 		var index=$(".controlImage img").index(this)+1; 
@@ -205,6 +199,8 @@ $(function(){
 	
 	//跳转节目单频道按钮
 	$("#channelBtn").click(function(){
+	    //var value = $("#channelList").val() + "11";//11表示切换后立即启动节目单播放，69表示进入手动模式
+	   
 	    var value = $("#inpurChannelValue").val() + "11";//11表示切换后立即启动节目单播放，69表示进入手动模式
 		value=encodeURI(value);
 		value="utf-8"+value;
@@ -217,11 +213,13 @@ $(function(){
 	});
 	//切换并暂停节目单频道按钮
 	$("#channelBtnPause").click(function(){
+	   // var value = $("#channelList").val() + "69";//11表示切换后立即启动节目单播放，69表示进入手动模式
 	    var value = $("#inpurChannelValue").val() + "69";//11表示切换后立即启动节目单播放，69表示进入手动模式
 
 		value=encodeURI(value);
 		value="utf-8"+value;
 		docmd(73,"'"+ value+"'");
+		//window.setTimeout("$('#title').click();",1500);//触发加载数据事件
 		$(".handControl").find("img").attr("src","images/leftControl/shoudongmoshiSelected.png");
 		$(".startProgram").find("img").attr("src","images/leftControl/qidongjiemu.png");
 		window.setTimeout("getData(newurl,clientIndex)", 1500);//触发加载数据事件
@@ -250,8 +248,8 @@ $(function(){
 			   
 				$(".topMain .programList .left .bgSpan").animate({width:"5%",height:$(".topMain .programList .left").width()*0.08+"px"});
 				$(".topMain .programList .left .leftList").animate({ "width": "92%" });
-				$(".startNow .startNowImg").css("width", "2.5rem");
-				$(".startNow .startNowImg").css("height", "2.5rem");
+				$(".startNow img").css("width", "2.5rem");
+				$(".startNow img").css("height", "2.5rem");
 				
 			} else {
 			    $(".topMain .programList .left .leftList").animate({ "width": "88%" });
@@ -269,13 +267,16 @@ $(function(){
 			if (screenWidth1 >= 1000) {
 			    $(".topMain .programList .left .leftList").animate({ "width": "88%" });
 			    $(".topMain .programList .left .leftList span").animate({ "width": "88%" });
-			    $(".startNow .startNowImg").css("width", "1.8rem");
-			    $(".startNow .startNowImg").css("height", "1.8rem");
+			    $(".startNow img").css("width", "1.8rem");
+			    $(".startNow img").css("height", "1.8rem");
 			} else {
 			    $(".topMain .programList .left .leftList").animate({ "width": "88%" });
 			    $(".topMain .programList .left .leftList span").animate({ "width": "86%" });
 			   
-			}	
+			}
+			
+			
+			
 			var cmdImg=$(".sendCmd").width()*0.2;
 			var cmdLi=$(".openOrClose").height();
 			var marTopLi=(cmdLi-cmdImg)/2;
@@ -293,13 +294,12 @@ $(function(){
 				
 			}
 		}	
-		$(".controlImage  span").css("width", $(".controlImage img").width());
 	});
-	$(".handControl").click(function(){//点击手动模式
+	$(".handControl").click(function(){
 		$(".handControl").find("img").attr("src","images/leftControl/shoudongmoshiSelected.png");
 		$(".startProgram").find("img").attr("src","images/leftControl/qidongjiemu.png");
 	});
-	$(".startProgram").click(function(){//自动播放
+	$(".startProgram").click(function(){
 		$(".handControl").find("img").attr("src","images/leftControl/shoudongmoshi.png");
 		$(".startProgram").find("img").attr("src","images/leftControl/qidongjiemuSelected.png");
 	});
@@ -319,18 +319,30 @@ $(function(){
 	            left: "0px",
 	            top: "0",
 	        });
-	        $(".close1").animate({ background: "#aaa", border: border2, borderLeft: "transparent" });    
+	        $(".close1").animate({ background: "#aaa", border: border2, borderLeft: "transparent" });
+	        //$(".before").attr("onclick", "docmd(14,0)");
+	        //$(".next").attr("onclick", "docmd(13,0)");
+	        //$(".cmdBar").find("li").eq(0).attr("onclick", "docmd(12,0)");
+	        //$(".cmdBar").find("li").eq(1).attr("onclick", "docmd(15,0)");
+	        //$(".cmdBar").find("li").eq(2).attr("onclick", "docmd(14,0)");
+	        //$(".cmdBar").find("li").eq(3).attr("onclick", "docmd(13,0)");
 	    } else {
 	        $(".slider").attr("allscreen", "open");
 	        $(".open2").removeAttr("style");
-			$(".open2").animate({
-				top: "0px",
-				right: "0px"
-			});
+	        $(".open2").animate({
+	            top: "0px",
+	            right: "0px"
+	        });
+	        //$(".before").attr("onclick", "docmd(14,3)");
+	        //$(".next").attr("onclick", "docmd(13,3)");
+	        //$(".cmdBar").find("li").eq(0).attr("onclick", "docmd(12,3)");
+	        //$(".cmdBar").find("li").eq(1).attr("onclick", "docmd(15,3)");
+	        //$(".cmdBar").find("li").eq(2).attr("onclick", "docmd(14,3)");
+	        //$(".cmdBar").find("li").eq(3).attr("onclick", "docmd(13,3)");
 	    }
 	    $.cookie("allscreen", $(".slider").attr("allscreen"));
 	}
-	setInterval("refreshScreen()", 2000);//定时刷新显示界面的大小，以便于界面大小改变时出现布局混乱的问题
+	setInterval("refreshScreen()", 2000);//定时刷新显示界面的大小
 
     //此处是为了解决input输入框在移动端不能输入的问题
 	$('#SendMSGBar input').click(function () {
@@ -340,45 +352,43 @@ $(function(){
         this.selectionEnd = this.value.length;
 
 	})
-	//翻译,如果cookie中没有关于语言的记录，则认为是中文
 	if ($.cookie("yuyan") != null && $.cookie("yuyan") != "" && $.cookie("yuyan") != undefined) {
 	    if ($.cookie("yuyan") == "en") {
 	        $(".changeLanguage img").attr("alt", "English");
 	        $(".changeLanguage img").attr("src", "images/allTitle/EN.png");
 	    } else {
-	        $(".changeLanguage img").attr("alt", "中文");
+	        $(".changeLanguage img").attr("alt", "Chinese");
 	        $(".changeLanguage img").attr("src", "images/allTitle/CH.png");
 	    }
 	    
 	} else {
 	    $(".changeLanguage img").attr("alt", "中文");
 	}
-	//切换语言
 	$(".changeLanguage img").click(function () {
-		
 	    if ($(this).attr("alt") == "English") {
 	        $.cookie("yuyan", "en", { path: "/" });
 	        $(this).attr("alt", "中文");
-	        $(this).attr("src", "images/allTitle/EN.png");
-			//setTimeout('getbtn("pctrl", 1)',3000);
-			switchLanguage(0, "pctrl.html");
-		
+	        $(this).attr("src", "images/allTitle/CH.png");
+	        // debugger;
+	        switchLanguage(1, "pctrl.html");
 	    } else {
 	        $.cookie("yuyan", "CH", { path: "/" });
 	        $(this).attr("alt", "English");
-	        $(this).attr("src", "images/allTitle/CH.png");
-			//setTimeout('getbtn("pctrl", 0)',3000);
-			switchLanguage(1, "pctrl.html");
-			
-		}		
+	        $(this).attr("src", "images/allTitle/EN.png");
+	        //  debugger;
+	        switchLanguage(0, "pctrl.html");
+                   
+
+	    }
 	    getLanguageMsg("获取数据出错!", $.cookie("yuyan"));
 	    $("#downLoad span").html(getLanguageMsg("下载", $.cookie("yuyan")));
 	    $("#checkFile span").html(getLanguageMsg("预览", $.cookie("yuyan")));
 	    if ($("#Screen .left").length <= 0&&$("#pic img").attr("src").indexOf("fail1")>=0) {
 	        $("#Screen").html("<p align='center' style='width:100%;font-size:22px;color:red;'>" + getLanguageMsg("获取数据出错!", $.cookie("yuyan")) + "</p>");
 	    }
-	});	
+	});
 })
+
 window.onload=function(){
     //对截屏按钮后 同步按钮进行属性的改变
     $("#div3").click(function(){
@@ -388,16 +398,18 @@ window.onload=function(){
             $(".drawSync").attr("sync","sync");
         }
     })
+    update(".topMain","y");
     $("#div1").css("marginTop", ($(".slider").height() - $("#div1").height() - 2) / 2);
     $(".changeLanguage").css("height", $(".slider").height());
-	$(".changeLanguage img").css("marginTop", ($(".changeLanguage").height() - $(".changeLanguage img").width()) / 2);
-	//对上次点击的终端进行记录，防止刷新时找不到上次操作的终端，如果cookie中没有记录终端则默认选中第一个终端
+    $(".changeLanguage img").css("marginTop", ($(".changeLanguage").height() - $(".changeLanguage img").width()) / 2);
+    //$("#top li:eq(0)").click();//页面加载时，若没有进行其他的选择，默认的给第一条数据设置样式，使其获得焦点
+    //从cookie中读取当前的是第几个终端
     if ($.cookie("clientIndex") == undefined || $.cookie("clientIndex") == "") {
         clientIndex = 0;
     } else {
         clientIndex = ($.cookie("clientIndex"));
     }
-    //在页面刚加载时，若当前的终端超过了当前显示区域的大小，则自动滚动到终端的位置
+    //若当前的终端超过了当前显示区域的大小，则自动滚动到终端的位置
     if ($.cookie("clientIndex") > $("#top").height() / $(".cc").height())
     {
         $('.topLeft .clientList').animate({ scrollTop: parseInt($.cookie("clientIndex")) * $(".cc").height() }, 'slow');
@@ -406,38 +418,35 @@ window.onload=function(){
     $("#top").attr("clientname", $("#top li:eq(" + clientIndex + ")").attr("clientname"))
     newurl= $("#tabscreen").attr("src");
 	
-    getData(newurl, clientIndex);//根据当前是第几个终端，从而显示第几个终端的列表
-	//根据选中和未选中的状态来更改背景图
+    getData(newurl, clientIndex);
+
     $(".topLeft .clientList ul li b").css("background","url(../images/computerB.png) 0% 0% / 100% no-repeat");
     $(".topLeft .clientList ul li b").eq(0).css("background","url(../images/computerW.png) 0% 0% / 100% no-repeat");
-	//文件上传时，若第一个终端的homeid="home"即当前页面是从显示端访问（且终端列表只有自己）而不是从控制室访问，
-	//则提交文件时直接以相对路径提交到本地
-	//否则根据当前的终端ip提交到相应的显示端上
-	if ($("#top li:eq(0)").attr("homeid") == "home") {
+    if ($("#top li:eq(0)").attr("homeid") == "home") {
         $("#fileSubmit").attr("action", "wpfileupload.asp?utf8=1");
     }else{
         $("#fileSubmit").attr("action", newurl + "/wpfileupload.asp?utf8=1");
     }
     $("#top li:eq(" + clientIndex + ")").css({ "background": "#06afe8", "color": "#fff" })
+    //$("#top li:eq(" + clientIndex + ")").next().css({ "background": "#06afe8", "color": "#fff" })
 	
     $("#title").html($("#top li:eq(" + clientIndex + ")").find("span").html());
     $("#tabscreen").attr("macName", $("#top li:eq(" + clientIndex + ")").attr("macname"));
     $("#tabscreen").attr("indexNumber", $("#top li:eq(" + clientIndex + ")").attr("indexclient"));
-	//由于调节进度是采用touch事件，所以此处将事件先声明
+	
     changeNowRate();
-	//start为节目项是音视频的启动/暂停按钮，若点击播放，则启用轮询获取前端的播放进度
-	//若暂停则清除轮询，已节约资源
+	
     $(".start").click(function () {
 	   
         var tabWindow=$("#tabscreen").attr("nowWindow");
         if ($(".start").attr("src") == "images/bottomPlay/bofang.png") {
             clearInterval(timer);
-            docmdex(3002,tabWindow);
+            docmd(3002,"'"+tabWindow+"'");
             $(".start").attr("src", "images/bottomPlay/tingzhi.png");
 
         } else {
             timer = setInterval("getRate(newurl)", 1000);
-            docmdex(3003,tabWindow);
+            docmd(3003,"'"+tabWindow+"'");
             $(".start").attr("src","images/bottomPlay/bofang.png");
         }
 		
@@ -451,8 +460,7 @@ window.onload=function(){
     $(".topLeft .clientList ul li").css("width",topLeftW);
     $(".clientList ul li").css("lineHeight",clientLiH+"px");
     //点击任意终端进行样式的切换，同时将当前终端的ip和mac地址赋值给tabScreen,每次点击一次终端则去后台读取一次数据
-	$(".cc").click(function () {
-		
+    $(".cc").click(function(){
         $(".topLeft .clientList ul li b").css("background","url(../images/computerB.png) no-repeat");
 		
         $(this).find("b").css("background","url(../images/computerW.png) no-repeat");
@@ -460,24 +468,19 @@ window.onload=function(){
         var ccNum=$(this).attr("indexclient");
         $(".cc").css({"background":"#fff","color":"#000"})
         $(this).css({ "background": "#06afe8", "color": "#ffffff" });
-		
-		$("#tabscreen").attr("src", $(this).attr("src"));
-		
+        //$(".cc").next().css({ "background": "#fff", "color": "#000" })
+        //$(this).next().css({ "background": "#06afe8", "color": "#ffffff" });
+        $("#tabscreen").attr("src",$(this).attr("src"));
         newurl=$("#tabscreen").attr("src");
         $("#tabscreen").attr("macName",$(this).attr("macname"));
         $("#tabscreen").attr("indexNumber",$(this).attr("indexclient"));
         $("#title").html($(this).find("span").html());
         $("#top").attr("clientName",$(this).attr("clientname"))
-		$(".getChannel").html($(this).attr("clientname"));
-		//若终端列表有返回中控页字样则表示当前的页面为在终端打开，而不是在控制室端打开
-		if ($(this).find("span").text() == "返回中控页") {
+        if($(this).find("span").text()=="返回中控页"){
             window.location.href="http://"+$(this).attr("src")+":8080"+window.location.href.split(":8080")[1];
         }else{
             getData(newurl,ccNum);
-		}
-		//文件上传时，若当前终端的homeid="home"即当前页面是从显示端访问（且终端列表只有自己）而不是从控制室访问，
-		//则提交文件时直接以相对路径提交到本地
-		//否则根据当前的终端ip提交到相应的显示端上
+        }
         if ($(this).attr("homeid") == "home") {
             $("#fileSubmit").attr("action", "wpfileupload.asp?utf8=1");
 
@@ -489,17 +492,19 @@ window.onload=function(){
         }
        
         $.cookie("clientIndex", ccNum);
-		//此时是关闭获取音视频进度和截屏的websocket，防止点击其他终端时，websocket直接饮用上次的数据
-		if (socket1 != null) {					//3-连接已经关闭或者根本没有建立;0-正在连接
+        if (socket1 != null) {					//3-连接已经关闭或者根本没有建立;0-正在连接
             delete socket1;
             socket1 = null;
         }
         if (socket != null) {					//3-连接已经关闭或者根本没有建立;0-正在连接
             delete socket;
             socket = null;
-        }   
+        }
+        
+       
     });
     showNowPlayScreen();
+    //showNowPlayScreen();
     whRate = parseInt($(".loadImage")[0].width) / parseInt($(".loadImage")[0].height);
     if ($.cookie("yuyan") == "en") {
         switchLanguage(1, "pctrl.html");
@@ -507,86 +512,47 @@ window.onload=function(){
     } else {
         switchLanguage(0, "pctrl.html");
         $(".changeLanguage img").attr("src", "images/allTitle/EN.png");
-	}
-	//页面加载时根据屏幕的大小所做的自适应
+    }
     if(document.documentElement.clientWidth>=900){
+		
+        //$("#range2").css("top","-120%");
+        //$("#range2").css("left","70%");
+        //$("#value2").css("left","59%");
         $("#range2").css("bottom", "160px");
         $("#range2").css("left", "72%");
         $("#value2").css("left", "68%");
         $("#value2").css("bottom", "65px");
         $(".controlBottomTab li b").css("width","60%");
+        //$(".topLeft .controlAll li span").css("marginTop","0");
+        //$(".topLeft .controlAll li").css("marginTop","2%");
     }else{
         $("#range2").css("bottom","160px");
         $("#range2").css("left","72%");
         $("#value2").css("left", "68%");
         $("#value2").css("bottom", "85px");
         $(".controlBottomTab li b").css("width","100%");
+        //$(".topLeft .controlAll li span").css("marginTop","4%");
+        //$(".topLeft .controlAll li").css("marginTop","5%");
     }
     $(".topLeft .controlAll li img").css("marginTop", ($(".topLeft .controlAll li").height() - 10 - $(".topLeft .controlAll li span").height() - $(".topLeft .controlAll li img").width()) / 2);
     $(".videoTitle img").click(function(){
         $(".videoContent").css("display","none");
     })
 	
-	$(".videoTK select").change(function () {
-		//获取视频源
+    $(".videoTK select").change(function(){
         var selectVal=$(this).val();
         getVideoSource(selectVal)
     })
     $(".musicTitle img").click(function(){
         $(".musicContent").css("display","none");
     })
-    $(".faceDetectionContent img").click(function () {
-        
-        $(".faceDetectionContent").hide();
-        $(".faceDetection").find("input[type=text]").val(" ");
-    })
-    $(".faceMergeContent img").click(function () {
-        $(".faceMergeUL ").find("input[type=text]").val(" ");
-        $(".faceMergeContent").hide();
-    })
-    $(".pageLoadContent img").click(function () {
-
-        $(".pageLoadContent").hide();
-       
-    })
-	//以下为人脸识别部分
-	//选择了一个ID后，其他的部分根据ID自动识别，并且将得到的数据添加到指定的位置（添加人脸连识别）
-    $(".faceDetectionUL select").eq(0).click(function () {
-       
-        $(this).next().val($(this).find("option:selected").html());
-        var selectStr = $(this).find("option:selected").attr("faceInfo");
-        if (selectStr != "") {
-            $(this).parents(".faceDetectionUL").find("li").eq(1).find("input").val((selectStr.split("_")[1]).split(":")[1]);
-            $(this).parents(".faceDetectionUL").find("li").eq(2).find("input").val((selectStr.split("_")[2]).split(":")[1]);
-            $(this).parents(".faceDetectionUL").find("li").eq(3).find("input").val((selectStr.split("_")[3]).split(":")[1]);
-        }   
-    })
-    $(".faceDetectionUL select").eq(1).click(function () {
-
-        $(this).next().val($(this).find("option:selected").html());
-	})
-	//合并人脸识别时所做的操作
-    $(".faceMergeUL select").eq(0).click(function () {
-
-        $(this).next().val($(this).find("option:selected").html());
-        var selectStr = $(this).find("option:selected").attr("faceInfo");
-        if (selectStr != "") {
-            $(this).parents(".faceMergeUL").find("li").eq(1).find("input").val((selectStr.split("_")[1]).split(":")[1]);
-            $(this).parents(".faceMergeUL").find("li").eq(2).find("input").val((selectStr.split("_")[2]).split(":")[1]);
-            $(this).parents(".faceMergeUL").find("li").eq(3).find("input").val((selectStr.split("_")[3]).split(":")[1]);
-        }
-
-    })
-   
     $("#checkPictureTitle img").click(function () {
         $("#checkPicture").hide();
     })
     $(".fileTitle img").click(function(){
         $(".fileContent").css("display", "none");
         $(".fileTK").removeClass("current");
-        $("#uploadRateLeft").css("width", "0%");
     })
-
     $(".slideImage").click(function(){
 		
         $(".sildeMore").css("right","0");
@@ -606,7 +572,6 @@ window.onload=function(){
     $("#title").click(function(){
         touchPanel();
     })
-	$("#title").css("width","72px");
     $("#localIP").click(function(){
         window.location.href="http://"+$("#freshPage span").attr("localip")+":8080/pctrl.html";
     })
@@ -659,6 +624,14 @@ window.onload=function(){
         $(".systemSound").css("display", "none");
         $("#meterial").css("display", "none");
     });
+    //点击音量图标，音量条显示，点击初次之外的按钮，音量条隐藏
+    //$("body *").on("click", function (e) {
+    //    var target = $(e.target);
+    //    if (target.closest(".playScreenShadowContent li").length != 0) {
+    //        $(".playScreenShadow").hide();
+    //    }
+	    
+    //});
     $(".topLogin img").click(function () {
         $(".onClickLogin").hide();
         $(".contentLoginMain input[type='text']").val(" ");
@@ -689,175 +662,7 @@ window.onload=function(){
     $(".windowName img").click(function () {
         $(".playScreenShadow").hide();
     })
-    //音频
-    //音箱
-    $("#tvControlShadow2 li").click(function () {
-
-        var parentIndex = $(this).parent().parent().index();
-        var thisIndex = $(this).index();
-        var controlNum = "";
-        var openNum = "";
-        if (parentIndex == 0) {
-            openNum = "112";
-            controlNum = "109";
-
-        } else if (parentIndex == 1) {
-            openNum = "119";
-            controlNum = "116";
-        } else if (parentIndex == 2) {
-            openNum = "120";
-            controlNum = "117";
-        } else if (parentIndex == 3) {
-            openNum = "121";
-            controlNum = "118";
-        } else if (parentIndex == 4) {
-            openNum = "113";
-            controlNum = "110";
-        } else if (parentIndex == 5) {
-            openNum = "105";
-            controlNum = "102";
-        } else if (parentIndex == 6) {
-            openNum = "103";
-            controlNum = "100";
-        } else if (parentIndex == 7) {
-            openNum = "104";
-            controlNum = "101";
-        } else if (parentIndex == 8) {
-            openNum = "111";
-            controlNum = "108";
-        }
-        if (thisIndex == 1) {
-            audioNoSound(openNum, "65535");
-
-        } else if (thisIndex == 2) {
-            audioNoSound(openNum, "0");
-        } else if (thisIndex == 3) {
-            changeSound1(controlNum, "1");
-            if (parseInt($(this).next().html()) < 84) {
-                $(this).next().html(parseInt($(this).next().html()) + 1);
-            }
-
-        } else if (thisIndex == 5) {
-            changeSound1(controlNum, "0");
-            if ($(this).prev().html() > 0) {
-                $(this).prev().html(parseInt($(this).prev().html()) - 1);
-            }
-
-        }
-    })
-    //音箱组
-    $("#tvControlShadow3 li").click(function () {
-        var parentIndex = $(this).parent().parent().index();
-        var thisIndex = $(this).index();
-        var controlNum1 = "";
-        var controlNum2 = "";
-        var controlNum3 = "";
-        var openNum1 = "";
-        var openNum2 = "";
-        var openNum3 = "";
-        if (parentIndex == 0) {
-            controlNum1 = "112";
-            controlNum2 = "119";
-            openNum1 = "109";
-            openNum2 = "116";
-        } else if (parentIndex == 1) {
-            controlNum1 = "112";
-            controlNum2 = "119";
-            controlNum3 = "120";
-            openNum1 = "109";
-            openNum2 = "116";
-            openNum3 = "117";
-        } else if (parentIndex == 2) {
-
-            controlNum1 = "119";
-            controlNum2 = "120";
-
-            openNum1 = "116";
-            openNum2 = "117";
-        } else if (parentIndex == 3) {
-            controlNum1 = "113"
-            controlNum2 = "119";
-            controlNum3 = "120";
-            openNum1 = "110";
-            openNum2 = "116";
-            openNum3 = "117";
-        } else if (parentIndex == 4) {
-            controlNum1 = "105"
-            controlNum2 = "113";
-            openNum1 = "102";
-            openNum2 = "110";
-        } else if (parentIndex == 5) {
-            controlNum1 = "103"
-            controlNum2 = "105";
-            openNum1 = "100";
-            openNum2 = "102";
-        } else if (parentIndex == 6) {
-            controlNum1 = "103"
-            controlNum2 = "104";
-            openNum1 = "100";
-            openNum2 = "101";
-        } else if (parentIndex == 7) {
-            controlNum1 = "104"
-            controlNum2 = "111";
-            openNum1 = "101";
-            openNum2 = "108";
-        } else if (parentIndex == 8) {
-            controlNum1 = "111"
-            controlNum2 = "112";
-            openNum1 = "108";
-            openNum2 = "109";
-        }
-        if (thisIndex == 1) {//静音
-            // changeGroupOrder("65535", openNum1, openNum2,openNum3);
-            changeGroupOrder("65535", controlNum1, controlNum2, controlNum3);
-        } else if (thisIndex == 2) {//取消静音
-            changeGroupOrder("0", controlNum1, controlNum2, controlNum3);
-        } else if (thisIndex == 3) {//音量加
-            changeGroupSound("1", openNum1, openNum2, openNum3);
-        } else if (thisIndex == 5) {//音量减
-            changeGroupSound("0", openNum1, openNum2, openNum3);
-        }
-    })
-    //主机/话筒
-    $("#tvControlShadow4 li").click(function () {
-        var parentIndex = $(this).parent().parent().index();
-        var thisIndex = $(this).index();
-        var controlNum = "";
-        var openNum = "";
-        if (parentIndex == 0) {
-            controlNum = "437"
-            openNum = "439";
-        } else {
-            controlNum = "436";
-            openNum = "438";
-
-        }
-        if (thisIndex == 1) {
-            audioNoSound(openNum, "65535");
-        } else if (thisIndex == 2) {
-            audioNoSound(openNum, "0");
-        } else if (thisIndex == 3) {
-            changeSound1(controlNum, "1");
-            if (parseInt($(this).next().html()) < 84) {
-                $(this).next().html(parseInt($(this).next().html()) + 1);
-            }
-        } else if (thisIndex == 5) {
-            changeSound1(controlNum, "0");
-            if ($(this).prev().html() > 0) {
-                $(this).prev().html(parseInt($(this).prev().html()) - 1);
-            }
-        }
-	})
-	if ($.cookie("yuyan") == "en") {
-		getbtn("pctrl", 1);
-	} else if ($.cookie("yuyan") == "CH") {
-		getbtn("pctrl", 0);
-	} else {
-		getbtn("pctrl");
-	}
-	setTimeout(function () {
-		$(".controlImage img").eq(0).click();
-	}, 1000)
+    
 }
 //定时器，截屏时点击操作框，若无人再点击则10s后自动隐藏
 function timeCount() {
@@ -869,7 +674,9 @@ function timeCount() {
             clearInterval(hideSlideTimer);
             count = 0;
         }
-    }	
+    }
+    
+	
 }
 //定时器，截屏时点击操作框，若无人再点击则10s后自动隐藏
 function timeCount1() {
@@ -894,8 +701,8 @@ function changeBorder(){
 	}
 }
 //获取数据
-function getData(URL, num) {
-	showLoading();
+function getData(URL,num){
+
 	content1='';
 	if(URL!=oldURL){//若改变url则将原来url所得到的数据去除
 		if(contentStr[num]!=undefined||contentStr[num]!=""){
@@ -906,19 +713,6 @@ function getData(URL, num) {
 	}
 	$("#pic").html('<img src="images/loadStatus.gif" class="loadStatus" allscrren="close" style=\"position:relative;left:0px;width:24px;top:25px;margin-right:5px;display:block;\"/>');
 	$("#pic img").css("top", ($("#pic").height() - 24) / 2);
-	controlIpName = $(".cc").eq(num).find("p").text();
-	$("#tabscreen").attr("color", $(".cc").eq(num).attr("color"));
-	$("#tabscreen").attr("onlyview", $(".cc").eq(num).attr("onlyview"));
-	$("#tabscreen").attr("usegate", $(".cc").eq(num).attr("usegate"));
-	$("#tabscreen").attr("gateip", $(".cc").eq(num).attr("gateip"));
-	$("#tabscreen").attr("gateport", $(".cc").eq(num).attr("gateport"));
-	$("#tabscreen").attr("port", $(".cc").eq(num).attr("port"));
-	color = $(".cc").eq(num).attr("color");//颜色值
-	onlyview = $(".cc").eq(num).attr("onlyview");//是否是只允许预览
-	usegate = $(".cc").eq(num).attr("usegate");//是否是多个服务器进行转发指令
-	gateip = $(".cc").eq(num).attr("gateip");//进行转发的多个服务器的ip地址，以;分割
-	gateport = $(".cc").eq(num).attr("gateport");//目的服务器的显示端的端口号
-	port = $(".cc").eq(num).attr("port");//目的服务器的显示端的端口号
 	$.ajax({
 		url: URL+"/wpgetxmlids.asp?rnd="+(Math.floor(Math.random()*(9999-1000))+1000)+"&utf8=1",
 		dataType: 'xml',
@@ -926,7 +720,6 @@ function getData(URL, num) {
 		timeout: 5000,      //失败时间
 		error: function(xml)
 		{
-			hideLoading();
 		    $("#pic").html("<img src='images/fail1.png' style=\"position:relative;left:0px;width:24px;margin-right:5px;display:block;\"/>");//top:15px;
 			$("#pic img").css("top",($("#pic").height()-24)/2);
 
@@ -937,6 +730,7 @@ function getData(URL, num) {
 				$("#Screen").html(contentStr[parseInt(number)]);
 			}
 			$("#Screen").html("<p align='center' style='width:100%;font-size:22px;color:red;'>" + getLanguageMsg("获取数据出错!", $.cookie("yuyan")) + "</p>");
+			//changLanguageMsg("获取数据出错!", $.cookie("yuyan"));
 			$("#functionButton").hide();
 			$(".startProgram").find("img").attr("src","images/leftControl/qidongjiemu.png");
 			$(".handControl").find("img").attr("src", "images/leftControl/shoudongmoshi.png");
@@ -988,11 +782,11 @@ function getData(URL, num) {
 					var menuPath=$(clientInfo).attr("menupath");//获得当前播放节目单所存储的位置
 					var menuInfo=$(clientInfo).attr("menuinfo");//获取当前节目单名
 					var localIp = $("#freshPage span").attr("localip", $(clientInfo).attr("controlroom"));
-					controlRoom = localIp;
 					if ($(clientInfo).attr("scrrate") != null && $(clientInfo).attr("scrrate") != undefined) {
 					    screenWidth = parseInt($(clientInfo).attr("scrrate").split("_")[0]);//获得显示端的宽度
+
 					    screenHeight = parseInt($(clientInfo).attr("scrrate").split("_")[1]);//获得显示端的高度
-					    widthRate = screenWidth / canvaswindowWidth;//获取显示端宽度和截屏的canvas的比例，以保证截屏截屏操作后点击某一个位置后与前端屏一致
+					    widthRate = screenWidth / canvaswindowWidth;
 					}
 					var playState=$(clientInfo).attr("playstate");
 					var playOrPause = "";
@@ -1001,13 +795,13 @@ function getData(URL, num) {
 					    playOrPause = playState.split("_");
 					    playStart = playOrPause[0];
 					}
-					//根据当前从后台获取的状态更改操控页面的图标和状态
-					changPlayStatus(playStart);					
+					changPlayStatus(playStart);
+					//var findex = "";
 					var systemSound = "";
 					var validValue = 0;
 					var objValid = "";
 					var objValid2 = "";
-					//获取系统音量
+					
 					if (playVol != null && playVol != undefined && playVol!="") {
 					    //findex = playVol.split("/");
 					    objValid=playVol.split("/");
@@ -1019,7 +813,6 @@ function getData(URL, num) {
 					        }
 					    }
 					}
-					
 					if (true||(validValue == 1)) {
 					    var nosoundVao = systemSound & 0x008000;//判断系统有没有静音
 					    systemSound = systemSound & ~0x008000;
@@ -1035,8 +828,10 @@ function getData(URL, num) {
 					        mplayVol = "0";
 					    } else {
 					        mplayVol = objValid[1].split("_")[0];
-					    }					    
-					}					
+					    }
+					    
+					}
+					
 					var playProc = "";
 					var playProc1=""
 					if ($(clientInfo).attr("playproc") != null && $(clientInfo).attr("playproc") != undefined) {
@@ -1054,9 +849,7 @@ function getData(URL, num) {
 					    mainStatus = parseInt(menuStatearr[0]) & 0x03f;//值为0-10，共十种状态
 					}
                     //showStatus(mainStatus,num)
-					if (parseInt(thisStatus) == 1) {
-						//后台返回的数据判断当前应显示的状态图标,如果thisStatus为1说明当前的数据改变了，若为0说明数据没有改变
-						//只有当数据改变时才重新更改状态图标
+					if(parseInt(thisStatus)==1){
 						showStatus(mainStatus,num)
 					}
 					
@@ -1083,11 +876,25 @@ function getData(URL, num) {
 					$("#rateProgressValue").html(secondToMinute((playProc1/10000)*strs));
 					//playState为音视频播放器播放状态（播放3，暂停2，停止1）,playtask(最前字节为显示端播放任务状态/播放任务号(2字节任务号/1字节栏目内任务号))，
 					//playProc为音视频播放进度万分比，playVol为播放机音量/音视频播放程序音量，g_getplayduring音视频文件的总时长，以毫秒为单位
-				//判断当前状态是暂停还是继续
-					changPlayStatus(playStatus);
-					//判断手动还是自动模式
-					changeMenuState(menuState);
 					
+					changPlayStatus(playStatus);
+					changeMenuState(menuState);
+					//if (findex>=0)
+					//{
+	
+					//   playVol=playVol.substr(0,findex);
+					//   findex=playVol.indexOf("/");
+					//   if (findex>=0)
+					//   {
+					//	  mplayVol=playVol.substr(findex+1,playVol.length-findex-1);
+					//	  playVol=playVol.substr(0,findex);
+					//   }
+					//}
+					//var clientInfobarHtml = "<span>" + getLanguageMsg("终端名:", $.cookie("yuyan")) + clientName1 + "</span><span style='margin-left:2em;'>" + changLanguageMsg("计算机名:", $.cookie("yuyan")) + hostName + "</span>";
+					//$("#clientInfoBar").html(clientInfobarHtml);
+					//changLanguageMsg("终端名:", $.cookie("yuyan"));
+					//changLanguageMsg("计算机名:", $.cookie("yuyan"));
+					//changLanguageMsg("节目单名:", $.cookie("yuyan"));
 					$(xml).find("item").each(function(i){
 						var downLink=$(this).find("downLink").text();
 						var itemType=$(this).find("itemType").text();
@@ -1104,20 +911,11 @@ function getData(URL, num) {
 						var newMoreInfo = ""
 
 						if (markID != undefined && markID != null) {
-                            tempMarkID = markID.split("-");
-                            if (parseInt(tempMarkID[1]) > 1) {
-                                taskID = parseInt(tempMarkID[2]) + (parseInt(tempMarkID[3]) << 16)  ;//算数符号优先级高于移位优先级
-                            } else {
-                                taskID = tempMarkID[2];	//任务号
-                            }
-						     
+						     tempMarkID = markID.split("-");
+						     taskID = tempMarkID[2];	//任务号
 						     moreInfo2 = moreInfo.text().split("\\027");
 						    if (moreInfo2[0] == "") {
-								if ($(this).find("taskName").text() != "") {
-									moreInfo2[0] = $(this).find("taskName").text();
-								} else {
-									moreInfo2[0] = "[" + ItemType(itemType, downLink) + "]";
-								}
+						        moreInfo2[0] = "[" + ItemType(itemType, downLink) + "]";
 						    }
 						   
 						     
@@ -1139,43 +937,23 @@ function getData(URL, num) {
 						} 
 						
 						//缩略图
-						var randomColor = color16((Win.split(":")[0]).split("-")[0]);
-						//docmd(67,'"+taskID+"')
-						var imagesrc="<span class='bgSpan' onclick=\"changeSize(this);\"><img src='"+iconLink+"' align='absmiddle' onerror='changeImage(this)'/><span class='bigScreen' style='width:100%;height:100%;margin-top:-100%;'><img src='images/list/bofang.png' style='width:20%;height:20%;'></span></span>"//类型图片
-						var inImage="<div class='startNow'  style='width:12%;height:100%;display:block;float:right;position:relative;' onclick=\"startNow(this,'"+taskID+"');\"><img class='startNowImg' src='images/list/startNow.png' style='display:block;width:2rem;height:2rem;float:right;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);'/></div>";//'"docmd(16,"'+taskID+'")"'
-						var columnInfoImage ="<div class='startNow'  style='width:12%;height:100%;display:block;float:right;position:relative;'><img  class='getMoreList' src='images/contentTab/gengduoex.png' style='display:block;width:1.5rem!important;height:1.5rem!important;float:right;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)' onclick='getClickMore(this)'/></div>";
-                        //节目项列表
-                       //特殊约定：对于不想显示在界面上的节目项，比如跳转指令等，可以通过在任务名前加两个**进行标记，处理程序可根据该标记来决定显示不显示该节目项。
-                        if ($(this).find("taskName").text().indexOf("**") >=0 ) {
-
-                        } else {
-							if($(this).find("itemType").text() .indexOf("14")>=0 || $(this).find("itemType").text().indexOf("1014")>=0 ){
-								content1 += "<div class='left' taskid='" + taskID + "' columId=" + $(this).find("markID").text().split("-")[2]+">" + imagesrc + "<div class='leftList' iconLink='" + iconLink + "' taskId='" + taskID + "' itemType='" + itemType + "' downLink='" + downLink + "' playStatus='" + playStatus + "' windowsNum='" + win + "'systemSound='" + systemSound + "' ><span markID=" + markID + " itemType=" + itemType+" style='padding-left:2%;height:100%;' onclick=\"showCtrlBar('ctrlBar" + markID + "','" + taskID + "','" + itemType + "',this);\" ><p class='programFileName' style='width:90%;'>" + moreInfo2[0] + "</p><p class='timeLong' style='width:90%;font-size:14px;color:#999;margin-top:5px;'><i style='font-size:12px;'><i  style='color:" + randomColor+"'>"+win+"</i>-" + Win.split(":")[0].split("-")[1] + "&nbsp;&nbsp;</i>" + newMoreInfo + "</p></span>" + columnInfoImage + "</div></div><div class='left1' taskid='" + taskID + "' style='display:none;'></div>";
-							}else if($(this).find("downLink").text().slice($(this).find("downLink").text().length-1).indexOf("\\")>=0){
-								content1 += "<div class='left' taskid='" + taskID + "'>" + imagesrc + "<div class='leftList' iconLink='" + iconLink + "' taskId='" + taskID + "' itemType='" + itemType + "' downLink='" + downLink + "' playStatus='" + playStatus + "' windowsNum='" + win + "'systemSound='" + systemSound + "' ><span markID=" + markID + " itemType=" + itemType+" style='padding-left:2%;height:100%;' onclick=\"showCtrlBar('ctrlBar" + markID + "','" + taskID + "','" + itemType + "',this);\" ><p class='programFileName' style='width:90%;'>" + moreInfo2[0] + "</p><p class='timeLong' style='width:90%;font-size:14px;color:#999;margin-top:5px;'><i style='font-size:12px;'><i  style='color:" + randomColor+"'>"+win+"</i>-" + Win.split(":")[0].split("-")[1] + "&nbsp;&nbsp;</i>" + newMoreInfo + "</p></span>" + columnInfoImage + "</div></div><div class='left1' taskid='" + taskID + "' style='display:none;'></div>";
-							}else{
-								if ($(this).find("markID").text().split("-")[1] > 0) {
-									content1 += "<div class='left' style='display:none;' taskid='" + taskID + "' columId=" + $(this).find("markID").text().split("-")[2]+">" + imagesrc + "<div class='leftList' iconLink='" + iconLink + "' taskId='" + taskID + "' itemType='" + itemType + "' downLink='" + downLink + "' playStatus='" + playStatus + "' windowsNum='" + win + "'systemSound='" + systemSound + "' ><span markID=" + markID + " itemType=" + itemType+" style='padding-left:2%;height:100%;' onclick=\"showCtrlBar('ctrlBar" + markID + "','" + taskID + "','" + itemType + "',this);\" ><p class='programFileName' style='width:90%;'>" + moreInfo2[0] + "</p><p class='timeLong' style='width:90%;font-size:14px;color:#999;margin-top:5px;'><i style='font-size:12px;'><i  style='color:" + randomColor+"'>"+win+"</i>-" + Win.split(":")[0].split("-")[1] + "&nbsp;&nbsp;</i>" + newMoreInfo + "</p></span>" + inImage + "</div></div><div class='left1' taskid='" + taskID + "' style='display:none;'></div>";
-								}else{
-									content1 += "<div class='left' taskid='" + taskID + "'>" + imagesrc + "<div class='leftList' iconLink='" + iconLink + "' taskId='" + taskID + "' itemType='" + itemType + "' downLink='" + downLink + "' playStatus='" + playStatus + "' windowsNum='" + win + "'systemSound='" + systemSound + "' ><span markID=" + markID + " itemType=" + itemType+" style='padding-left:2%;height:100%;' onclick=\"showCtrlBar('ctrlBar" + markID + "','" + taskID + "','" + itemType + "',this);\" ><p class='programFileName' style='width:90%;'>" + moreInfo2[0] + "</p><p class='timeLong' style='width:90%;font-size:14px;color:#999;margin-top:5px;'><i style='font-size:12px;'><i  style='color:" + randomColor+"'>"+win+"</i>-" + Win.split(":")[0].split("-")[1] + "&nbsp;&nbsp;</i>" + newMoreInfo + "</p></span>" + inImage + "</div></div><div class='left1' taskid='" + taskID + "' style='display:none;'></div>";
-								}	
-							}
-                        }
+						
+						var imagesrc="<span class='bgSpan' onclick=\"docmd(67,'"+taskID+"');\"><img src='"+iconLink+"' align='absmiddle' onerror='changeImage(this)'/><span class='bigScreen' style='width:100%;height:100%;margin-top:-100%;'><img src='images/list/bofang.png' style='width:20%;height:20%;'></span></span>"//类型图片
+						var inImage="<div class='startNow'  style='width:12%;height:100%;display:block;float:right;' onclick=\"startNow('"+taskID+"');\"><img  src='images/list/startNow.png' style='display:block;width:2rem;height:2rem;margin-left:25%;float:right;'/></div>";//'"docmd(16,"'+taskID+'")"'
+						//节目项列表
+						
+						content1 += "<div class='left' taskid='" + taskID + "'>" + imagesrc + "<div class='leftList' iconLink='" + iconLink + "' taskId='" + taskID + "' itemType='" + itemType + "' downLink='" + downLink + "' playStatus='" + playStatus + "' windowsNum='" + win + "'systemSound='" + systemSound + "' ><span style='padding-left:2%;height:100%;' onclick=\"showCtrlBar('ctrlBar" + markID + "','" + taskID + "'," + itemType + ",this);\" ><p class='programFileName' style='width:90%;'>" + moreInfo2[0] + "</p><p class='timeLong' style='width:90%;font-size:14px;color:#999;margin-top:5px;'><i style='font-size:12px;'>" + Win.split(":")[0] + "&nbsp;&nbsp;</i>" + newMoreInfo + "</p></span>" + inImage + "</div></div>";
 					});
 					var strNum=parseInt($("#tabscreen").attr("indexnumber"));
 					contentStr[strNum]=content1;
 					$("#Screen").html(content1);
-					if(conDragScreen){
-						dragScreen();
-					}
-					
 					$(".topMain .programList .left:nth-child(2n+1)").find(".leftList span").css("background", "#c9ecfe");
 					$(".loadpng").attr("screenWidth",screenWidth);
 					$(".loadpng").attr("screenHeight",screenHeight);
 					//获得焦点的项目样式改变
 					changeStyle();
 					//全局控制按钮
-                    controlAll = "<ul src='" + URL + "'><li onclick='docmd(69,0)'>手动模式</li><li class='sendCmd' onclick='docmd(11,0)' >启动节目</li><li class='sendCmd' onclick='docmd(70,0)'>停止节目</li><li cmdStr='' title='sound'><input id='range' type='range' min='0' max='255' value='' onchange='change(\"range\",\"value\")'></input>&nbsp;&nbsp;<span id='value'>#</span></li><li class='sendCmd' id='preTask' onClick='docmd(\"before\",0)'>上一节目项</li><li class='sendCmd' id='nextTask' onClick='docmd(\"next\",0)'>下一节目项</li><li class='sendCmd' onclick='docmd(21,0)'>暂停/继续</li></ul>";
+					controlAll = "<ul src='" + URL + "'><li onclick='docmd(69,0)'>手动模式</li><li class='sendCmd' onclick='docmd(11,0)' >启动节目</li><li class='sendCmd' onclick='docmd(70,0)'>停止节目</li><li cmdStr='' title='sound'><input id='range' type='range' min='0' max='255' value='' onchange='change(\"range\",\"value\")'></input>&nbsp;&nbsp;<span id='value'>#</span></li><li class='sendCmd' id='preTask' onClick='docmd(14,0)'>上一节目项</li><li class='sendCmd' id='nextTask' onClick='docmd(13,0)'>下一节目项</li><li class='sendCmd' onclick='docmd(21,0)'>暂停/继续</li></ul>";
 					//显示系统音量
 					
 					if (soundFlag <= 0) {
@@ -1209,7 +987,6 @@ function getData(URL, num) {
 					        }
 					    }
 					}
-					hideLoading();
 					
 				}
 				//}
@@ -1217,66 +994,9 @@ function getData(URL, num) {
 			oldData=$(xml).text();
 		}
 	});
-	//setTimeout("dragScreen()", 2000);
+	
 	//将当前的url设置为oldurl,也是为了切换显示端时，让程序进行识别，清除原来的数据
 	oldURL=URL;	
-}
-function getFileFolder(ele,subpath,tasktype){
-	$.ajax({
-		url:newurl+"/wpdigitalcontent.asp",
-		type:"get",
-		dataType:"xml",
-		data:{
-			"type":"0",
-			"utf8":"1",
-			"pageno":"0",
-			"pagesize":"1000",
-			"sort":"0",
-			"desc":"1",
-			"pathindex":"6",
-			"subpath":subpath,
-			"displaydate":"",
-			"tasktype":tasktype
-		},success:function(data){
-			var content2="";
-			if($(data).find("item").length>0){
-				var dataStr=$(data).find("item");
-				
-				for(var i=0;i<dataStr.length;i++){
-					var taskID=dataStr.eq(i).find("id").text();
-					var iconLink="$$"+subpath+dataStr.eq(i).find("l2").text();
-					//docmd(67,'" + taskID + "')
-					var imagesrc = "<span class='bgSpan' onclick=\"changeSize(this);\"><img src='" + iconLink + "' align='absmiddle' onerror='changeImage(this)'/></span>"//类型图片
-					var downLink=subpath+dataStr.eq(i).find("l1").text();
-					var playStatus=$(ele).parent().parent().parent().find(".leftList").attr("playStatus"); 
-					var win=0;
-					var systemSound=$(ele).parent().parent().parent().find(".leftList").attr("systemSound"); 
-					var markID=taskID;
-					var fileName=dataStr.eq(i).find("l1").text();
-					var mplayVol=$(ele).parent().parent().parent().find(".leftList").attr("mplayVol");
-					var Win=$(ele).parent().parent().parent().find(".leftList").attr("windowsnum");
-					var randomColor = color16(Win);
-                    var otherButton="<div class='programBtn'></div>";
-					var  programListInfo = "<div class='programListInfo'><p ><span>" + getLanguageMsg("地址:", $.cookie("yuyan")) + "</span>" + downLink + "</p><p><span>" + getLanguageMsg("布局:", $.cookie("yuyan")) + "</span>" +  + "</p></div>";
-					
-                    var inImage = "<div class='startNow'  style='width:12%;height:100%;display:block;float:right;position:relative;' onclick=\"startNow(this,'" + taskID +"','"+1+"','"+$(ele).parent().parent().parent().attr('taskid')+"');\"><img class='startNowImg' src='images/list/startNow.png' style='display:block;width:2rem;height:2rem;float:right;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);'/></div>";
-                    var infoProgram = "<span class='infoProgram'>"+$(ele).parent().prev().find(".timeLong").html()+"</span>";
-                   
-					content2 += "<div class='left folderList' style='display:none;' taskid='" + taskID + "' columId=" + $(this).find("markID").text().split("-")[2]+">" + imagesrc + "<div class='leftList' iconLink='" + iconLink + "' taskId='" + taskID + "' parentid='"+$(ele).parent().parent().parent().attr('taskid')+"' itemType='" + tasktype + "' downLink='" + downLink + "' playStatus='" + playStatus + "' windowsNum='" + win + "'systemSound='" + systemSound + "' ><span markID=" + markID + " itemType=" + tasktype+" style='padding-left:2%;height:100%;' onclick=\"showCtrlBar('ctrlBar" + markID + "','" + taskID + "','" + tasktype + "',this);\" ><p class='programFileName' style='width:90%;'>" + fileName + "</p><p class='timeLong' style='width:90%;font-size:14px;color:#999;margin-top:5px;'>"+infoProgram+"</p></span>" + inImage + "</div></div><div class='left1' taskid='" + taskID + "' style='display:none;'></div>";
-				}	
-				$(ele).parent().parent().parent().next().after(content2);
-				if($(ele).parent().parent().parent().css("background")=="rgb(201, 236, 254) none repeat scroll 0% 0% / auto padding-box border-box"){
-					$(".folderList .leftList>span:odd").css("background","rgb(201, 236, 254)")
-				 }else{
-					$(".folderList .leftList>span:even").css("background","rgb(201, 236, 254)")
-				 }
-				 changeStyle();
-                
-			}
-		},error:function(a,b,c){
-
-		}
-	})
 }
 //在本机当前图片缩略图的情况下，显示系统默认的缩略图
 function changeImage(thisIamge){
@@ -1292,7 +1012,71 @@ function changeMainStatus(num){
 		$(".cc").eq(num).css("color","fff");
 	}
 }
+function ItemType(itemtype,downLink) {
+    //音视频
+    if (itemtype == 10 || itemtype == 1010 || itemtype == 9 || itemtype == 1009) {
+        return "音视频";
+       // return changLanguageMsg("音视频:", 0, $.cookie("yuyan"));
+    }
+    else if (itemtype == 8 || itemtype == 1008)//office文档
+    {
+        //判断office文件中只有含有ppt和pptx才是ppt文件，其他的不做ppt处理
+        if (downLink != null && (downLink.indexOf(".ppt") >= 0 || downLink.indexOf(".pptx") >= 0)) {
+            return "Office文档";
+        } else {//除了ppt和pptx的office文档当做图类型处理片
+            return "图片";
+        }
+    }//对文档进行处理
+    else if (itemtype == 1 || itemtype == 1001) {
+        return "文本";
+    }
+    else if (itemtype == 12 || itemtype == 1012 || itemtype == 0 || itemtype == 1000 || itemtype == 11 || itemtype == 1011) {
+        if (downLink != null && (downLink.indexOf(".ppt") >= 0 || downLink.indexOf(".xls") >= 0 || downLink.indexOf(".docx") >= 0 || downLink.indexOf(".ppt") >= 0 || downLink.indexOf(".doc") >= 0 || downLink.indexOf(".xlsx") >= 0 || downLink.indexOf(".pps") >= 0 || downLink.indexOf(".pptx") >= 0 || downLink.indexOf(".ppsx") >= 0)) {
+            return "Office文档"
+        } else if (downLink.indexOf(".txt") >= 0) {
+            return "文本"
+        } else if (downLink.indexOf(".htm") >= 0 || downLink.indexOf(".html") >= 0 || downLink.indexOf(".asp") >= 0 || downLink.indexOf(".aspx") >= 0 || downLink.indexOf(".php") >= 0 || downLink.indexOf(".jsp") >= 0 || downLink.indexOf(".shtml") >= 0 || downLink.indexOf(".pdf") >= 0) {
+            return "网页";
+        } else if (downLink.indexOf(".gif") >= 0 || downLink.indexOf(".jpg") >= 0 || downLink.indexOf(".bmp") >= 0 || downLink.indexOf(".png") >= 0 || downLink.indexOf(".tiff") >= 0 || downLink.indexOf(".tif") >= 0 || downLink.indexOf(".jpeg") >= 0|| downLink.indexOf(".ico") >= 0) {
+            return "图片"
+        } else if (downLink.indexOf(".swf") >= 0) {
+            return "动画"
+        } else if (downLink.indexOf(".wav") >= 0 || downLink.indexOf(".aif") >= 0 || downLink.indexOf(".mp3") >= 0 || downLink.indexOf(".wma") >= 0 || downLink.indexOf(".cda") >= 0 || downLink.indexOf(".au") >= 0 || downLink.indexOf(".midi") >= 0 || downLink.indexOf(".aac") >= 0 || downLink.indexOf(".ape") >= 0 || downLink.indexOf(".ogg") >= 0) {
+            return "音频"
+        } else if (downLink.indexOf(".avi") >= 0 || downLink.indexOf(".mpg") >= 0 || downLink.indexOf(".mpeg") >= 0 || downLink.indexOf(".mp4") >= 0 || downLink.indexOf(".wmv") >= 0 || downLink.indexOf(".asf") >= 0 || downLink.indexOf(".vob") >= 0 || downLink.indexOf(".rm") >= 0 || downLink.indexOf(".rmvb") >= 0 || downLink.indexOf(".flv") >= 0 || downLink.indexOf(".f4v") >= 0 || downLink.indexOf(".mov") >= 0 || downLink.indexOf(".dat") >= 0) {
+            return "视频"
 
+        } else if (downLink.indexOf(".zip") >= 0 || downLink.indexOf(".rar") >= 0 || downLink.indexOf(".7z") >= 0 || downLink.indexOf(".tar") >= 0 || downLink.indexOf(".xz") >= 0 || downLink.indexOf(".bz2") >= 0) {
+            return "压缩文件"
+        } else {
+            if (itemtype == 11 || itemtype == 1011) {
+                return "操作系统自检";
+            } else if (itemtype == 12 || itemtype == 1012) {
+                return "应用程序"
+            } else {
+                return "自适应"
+            }
+        }
+    } else if (itemtype == 2 || itemtype == 1002) {//其他的所有格式都当做图片进行处理
+        return "网页";
+
+    } else if (itemtype == 3 || itemtype == 1003) {
+        return "图片";
+    } else if (itemtype == 4 || itemtype == 1004) {
+        return "通知(静态)";
+    } else if (itemtype == 5 || itemtype == 1005) {
+        return "通知(向上滚动)";
+    } else if (itemtype == 6 || itemtype == 1006) {
+        return "字幕(向左滚动)";
+    } else if (itemtype == 7 || itemtype == 1007) {
+        return "动画";
+    } else if (itemtype == 13 || itemtype == 1013) {
+        return "远程指令"
+    } else if (itemtype == 14 || itemtype == 1014) {
+        return "栏目"
+    }
+	
+}
 //声明函数根据后台返回的数据判断当前应显示的状态图标
 function showStatus(menuStatus,number){
 	var menuStatus=parseInt(menuStatus);
@@ -1353,27 +1137,25 @@ function clickChangeMenuState(menuState){
 	}
 }
 //专门为了获取音视频的播放状态，获取的方式和getData（）相同，只不过不再对其他的数据进行处理
-function getRate(URL) {
+function getRate(URL){
 	if(dragStartjt){return;}//判断是不是要进行拖拽的动作，若是则将获取进度的长连接终止掉
 	if(sendding){return;}
 	sendding=true;
 	if(URL!=oldURL){//若改变url则将原来url所得到的数据去除
 		$(".programList").children().remove();
 	}
-	if (socket != null && socket.readyState == 1) {
-		//若socket不是空，则说明已经启用了，所以每次只需要直接发送请求即可
-        socket.send("wpgetxmlids.asp?gettype=9&win=" + parseInt($("#tabscreen").attr("nowwindow")) +"&utf8=1&rnd="+(Math.floor(Math.random()*(9999-1000))+1000));
-	} else {
-		//若没有启用scoket，则建立socket连接并且发送一次ajax请求，随后使用websocket发送请求
+	if(socket!=null&&socket.readyState==1){
+		socket.send("wpgetxmlids.asp?gettype=9&utf8=1&rnd="+(Math.floor(Math.random()*(9999-1000))+1000));
+	}else{
          connect();
 		if(socket!=null&&socket.readyState==1){
-            socket.send("wpgetxmlids.asp?gettype=9&win=" + parseInt($("#tabscreen").attr("nowwindow")) +"&utf8=1&rnd="+(Math.floor(Math.random()*(9999-1000))+1000));
+		   socket.send("wpgetxmlids.asp?gettype=9&utf8=1&rnd="+(Math.floor(Math.random()*(9999-1000))+1000));
 		   sendding=false;
                    return;
 				   
 		}
 		$.ajax({
-            url: URL + "/wpgetxmlids.asp?gettype=9&win=" + parseInt($("#tabscreen").attr("nowwindow")) +"&utf8=1&rnd="+(Math.floor(Math.random()*(9999-1000))+1000),
+			url: URL+"/wpgetxmlids.asp?gettype=9&utf8=1&rnd="+(Math.floor(Math.random()*(9999-1000))+1000),
 			dataType: 'xml',
 			type: 'GET',		//提交方式
 			timeout: 2000,      //失败时间
@@ -1383,7 +1165,6 @@ function getRate(URL) {
 			},
 			success: function(xml)
 			{
-
 				$("#functionButton").css("display","block");
 				//每次请求成功后都将之前所获得的播放列表的数据清除
 				
@@ -1406,12 +1187,10 @@ function getRate(URL) {
 				var playState = $(clientInfo).attr("playstate");
 				var playOrPause = "";
 				var playStart = ""
-				//每次切换屏幕时都会重新读取当时视频暂停/继续的状态
 				if (playState != null && playState != undefined) {
 				    playOrPause = playState.split("_");
 				    playStart = playOrPause[0];
 				}
-				changPlayStatus(playStart);
 				var arrayTask = "";
 				var currentTask = ""
 				if (playTask == undefined || playTask == "") {
@@ -1419,7 +1198,14 @@ function getRate(URL) {
 				} else {
 				    arrayTask = playTask.split("/");
 				    currentTask = arrayTask[1];//获得当前播放节目的id
-				  
+				    //if (currentTask != $(".current").attr("taskid")) {
+				    //    $(".left").eq(i).find(".timeLong").css("color", "#999");
+				    //    for (var i = 0; i < $(".left").length; i++) {
+				    //        if ($(".left").eq(i).attr("taskid") == currentTask) {
+				    //            $(".left").eq(i).find(".timeLong").css("color", "red");
+				    //        }
+				    //    }
+				    //}
 				    $(".left").eq(parseInt(currentTask)).find(".timeLong").css("color", "#d11b28d");
 				}
 				changPlayStatus(playStart);
@@ -1467,61 +1253,29 @@ function getRate(URL) {
 				//$("#value").html(systemSound);
 				$("#range2").val(mplayVol);
 				$("#value2").html(mplayVol);
-				hideLoading();
 			}
 		});
 	}
-	
 	sendding=false;
 }
-var tmpItem="";
 //点击立即启动按钮
-function startNow(thisItem,taskId,folder,parentId){	
-	var winNum=parseInt($("#tabscreen").attr("nowwindow"));
-	var itemType=$(thisItem).prev().attr("itemtype").split("-")[1].toLowerCase();
-	if(changeSizeCommon(itemType)){
-		if(folder==undefined){
-			if(tmpItem==""){             
-                docmd(16, taskId);
-                docmd(winNum*10000+3085, 0);
-            }else{
-                docmd(16, taskId);
-            } 
-		}else{
-			if(tmpItem==""){
-                docmd(16, parentId);
-                docmd(winNum*10000+3085, 0);
-            }else{
-                docmd(16, parentId);
-            }  
-            docmd(3079+10000*winNum,taskId);
-		}
+function startNow(taskId){
+	if($("#div1").attr("class")=="open1"){
+		docmd(67,taskId);
 	}else{
-		if(folder==undefined){
-			if ($("#div1").attr("class")=="open1") {
-				docmd(67, taskId);
-			} else {
-				docmd(16, taskId);
-			}
-		}else{
-			if($("#div1").attr("class")=="open1"){
-				docmd(67,parentId);
-			}else{
-				docmd(16,parentId);
-			}
-			docmd(3079+10000*parseInt($("#tabscreen").attr("nowwindow")),taskId);
-		}
-	}	
-	tmpItem="";
+		docmd(16,taskId);
+	}
 }
-function changeStyle2(){
+//对动态加载进来的数据进行样式的修改
+function changeStyle(){
 	if(document.documentElement.clientHeight<900){
 		$(".bgSpan").css("width","5%");
 		$(".bgSpan").css("height",$(".topMain .programList .left").width()*0.05+"px");
 	}else{
 		$(".bgSpan").css("width","9%");
 		$(".bgSpan").css("height",$(".topMain .programList .left").width()*0.09+"px");
-	}	
+	}
+		
 	var leftListH=$(".leftList").height();
 	var leftListspanH=$(".leftList span").height();
 	var listImg=$(".leftList img").height();
@@ -1544,52 +1298,52 @@ function changeStyle2(){
 	$(".leftList span").css("paddingTop",(leftListH-leftListspanH)/2);
 	$(".leftList span").css("paddingBottom",(leftListH-leftListspanH)/2);
 	$(".downFile b").css("marginTop",(bottomH-downFileH)/2);
-	
+	$(".leftList img").css("marginTop",imgLin);
 	$(".topMain .programList .left .bgSpan").css("marginTop",spanMargin);
 	$("#functionButton .start").css("marginTop",(bottomH-startH)/2);
 	$(".programFileName").css("lineHeight",$(".programFileName").height()+"px");
-	$(".leftList>span").click(function(){
-		//点击切换节目时，会将正在点击的节目项添加'current'类名，同时将其他节目的'current'去掉，同时将正在点击的节目设置样式。
-		//节目项控制和全局控制的内容也得到相应的改变
-		$(".leftList span").css("background","#fff");
-		$(".leftList .programFileName").css("color","#000");
-		$(".leftList .timeLong").css("color", "#999");
-		$(".topMain .programList .left:even").find(".leftList span").css("background", "#c9ecfe");
-		$(this).parent().addClass("current");
-		$(this).parents().siblings().find(".leftList").removeClass("current");		
-		$(".leftList").css("background","");
-		$(this).css("background","#06afe8");
-		$(this).find("span").css("background","#06afe8");
-		$(this).find("p").css("color","#fff");
-	   
-		var url=$("#tabscreen").attr("src");
-		//对当前的节目点击下载按钮
-		var downLink=$(".current").attr("downLink");
-		//如果节目是存储在本地，需要在连接前添加$$符号
-		//以下是用"\\"进行本地文件和线上文件的区分
-		if(downLink.indexOf("\\")<0){
-		}else{
-			downLink="$$"+downLink;
-		}
-		//将文件的地址转换成线上能运行的地址，同时在地址前增加当前获取数据的显示端地址，来得到一个新的地址。
-		href=url+"/"+downLink;//预览
-		var arry=href.split("\\");
-		downLoadArry=arry[arry.length-1];//此时声明成全局变量是为了接下来在拼接字符串的时候用到这个值，预览的变量同此变量
-		//在文件名前加onlydownload,系统就会自动识别为当前的文件为下载文件。
-		downLoadArry="onlydownload_\\"+downLoadArry;
-		arry[arry.length-1]=downLoadArry;
-		hrefDownLoad=arry.join('\\');
-		//预览当前文件只需要在预览的按钮添加一个href,href的值为上面所提到的新的组合的地址。
-		$("#checkFile").attr("href1",href);
-		$("#downLoad").attr("href",hrefDownLoad);
-		$(".start").attr("src", "images/bottomPlay/tingzhi.png");
+	$(".leftList span").click(function(){
+	  //点击切换节目时，会将正在点击的节目项添加'current'类名，同时将其他节目的'current'去掉，同时将正在点击的节目设置样式。
+	    //节目项控制和全局控制的内容也得到相应的改变
+	    //if ($(".programList .left").index($(".current").parent(".left")) % 2 == 0) {
+
+	    //}
+	  $(".leftList span").css("background","#fff");
+	  $(".leftList .programFileName").css("color","#000");
+	  $(".leftList .timeLong").css("color", "#999");
+	  $(".topMain .programList .left:nth-child(2n+1)").find(".leftList span").css("background", "#c9ecfe");
+	  $(this).parent().addClass("current");
+	  $(this).parents().siblings().find(".leftList").removeClass("current");
+	 
+	  $(".leftList").css("background","");
+	  $(this).css("background","#06afe8");
+	  $(this).find("p").css("color","#fff");
+	 
+	  var url=$("#tabscreen").attr("src");
+	  //对当前的节目点击下载按钮
+	  var downLink=$(".current").attr("downLink");
+	  //如果节目是存储在本地，需要在连接前添加$$符号
+	  //以下是用"\\"进行本地文件和线上文件的区分
+	  if(downLink.indexOf("\\")<0){
+	  }else{
+		  downLink="$$"+downLink;
+	  }
+	  //将文件的地址转换成线上能运行的地址，同时在地址前增加当前获取数据的显示端地址，来得到一个新的地址。
+	  href=url+"/"+downLink;//预览
+	  var arry=href.split("\\");
+	  downLoadArry=arry[arry.length-1];//此时声明成全局变量是为了接下来在拼接字符串的时候用到这个值，预览的变量同此变量
+	  //在文件名前加onlydownload,系统就会自动识别为当前的文件为下载文件。
+	  downLoadArry="onlydownload_\\"+downLoadArry;
+	  arry[arry.length-1]=downLoadArry;
+	  hrefDownLoad=arry.join('\\');
+	  //预览当前文件只需要在预览的按钮添加一个href,href的值为上面所提到的新的组合的地址。
+	  $("#checkFile").attr("href1",href);
+	  $("#downLoad").attr("href",hrefDownLoad);
+	  $(".start").attr("src", "images/bottomPlay/tingzhi.png");
+	  //getData(newurl);
 	})
-}
-//对动态加载进来的数据进行样式的修改
-function changeStyle(){	
-	changeStyle2();
 	//点击当前列表的立即播放按钮，则当前列表的样式跟着改变，焦点定位到当前的点击的列表行
-	$(".leftList .startNow .startNowImg").click(function(){
+	$(".leftList .startNow img").click(function(){
 		//点击切换节目时，会将正在点击的节目项添加'current'类名，同时将其他节目的'current'去掉，同时将正在点击的节目设置样式。
 	  //节目项控制和全局控制的内容也得到相应的改变
 	  $(".leftList span").css("background","#fff");
@@ -1625,96 +1379,50 @@ function changeStyle(){
 	  $("#checkFile").attr("href1",href);
 	  $("#downLoad").attr("href",hrefDownLoad);
 	  $(".start").attr("src", "images/bottomPlay/tingzhi.png");
+	  //getData(newurl);
 	});
-	changeStyle3();
-}
-function getClickMore(thisList){
-	if($(".folderList").length<=0){
-		getFileFolder(thisList,$(thisList).parent().parent().attr("downlink"),$(thisList).parent().parent().attr("itemtype"));		
-   }
-   if($(thisList).parent().parent().attr("itemtype").indexOf("14")>=0|| $(thisList).parent().parent().attr("itemtype").indexOf("1014")>=0){
-	  
-		for (var i = 0; i < $(".programList .left").length; i++) {
-			if ($(".left").eq(i).attr("columid") == $(thisList).parent().parent().parent().attr("taskid")) {
-				if ($(".programList .left").eq(i).find(".leftList").attr("itemtype").indexOf("14")<0&& $(".programList .left").eq(i).find(".leftList").attr("itemtype").indexOf("1014")<0) {
-					if ($(".programList .left").eq(i).css("display") == "none") {
-						$(".programList .left").eq(i).slideDown("slow");
-						$(thisList).attr("src", "images/contentTab/gengduoex1.png");
-					} else {
-						$(".programList .left").eq(i).slideUp("slow");
-						$(thisList).attr("src", "images/contentTab/gengduoex.png");
-					}
-				}
-			}
-			
-		}
-	}else{
-		if($(thisList).parent().parent().attr("downlink").slice($(thisList).parent().parent().attr("downlink").length-1).indexOf("\\")>=0){
-			if($(".folderList").length<=0){
-				$(thisList).attr("src", "images/contentTab/gengduoex1.png");
-				setTimeout(function(){
-					if($(".folderList").css("display")=="none"){							
-						$(".folderList").slideDown("slow");						
-					}else{
-						$(".folderList").slideUp("slow");
-						$(thisList).attr("src", "images/contentTab/gengduoex.png");
-					}
-				},1000);
-			}else{
-				if($(".folderList").css("display")=="none"){
-					$(".folderList").slideDown("slow");
-					$(thisList).attr("src", "images/contentTab/gengduoex1.png");
-				}else{
-					$(".folderList").slideUp("slow");
-					$(thisList).attr("src", "images/contentTab/gengduoex.png");
-				}
-			}	
-		}
-	}
-}
-function changeStyle3(){
-//点击全屏播放时，当前的行的样式跟随改变
+	//点击全屏播放时，当前的行的样式跟随改变
 	$(".bigScreen").click(function(){
-		//点击切换节目时，会将正在点击的节目项添加'current'类名，同时将其他节目的'current'去掉，同时将正在点击的节目设置样式。
-		//节目项控制和全局控制的内容也得到相应的改变
-		$(".leftList span").css("background","#fff");
-		$(".leftList .programFileName").css("color","#000");
-		$(".leftList .timeLong").css("color","#999");
-		$(".leftList").removeClass("current");
-		$(".topMain .programList .left:nth-child(4n+1)").find(".leftList span").css("background", "#c9ecfe");
-		$(this).parent().next().addClass("current");
-		$(this).parent().next().find("span").css("background","#06afe8");
-		$(this).parent().next().find("span p").css("color","#fff");
-		
-		var url=$("#tabscreen").attr("src");
-		//对当前的节目点击下载按钮
-		var downLink=$(this).parent().next().attr("downLink");
-		//如果节目是存储在本地，需要在连接前添加$$符号
-		//以下是用"\\"进行本地文件和线上文件的区分
-		if(downLink.indexOf("\\")<0){
-		}else{
-			downLink="$$"+downLink;
-		}
-		//将文件的地址转换成线上能运行的地址，同时在地址前增加当前获取数据的显示端地址，来得到一个新的地址。
-		href=url+"/"+downLink;
-		var arry=href.split("\\");
-		downLoadArry=arry[arry.length-1];
-		//在文件名前加onlydownload,系统就会自动识别为当前的文件为下载文件。
-		downLoadArry="onlydownload_\\"+downLoadArry;
-		arry[arry.length-1]=downLoadArry;
-		hrefDownLoad=arry.join('\\');
-		//预览当前文件只需要在预览的按钮添加一个href,href的值为上面所提到的新的组合的地址。
-		$("#checkFile").attr("href1",href);
-		$("#downLoad").attr("href",hrefDownLoad);
-		$(".start").attr("src", "images/bottomPlay/tingzhi.png");
-	// getData(newurl);
+			//点击切换节目时，会将正在点击的节目项添加'current'类名，同时将其他节目的'current'去掉，同时将正在点击的节目设置样式。
+	  //节目项控制和全局控制的内容也得到相应的改变
+	  $(".leftList span").css("background","#fff");
+	  $(".leftList .programFileName").css("color","#000");
+	  $(".leftList .timeLong").css("color","#999");
+	  $(".leftList").removeClass("current");
+	  $(".topMain .programList .left:nth-child(2n+1)").find(".leftList span").css("background", "#c9ecfe");
+	  $(this).parent().next().addClass("current");
+	  $(this).parent().next().find("span").css("background","#06afe8");
+	  $(this).parent().next().find("span p").css("color","#fff");
+	  
+	  var url=$("#tabscreen").attr("src");
+	  //对当前的节目点击下载按钮
+	  var downLink=$(this).parent().next().attr("downLink");
+	  //如果节目是存储在本地，需要在连接前添加$$符号
+	  //以下是用"\\"进行本地文件和线上文件的区分
+	  if(downLink.indexOf("\\")<0){
+	  }else{
+		  downLink="$$"+downLink;
+	  }
+	  //将文件的地址转换成线上能运行的地址，同时在地址前增加当前获取数据的显示端地址，来得到一个新的地址。
+	  href=url+"/"+downLink;
+	  var arry=href.split("\\");
+	  downLoadArry=arry[arry.length-1];
+	  //在文件名前加onlydownload,系统就会自动识别为当前的文件为下载文件。
+	  downLoadArry="onlydownload_\\"+downLoadArry;
+	  arry[arry.length-1]=downLoadArry;
+	  hrefDownLoad=arry.join('\\');
+	  //预览当前文件只需要在预览的按钮添加一个href,href的值为上面所提到的新的组合的地址。
+	  $("#checkFile").attr("href1",href);
+	  $("#downLoad").attr("href",hrefDownLoad);
+	  $(".start").attr("src", "images/bottomPlay/tingzhi.png");
+	 // getData(newurl);
 	})
 	if(screenWidth1>=1000){
 		$(".leftList").css("width","92%");
 		$(".startNow").css("width", "9%");
 		$(".leftList span").css("width", "86%")
-		$(".startNow .startNowImg").css("width","2.5rem");
-		$(".startNow .startNowImg").css("height","2.5rem");
+		$(".startNow img").css("width","2.5rem");
+		$(".startNow img").css("height","2.5rem");
 		$(".topMain .programList .left").css("height", "12%");
 		$(".cc").css("height", "16%");
 		
@@ -1722,30 +1430,26 @@ function changeStyle3(){
 		$(".leftList").css("width","88%");
 		$(".startNow").css("width", "9%");
 		$(".leftList span").css("width","88%")
-		$(".startNow .startNowImg").css("width","1.5rem");
-		$(".startNow .startNowImg").css("height", "1.5rem");
+		$(".startNow img").css("width","1.5rem");
+		$(".startNow img").css("height", "1.5rem");
 		$(".topMain .programList .left").css("height", "10%");
-		$(".cc").css("height", "13%");		
+		$(".cc").css("height", "13%");
+		
 	}
 	$(".cc").find("b").css("marginTop", (parseInt($(".cc").css("height")) - 28) / 2);
-	
+	$(".startNow img").css("marginTop",($(".startNow").height()-$(".startNow img").height())/2);
+	$(".startNow img").css("marginLeft", ($(".startNow").width() - $(".startNow img").width()) / 2);
 	$(".programFileName").css("marginTop", ($(".leftList span").height() - $(".programFileName").height() - 5 - $(".timeLong").height()) / 2);
 }
 //判断当前的列表是那种类型，根据当前的类型显示不同的操作按钮
 function showCtrlBar(barID, taskID, itemtype, thisList) {
-	//点击当前节目项时，增加甩屏操作
-	//alert(111);
-	itemtype=parseInt(itemtype.split("-")[0]);
 	var flag = 0;
 	var downLink = "";
 	rateLeft = 0
 	//getRate(newurl);
-	// var imageUrl=$(".left").find(".leftList[taskId='"+taskID+"']").prev(".bgSpan").find("img").attr("src");
-	// var fileName=$(".left").find(".leftList[taskId='"+taskID+"']").children("span").find("p").eq(0).text();
-	// downLink=$(".left").find(".leftList[taskId='"+taskID+"']").attr("downlink");
-	var imageUrl=$(thisList).parent().prev(".bgSpan").find("img").attr("src");
-	var fileName=$(thisList).find(".programFileName").text();
-    downLink = $(".left").find(".leftList[taskId='" + taskID + "']").attr("downlink");
+	var imageUrl=$(".left").find(".leftList[taskId='"+taskID+"']").prev(".bgSpan").find("img").attr("src");
+	var fileName=$(".left").find(".leftList[taskId='"+taskID+"']").children("span").find("p").eq(0).text();
+	downLink=$(".left").find(".leftList[taskId='"+taskID+"']").attr("downlink");
 	var nowWindow=$(".left").find(".leftList[taskId='"+taskID+"']").attr("windowsNum");
 	$("#tabscreen").attr("nowWindow",nowWindow);
 	$("#functionButton .images").attr("src", imageUrl);
@@ -1760,8 +1464,7 @@ function showCtrlBar(barID, taskID, itemtype, thisList) {
 	if (itemtype == 12 || itemtype == 1012 || itemtype == 0 || itemtype == 1000 || itemtype == 11 || itemtype == 1011) {
 	    itemtype = checkFileType(itemtype, downLink);
 	}
-	//音视频 音视频的时候需要调用websocket 因为需要一直向wiseSendInfo访问进度的数据
-	//所以需要启动轮询，但是如果当前的节目项不是音视频，则为了防止多次请求数据，造成资源浪费，停止轮询
+	//音视频
 	if (itemtype == 10 || itemtype == 1010 || itemtype == 9 || itemtype == 1009 || itemtype == 7 || itemtype==1007)
     {	clearInterval(timer);
 		var playOrPause=$("thisList").attr("playStatus");
@@ -1843,23 +1546,19 @@ function showCtrlBar(barID, taskID, itemtype, thisList) {
 		
 	}
 	$(".images").css("width",$(".bottom").height()*0.6+"px");
-	// if($("#div1").attr("class")=="open1"){
-	// 	$(".startUp").attr("onclick","docmd(67,'"+taskID+"')");//跳转到当前任务
-	// }else{
-	// 	$(".startUp").attr("onclick","docmd(16,'"+taskID+"')");//跳转到当前任务
-	// }
-	// $(".startUp").removeAttr("onclick");
-	// $(".startUp").attr("onclick", "startNow('"+taskID+"','1','"+$(thisList).parent().attr("parentid")+"')");
-	$(".startUp").removeAttr("onclick");
-	$(".startUp").click(function(){
-        $(".current .startNow .startNowImg").click();
-    })
-
-	$(".pause").attr("onclick", "docmd(70,'0')");
+	if($("#div1").attr("class")=="open1"){
+		$(".startUp").attr("onclick","docmd(67,'"+taskID+"')");//跳转到当前任务
+	}else{
+		$(".startUp").attr("onclick","docmd(16,'"+taskID+"')");//跳转到当前任务
+	}
+	
+	$(".pause").attr("onclick","docmd(70,'0')");
 }
 //拼接ppt控制按钮的字符串
 function pptStr(hrefDownLoad1, href1, imageMargin1) {
     return '<li><a id="downLoad" class="downFile" href="' + hrefDownLoad1 + '"><b class="downLoad" style="margin-top:' + imageMargin1 + 'px;"></b><span>' + getLanguageMsg("下载", $.cookie("yuyan")) + '</span></a></li><li><a id="checkFile" onclick="checkFile()"  class="downFile" href1="' + href1 + '"><b class="checkIn" onclick="checkFile()" style="margin-top:' + imageMargin1 + 'px;"></b><span>' + getLanguageMsg("预览", $.cookie("yuyan")) + '</span></a></li>';
+    //return '<li><a id="downLoad" class="downFile" href="' + hrefDownLoad1 + '"><b class="downLoad" style="margin-top:' + imageMargin1 + 'px;"></b><span>下载</span></a></li><li><a id="checkFile" class="downFile" href1="' + href1 + '"><b class="checkIn" style="margin-top:' + imageMargin1 + 'px;"></b><span>预览</span></a></li>';
+
 }
 //拼接音视频控制按钮的字符串
 function videoStr(hrefDownLoad1, href1, imageMargin1) {
@@ -1872,7 +1571,6 @@ function picStr(hrefDownLoad1, href1, imageMargin1) {
 }
 //发送指令函数
 function docmd(cmdtype, cmdData) {
-	showLoading();
     var screenType = cmdData;
     if ($(".slider").attr("allscreen") == "open") {
         screenType = 3;
@@ -1880,7 +1578,7 @@ function docmd(cmdtype, cmdData) {
         screenType = 0;
     }
 	var url=$("#tabscreen").attr("src");
-	var cmdType = "" + (parseInt($("#tabscreen").attr("nowWindow")) * 10000 + parseInt(cmdtype)) + "";
+	var cmdType=""+cmdtype+"";
 	var sendcmdurl=url+"/wpsendclientmsg.asp?rnd="+(Math.floor(Math.random()*(9999-1000))+1000);
 	if(!isNaN(cmdtype)){//执行显示端命令
 		cmdstr=cmdtype+"_"+cmdData;
@@ -1891,25 +1589,20 @@ function docmd(cmdtype, cmdData) {
 		type: 'GET',
 		timeout: 15000,		//超时时间
 		error:function(xml){
-			hideLoading();
+		    //timeShowMsg("title","发送失败",500);		//失败报错
+		   
 		    topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")));
-			
+		   
 		},
 		success:function(xml){
-			hideLoading();
 			if(xml){
-				if(xml.indexOf("501")>=0){
-					topTrip("平板操控功能为授权！");
-				}else{
-					if (cmdType.indexOf("3009") < 0 && cmdType.indexOf("29") < 0 && cmdType.indexOf("3001") < 0) {
+				//timeShowMsg("title","发送成功",500);		//发送成功
+			    if (cmdType.indexOf("3009") < 0 && cmdType.indexOf("29") < 0 && cmdType.indexOf("3001") < 0) {
 			       
-						topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")));
+			        topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")));
 			       
-					}
-				}
-				
+			    }
 			}
-			
 		}
 		});
 	}
@@ -1925,26 +1618,22 @@ function docmd(cmdtype, cmdData) {
 			dataType:'html',
 			type: 'GET',
 			timeout: 5000,		//超时时间
-			error: function (xml) {
-				hideLoading();
+			error:function(xml){
 					//timeShowMsg("title","发送失败",500);		//失败报错
 			    topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
 				},
-			success: function (xml) {
-				hideLoading();
+			success:function(xml){
 				if(xml){
-					if(xml.indexOf("501")>=0){
-						topTrip("平板操控功能为授权！");
-					}else{
-						topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
-					}
+					//timeShowMsg("title","发送成功",500);		//发送成功
+				    topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
+					
 				}
 			}
 		});
 	}
 	//点击上一节目项，下一节目项，将当前节目的'current'去掉，将上一节目项/下一节目项添加上'current'
 	if(cmdtype==13){
-	var ele=$(".current").parent().next().next();
+	var ele=$(".current").parent().next();
 	ele.find(".leftList").addClass("current").find("img").click();
 	ele.prev().find(".leftList").removeClass('current');
 	}
@@ -1957,7 +1646,7 @@ function docmd(cmdtype, cmdData) {
 		$(".leftList").eq($(".leftList").length-1).addClass("current").find("img").click();
 	}
 	if(cmdtype==14){
-		var ele=$(".current").parent().prev().prev();
+		var ele=$(".current").parent().prev();
 		ele.find(".leftList").addClass("current").find("img").click();
 		ele.next().find(".leftList").removeClass('current');
 	}if(cmdType.indexOf("3009")>=0){
@@ -1965,26 +1654,15 @@ function docmd(cmdtype, cmdData) {
 		timer=setInterval("getRate(newurl)",1000);
 	}	
 	if(cmdtype==70){
-		clearInterval(timer);//停止节目单时，清除轮询，不再占用资源
+		clearInterval(timer);
 	}
 	if(cmdtype==16){
-    }
-    if (cmdtype == "before") {
-        var ele = $(".current").parent().prev().prev();
-        ele.find(".leftList").addClass("current").find("img").click();
-        ele.next().find(".leftList").removeClass('current');
-    }
-    if (cmdtype == "next") {
-        var ele = $(".current").parent().next().next();
-        ele.find(".leftList").addClass("current").find("img").click();
-        ele.prev().find(".leftList").removeClass('current');
-    }
+	}
 	
 }
 
-//发送指令函数 当前是当启动了全屏播放后所发送的指令函数
+//发送指令函数
 function docmd1(cmdtype, cmdData) {
-	showLoading();
     var screenType = cmdData;
     if ($(".slider").attr("allscreen") == "open") {
         screenType = 3;
@@ -2002,24 +1680,17 @@ function docmd1(cmdtype, cmdData) {
             dataType: 'html',
             type: 'GET',
             timeout: 15000,		//超时时间
-			error: function (xml) {
-				hideLoading();
+            error: function (xml) {
                 //timeShowMsg("title","发送失败",500);		//失败报错
                 topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
             },
-			success: function (xml) {
-				hideLoading();
+            success: function (xml) {
                 if (xml) {
-					if(xml.indexOf("501")>=0){
-						topTrip("平板操控功能为授权！");
-					}else{
-						 //timeShowMsg("title","发送成功",500);		//发送成功
-						if (cmdType.indexOf("3009") < 0 && cmdType.indexOf("29") < 0 && cmdType.indexOf("3001") < 0) {
-							
-							topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
-						}
-					}
-                   
+                    //timeShowMsg("title","发送成功",500);		//发送成功
+                    if (cmdType.indexOf("3009") < 0 && cmdType.indexOf("29") < 0 && cmdType.indexOf("3001") < 0) {
+                        
+                        topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
+                    }
                 }
             }
         });
@@ -2037,23 +1708,14 @@ function docmd1(cmdtype, cmdData) {
             dataType: 'html',
             type: 'GET',
             timeout: 5000,		//超时时间
-			error: function (xml) {
-				hideLoading();
+            error: function (xml) {
                 //timeShowMsg("title","发送失败",500);		//失败报错
                 topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
             },
-			success: function (xml) {
-				hideLoading();
+            success: function (xml) {
                 if (xml) {
-					 //timeShowMsg("title","发送成功",500);		//发送成功
-                    if (cmdType.indexOf("3009") < 0 && cmdType.indexOf("29") < 0 && cmdType.indexOf("3001") < 0) {
-                        
-                        topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
-                    }else{
-						//timeShowMsg("title","发送成功",500);		//发送成功
-						topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
-					}
-                    
+                    //timeShowMsg("title","发送成功",500);		//发送成功
+                    topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
 
                 }
             }
@@ -2061,7 +1723,7 @@ function docmd1(cmdtype, cmdData) {
     }
     //点击上一节目项，下一节目项，将当前节目的'current'去掉，将上一节目项/下一节目项添加上'current'
     if (cmdtype == 13) {
-        var ele = $(".current").parent().next().next();
+        var ele = $(".current").parent().next();
         ele.find(".leftList").addClass("current").find("img").click();
         ele.prev().find(".leftList").removeClass('current');
     }
@@ -2074,7 +1736,7 @@ function docmd1(cmdtype, cmdData) {
         $(".leftList").eq($(".leftList").length - 1).addClass("current").find("img").click();
     }
     if (cmdtype == 14) {
-		var ele = $(".current").parent().prev().prev();
+        var ele = $(".current").parent().prev();
         ele.find(".leftList").addClass("current").find("img").click();
         ele.next().find(".leftList").removeClass('current');
     } if (cmdType.indexOf("3009") >= 0) {
@@ -2086,50 +1748,42 @@ function docmd1(cmdtype, cmdData) {
     }
     if (cmdtype == 16) {
     }
-    if (cmdtype == "before") {
-		var ele = $(".current").parent().prev().prev();
-		tmpItem="before";
-		if(ele.length!=0){
-			ele.find(".leftList").addClass("current").find("img").click();
-			ele.next().find(".leftList").removeClass('current');
-		}
-       else{
-		hideLoading();
-	   }
-    }
-    if (cmdtype == "next") {
-		var ele = $(".current").parent().next().next();
-		tmpItem="next";
-		if(ele.length!=0){
-			ele.find(".leftList").addClass("current").find("img").click();
-			ele.prev().find(".leftList").removeClass('current');
-		}else{
-			hideLoading();
-		}  
-    }
+
 }
-//拖动滑动条获取到相应的值(素材音量)
-function change(rangex, valuex) {
-	coundFlag = 2;
-	if ($("#tabscreen").attr("nowwindow") == undefined) {
-		$("#tabscreen").attr("nowwindow", "0");
+//提示框函数
+function timeShowMsg(objID,msgstr,durTime){		//显示加载状态函数
+	if(objID==""||durTime==null){return false;}
+	if(msgstr==""||durTime==null){return false;}
+	if(durTime==""||durTime==null){durTime=500;}
+	var tempstr=$("#"+objID).text();
+	$("#"+objID).text(msgstr);
+	if(msgstr.indexOf("失败")>0){
+		$("#"+objID).css("color","red");
+	}else if(msgstr.indexOf("成功")>0){
+		$("#"+objID).css("color","#000");
+	}else if(msgstr.indexOf("刷新")>0){
+	  $("#"+objID).css("color","#000");
 	}
-	if (rangex == "range") {
-		var value = document.getElementById(rangex).value;
-		var nw = parseInt($("#tabscreen").attr("nowwindow"));
-		document.getElementById(valuex).innerHTML = value;
-		if (document.getElementById('range').value == "0") {
-			$(".noSound").attr("src", "images/leftControl/noSound.png")
-		} else {
-			$(".noSound").attr("src", "images/leftControl/quanjuyinliangSelected.png")
+	window.setTimeout(function (){
+		$("#"+objID).text(tempstr);
+		if(tempstr.indexOf("刷新")>0){
+	    $("#"+objID).css("color","#000");
 		}
-		docmd(29, getSoundNumSlip(document.getElementById(rangex).value));
-	} else {
-		var value = document.getElementById(rangex).value;
-		var nw = parseInt($("#tabscreen").attr("nowwindow"));
-		document.getElementById(valuex).innerHTML = value;
-		docmd(nw * 10000 + 3001, getSoundNumSlip(document.getElementById(rangex).value));
-	} 
+		//点击按钮，点的太快，‘’失败‘’出现BUG，文字不能还原。
+	},durTime);
+}
+//拖动滑动条获取到相应的值
+function change(idnname, spanid) {
+    coundFlag = 2;
+    var value = document.getElementById(idnname).value;
+    var nw = parseInt($("#tabscreen").attr("nowwindow"));
+    document.getElementById(spanid).innerHTML = value;
+    if (idnname == "range") {
+        docmd(nw * 10000 + 29, getSoundNumSlip(document.getElementById(idnname).value));
+    } else if (idnname == "prorange" || idnname == "range2") {
+        docmd(nw * 10000 + 3001, getSoundNumSlip(document.getElementById(idnname).value));
+    }
+
 }
 //毫秒转化成分钟
 function secondToMinute(num){
@@ -2165,8 +1819,7 @@ function getSoundNumSlip(num){
 	return tempnum;
 }
 //获取终端频道信息函数
-function getChannelList() {
-	showLoading();
+function getChannelList(){
 	var channelListUrl=$("#tabscreen").attr("src");
 	var url=channelListUrl+"/wpgetxmlids.asp?utf8=1&rnd="+(Math.floor(Math.random()*(9999-1000))+1000);
 	$.ajax({
@@ -2177,16 +1830,15 @@ function getChannelList() {
 		timeout: 15000,		//失败时间
 		error: function(xml)
 		{
-			hideLoading();
 			$("#title").text("获取频道出错!");
-			$("#pic img").attr("src", "images/fail1.png");
-			
+			$("#pic").html("<img src='images/fail1.png' style=\"position:relative;left:0px;\"/>")//top:15px;
+			$("#pic img").css("top",($("#pic").parent().height()-38)/2);
 		},
 		success: function(xml)
 		{
 			//下拉列表的第一项为当前正在播放的节目单，剩下的节目单按照正常的顺序显示
-			$("#pic img").attr("src", "images/success1.png");
-			
+			$("#pic").html("<img src='images/success1.png' style=\"position:relative;left:0px;\"/>")//top:15px;
+			$("#pic img").css("top",($("#pic").parent().height()-38)/2);
 			var channels=$(xml).find("channel");
 			var raius="10px 10px 0px 0px";
 			$("#channelList").html("");
@@ -2195,7 +1847,8 @@ function getChannelList() {
 				var name,path,desc;
 				name=$(this).find("name").text();
 				path=$(this).find("path").text();
-				desc = $(this).find("desc").text();	
+				desc = $(this).find("desc").text();
+				
 				if($("#menuPath").val()==path){
 				    $("#channelList").append("<option value='" + name + "' selected>" + name + "</option>");
 				    $("#ulChannelList").append("<li onclick='changinputvalue(this)'>"+ name +"</li>");
@@ -2212,7 +1865,6 @@ function getChannelList() {
 				}
 			});
 			$("#inpurChannelValue").val($("#channelList").val());
-			hideLoading();
 		}
 	});
 }
@@ -2222,8 +1874,9 @@ function changinputvalue(thisList) {
     $("#ulChannelList").hide();
 }
 //一键切换所有终端频道 因为每个显示端都由一个配置文件连接到主控端，wiseSendInfo会自动连接到主控端，所以此时可以用相对路径
-function allClientChannel() {
-	showLoading();
+function allClientChannel(){
+	//var valueName=$("#channelList").val()+"11";
+    //var valueName=$("#channelList").val();
     var valueName = $("#inpurChannelValue").val();
 		valueName=valueName.split("[");
 		valueName="*["+valueName[1]+"11";
@@ -2238,21 +1891,19 @@ function allClientChannel() {
 		dataType:"text",
 		type:"GET",
 		success:function(data){
-			if (data) {
-				hideLoading();
+			if(data){
 				//timeShowMsg("title","发送成功",500);		//发送成功
 			    topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
 				getData(newurl,indexNumber);
 			}
-		}, error: function (data) {
-			hideLoading();
+		},error:function(data){
 			//timeShowMsg("title","发送失败",500);		//发送失败
 		    topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
 		}
 	})
 }
-function allClientChannelHand() {
-	showLoading();
+function allClientChannelHand(){
+    //var valueName=$("#channelList").val();
     var valueName = $("#inpurChannelValue").val();
 		valueName=valueName.split("[");
 		valueName="*["+valueName[1]+"69";
@@ -2266,15 +1917,14 @@ function allClientChannelHand() {
 		url:"wpcontrolcenter.asp?wpcontrolcenter=&maintype=5&subtype=73&companyid=wisepeak&utf8=1&cnlist="+str+"&commandparam="+valueName+"&rnd="+(Math.floor(Math.random()*(9999-1000))+1000),
 		dataType:"text",
 		type:"GET",
-		success: function (data) {
-			hideLoading();
+		success:function(data){
 			if(data){
-
+				//timeShowMsg("title","发送成功",500);		//发送成功
 				topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")),1);
 				getData(newurl, indexNumber);
 			}
-		}, error: function (xml) {
-			hideLoading();
+		},error:function(xml){
+			//timeShowMsg("title","发送失败",500);		//发送失败
 		    topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 2);
 		}
 	})
@@ -2292,55 +1942,65 @@ function changeTab(id){ //切换Tab内容
 //控制灯颜色
 function lightChange(url, obj) {
    
-	//var index=$("#bar1 .cmdBar .sendCmd").index(obj);
-    var index = $("#lightChangeColor .sendCmd").index(obj);
+	var index=$("#bar1 .cmdBar .sendCmd").index(obj);
 	if(index==0){
-        $("#lightChangeColor .sendCmd").css("background","#e6e6e6");
-        $("#lightChangeColor .sendCmd").css("color","#999");
+		$("#bar1 .cmdBar .sendCmd").css("background","#e6e6e6");
+		$("#bar1 .cmdBar .sendCmd").css("color","#999");
 	}
 	if (index == 1) {
 	    
-        $("#lightChangeColor .sendCmd").css("background","#e6e6e6");
-        $("#lightChangeColor .sendCmd").css("color","#999");
+		$("#bar1 .cmdBar .sendCmd").css("background","#e6e6e6");
+		$("#bar1 .cmdBar .sendCmd").css("color","#999");
 		$(obj).css("background","#e8072c");
 		$(obj).css("color","#fff");
 	}else if(index==2){
-        $("#lightChangeColor .sendCmd").css("background","#e6e6e6");
-        $("#lightChangeColor .sendCmd").css("color","#999");
+		$("#bar1 .cmdBar .sendCmd").css("background","#e6e6e6");
+		$("#bar1 .cmdBar .sendCmd").css("color","#999");
 		$(obj).css("background","#06e860");
 		$(obj).css("color","#fff");
 	}else if(index==3){
-        $("#lightChangeColor .sendCmd").css("background","#e6e6e6");
-        $("#lightChangeColor .sendCmd").css("color","#999");
+		$("#bar1 .cmdBar .sendCmd").css("background","#e6e6e6");
+		$("#bar1 .cmdBar .sendCmd").css("color","#999");
 		$(obj).css("background","#074ae8");
 		$(obj).css("color","#fff");
 	}else if(index==4){
-        $("#lightChangeColor .sendCmd").css("background","#e6e6e6");
-        $("#lightChangeColor .sendCmd").css("color","#999");
+		$("#bar1 .cmdBar .sendCmd").css("background","#e6e6e6");
+		$("#bar1 .cmdBar .sendCmd").css("color","#999");
 		$(obj).css("background","#e8e807");
 		$(obj).css("color","#fff");
 	}else if(index==5){
-        $("#lightChangeColor .sendCmd").css("background","#e6e6e6");
-        $("#lightChangeColor .sendCmd").css("color","#999");
+		$("#bar1 .cmdBar .sendCmd").css("background","#e6e6e6");
+		$("#bar1 .cmdBar .sendCmd").css("color","#999");
 		$(obj).css("background","#c307e8");
 		$(obj).css("color","#fff");
 	}else if(index==6){
-        $("#lightChangeColor .sendCmd").css("background","#e6e6e6");
-        $("#lightChangeColor .sendCmd").css("color","#999");
+		$("#bar1 .cmdBar .sendCmd").css("background","#e6e6e6");
+		$("#bar1 .cmdBar .sendCmd").css("color","#999");
 		$(obj).css("background","#07e8e8");
 		$(obj).css("color","#fff");
 	}else if(index==7){
-        $("#lightChangeColor .sendCmd").css("background","#e6e6e6");
-        $("#lightChangeColor .sendCmd").css("color","#999");
+		$("#bar1 .cmdBar .sendCmd").css("background","#e6e6e6");
+		$("#bar1 .cmdBar .sendCmd").css("color","#999");
 		$(obj).css("background","#fff");
 		$(obj).css("color","#000");
 	}
+	$("#bar1 .cmdBar .sendCmd").eq($("#bar1 .cmdBar .sendCmd").length-1).css("background","#f3a9a9");
+	$("#bar1 .cmdBar .sendCmd").eq($("#bar1 .cmdBar .sendCmd").length-2).css("background","#f3a9a9");
+	$("#bar1 .cmdBar .sendCmd").eq($("#bar1 .cmdBar .sendCmd").length-3).css("background","#f3a9a9");
+	$("#bar1 .cmdBar .sendCmd").eq($("#bar1 .cmdBar .sendCmd").length - 4).css("background", "#f3a9a9");
+	$("#bar1 .cmdBar .sendCmd").eq($("#bar1 .cmdBar .sendCmd").length - 5).css("background", "#f3a9a9");
+	$("#bar1 .cmdBar .sendCmd").eq($("#bar1 .cmdBar .sendCmd").length - 6).css("background", "#f3a9a9");
+	$("#bar1 .cmdBar .sendCmd").eq($("#bar1 .cmdBar .sendCmd").length-1).css("color","#fff");
+	$("#bar1 .cmdBar .sendCmd").eq($("#bar1 .cmdBar .sendCmd").length-2).css("color","#fff");
+	$("#bar1 .cmdBar .sendCmd").eq($("#bar1 .cmdBar .sendCmd").length-3).css("color","#fff");
+	$("#bar1 .cmdBar .sendCmd").eq($("#bar1 .cmdBar .sendCmd").length - 4).css("color", "#fff");
+	$("#bar1 .cmdBar .sendCmd").eq($("#bar1 .cmdBar .sendCmd").length - 5).css("color", "#fff");
+	$("#bar1 .cmdBar .sendCmd").eq($("#bar1 .cmdBar .sendCmd").length - 6).css("color", "#fff");
 	var url1=newurl+"/wpcontrolcomm.asp?wpcontrolcomm=";
 		$.get(url1+url);
 }
 //对系统的应用功能按钮发送指令
-function getUrl(url) {
-	showLoading();
+function getUrl(url){
 	url=$("#tabscreen").attr("src")+"/"+url+"&utf8=1";
 	$.ajax({
 		data:{rnd:(Math.floor(Math.random()*(9999-1000))+1000)},
@@ -2348,23 +2008,52 @@ function getUrl(url) {
 		dataType:'html',
 		type: 'GET',
 		timeout: 15000,		//超时时间
-		error: function (xml) {
-			hideLoading();
+		error:function(xml){
+			//timeShowMsg("title","发送失败",500);		//失败报错
 			topTrip("发送失败",2);
 		},
-		success: function (xml) {
-			hideLoading();
+		success:function(xml){
 			if(xml){
-				
+				//timeShowMsg("title","发送成功",500);		//发送成功
+			    
 			    topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
 			}
 		}
 	});
 }
-//文件预览，图片除外
+//文件预览
 function checkFile(){
     var fileSrc = $("#checkFile").attr("href1");
     $("#checkFile").attr("href1", fileSrc);
+	//var itemType=$(".current").attr("itemType")
+	//var content="";
+	//$(".file").find("video").remove();
+	//$(".file").find("img").remove();
+	////根据不同的itemType来使用不同的标签，使素材能正常预览，目前只设置了音/视频，图片两种
+	//if(itemType == 10 || itemType == 1010||itemType==9||itemType==1009){
+	//	content="<video src='"+fileSrc+"' controls='controls'></video>";
+	//} else if (itemType == 3 || itemType == 1003) {
+	//	content="<img src='"+fileSrc+"'>";
+	//} else if (itemType == 12 || itemType == 1012 || itemType == 0 || itemType == 1000 || itemType == 11 || itemType == 1011) {
+	//    if (downLink.indexOf(".gif") >= 0 || downLink.indexOf(".jpg") >= 0 || downLink.indexOf(".bmp") >= 0 || downLink.indexOf(".png") >= 0 || downLink.indexOf(".tiff") >= 0 || downLink.indexOf(".tif") >= 0 || downLink.indexOf(".jpeg" >= 0) || downLink.indexOf(".ico") >= 0) {
+	//        content = "<img src='" + fileSrc + "'>";
+	//    } else if (downLink.indexOf(".wav") >= 0 || downLink.indexOf(".aif") >= 0 || downLink.indexOf(".mp3") >= 0 || downLink.indexOf(".wma") >= 0 || downLink.indexOf(".cda") >= 0 || downLink.indexOf(".au") >= 0 || downLink.indexOf(".midi") >= 0 || downLink.indexOf(".aac") >= 0 || downLink.indexOf(".ape") >= 0 || downLink.indexOf(".ogg") >= 0) {
+	//        content = "<video src='" + fileSrc + "' controls='controls'></video>";
+	//    } else if (downLink.indexOf(".avi") >= 0 || downLink.indexOf(".mpg") >= 0 || downLink.indexOf(".mpeg") >= 0 || downLink.indexOf(".mp4") >= 0 || downLink.indexOf(".wmv") >= 0 || downLink.indexOf(".asf") >= 0 || downLink.indexOf(".vob") >= 0 || downLink.indexOf(".rm") >= 0 || downLink.indexOf(".rmvb") >= 0 || downLink.indexOf(".flv") >= 0 || downLink.indexOf(".f4v") >= 0 || downLink.indexOf(".mov") >= 0 || downLink.indexOf(".dat") >= 0) {
+	//        content = "<video src='" + fileSrc + "' controls='controls'></video>";
+	//    }
+	//} else {
+	//    $(".file").css("display", "none");
+	//    window.location.href = fileSrc;
+	//}
+	//$(".file").append(content);
+	//$(".file").css("display","block");
+	//$(".close").click(function(){
+	//	$(".file").css("display","none");
+	//	if($("video").length>0){
+	//		$("video").remove();
+	//	}
+    //});
     window.open(fileSrc, "_blank", "toolbar=yes, location=yes, directories=no, status=no, menubar=yes, scrollbars=yes, resizable=no, copyhistory=yes, width=400, height=400");
 
 }
@@ -2376,24 +2065,21 @@ function refreshScreen(){
 		screenWidth1=nowWidth;
 	}
 }
-//关机、重启都调用函数 关机时向终端和控制端都发送指令，防止向终端发送指令是不能关机
+//关机
 function powerOff(clientNum) {
-	if ($(".topConfirm").attr("messageTip") == "ok") {
-		showLoading();
+    if ($(".topConfirm").attr("messageTip") == "ok") {
         var clintName = $("#top").attr("clientname");
         var errorURL = $("#tabscreen").attr("src");
         $.ajax({
             url: errorURL + "/wpsendclientmsg.asp?wpsendclientmsg=" + clientNum + "_"+(1000+parseInt(clientNum))+"&rnd=" + (Math.floor(Math.random() * (9999 - 1000)) + 1000),
             dataType: 'xml',
             type: 'GET',
-			success: function (data) {
-				hideLoading();
+            success: function (data) {
                 //timeShowMsg("title","发送成功",500)
                 topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
                 $(".topConfirm").attr("messageTip", "");
             },
-			error: function (data) {
-				hideLoading();
+            error: function (data) {
                 //timeShowMsg("title","发送失败",500)
                 topTrip(getLanguageMsg("发送失败功", $.cookie("yuyan")), 1);
                 $(".topConfirm").attr("messageTip", "");
@@ -2404,14 +2090,12 @@ function powerOff(clientNum) {
             url: "wpcontrolcenter.asp?wpcontrolcenter=&maintype=5&subtype=0&companyid=wisepeak&utf8=1&cnlist=" + clintName + ";&commandparam=&rnd=" + (Math.floor(Math.random() * (9999 - 1000)) + 1000),
             dataType: 'text',
             type: 'GET',
-			success: function (data) {
-				hideLoading();
+            success: function (data) {
                 //timeShowMsg("title","发送成功",500);
                 topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
                 $(".topConfirm").attr("messageTip", "");
             },
-			error: function (data) {
-				hideLoading();
+            error: function (data) {
             }
         })
     } else {
@@ -2422,9 +2106,8 @@ function powerOff(clientNum) {
         }
     }
 }
-//开机，开机时向控制室端发送两条指令，若第一条指令发送失败不能开机，则向显示端再发送一条
-function powerOn() {
-	showLoading();
+//开机
+function powerOn(){
 	var clintName=$("#title").text();
 	var ClientName = clintName;
 	var errorip = $("#tabscreen").attr("src");
@@ -2438,8 +2121,7 @@ function powerOn() {
 	        url: "wpcontrolcenter.asp?wpcontrolcenter=&maintype=5&subtype=45&companyid=wisepeak&utf8=1&cnlist=" + ClientName + ";&commandparam=-f " + errorIp + ":" + errorMac + "&rnd=" + (Math.floor(Math.random() * (9999 - 1000)) + 1000),
 	        dataType: 'text',
 	        type: 'GET',
-			success: function (data) {
-				hideLoading();
+	        success: function (data) {
 	            topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
 	            $(".topConfirm").attr("messageTip", "");
 	        },
@@ -2449,15 +2131,13 @@ function powerOn() {
 	                url: "wpcontrolcenter.asp?wpcontrolcenter=Turn-On TV&maintype=6&subtype=0&companyid=wisepeak&utf8=1&dohere=1&cnlist=noneed&commandparam=-f " + errorIp + ":" + errorMac + "&rnd=" + (Math.floor(Math.random() * (9999 - 1000)) + 1000),
 	                dataType: 'text',
 	                type: 'GET',
-					success: function (data) {
-						hideLoading();
+	                success: function (data) {
 	                    //timeShowMsg("title","发送成功",500)
 	                    topTrip(getLanguageMsg("发送成功", $.cookie("yuyan")), 1);
 	                    $(".topConfirm").attr("messageTip", "");
 	                },
 	                error: function (data, XMLHttpRequest, textStatus, errorThrown) {
-						//timeShowMsg("title","发送失败",500);
-						hideLoading();
+	                    //timeShowMsg("title","发送失败",500);
 	                    topTrip(getLanguageMsg("发送失败", $.cookie("yuyan")), 1);
 	                    $(".topConfirm").attr("messageTip", "");
 	                }
@@ -2608,7 +2288,7 @@ function connect() {
         hosturl=newurl.split("//")[1];
     }
         
-    var host = "ws://" + hosturl + "/wpgetxmlids.asp?gettype=9&win=" + parseInt($("#tabscreen").attr("nowwindow"))+"&utf8=1&rnd="+(Math.floor(Math.random()*(9999-1000))+1000);
+	var host = "ws://"+hosturl+"/wpgetxmlids.asp?gettype=9&utf8=1&rnd="+(Math.floor(Math.random()*(9999-1000))+1000);
 	try{
 		if(socket==null||socket.readyState!=1){//1-连接成功建立，可以通信；2-连接正在进行关闭握手，即将关闭；
 			if (socket!=null){					//3-连接已经关闭或者根本没有建立;0-正在连接
@@ -2654,8 +2334,6 @@ function connect() {
 			    playOrPause = playState.split("_");
 			    playStart = playOrPause[0];
 			}
-			changPlayStatus(playStart);
-            $("#rangeRate1").attr("max", gGetPlayDuring);
 			var arrayTask = "";
 			var currentTask = ""
 			if (playTask == undefined || playTask == "") {
@@ -2663,7 +2341,14 @@ function connect() {
 			} else {
 			    arrayTask = playTask.split("/");
 			    currentTask = arrayTask[1];//获得当前播放节目的id
-			   
+			    //if (currentTask != $(".current").attr("taskid")) {
+			    //    $(".left").eq(i).find(".timeLong").css("color", "#999");
+			    //    for (var i = 0; i < $(".left").length; i++) {
+			    //        if ($(".left").eq(i).attr("taskid") == currentTask) {
+			    //            $(".left").eq(i).find(".timeLong").css("color", "red");
+			    //        }
+			    //    }
+			    //}
 			    $(".left").eq(parseInt(currentTask)).find(".timeLong").css("color", "#d11b28");
 			}
 			changPlayStatus(playStart);
@@ -2695,6 +2380,7 @@ function connect() {
 			    } else {
 			        mplayVol = objValid[1].split("_")[0];
 			    }
+
 			}
 			screenWidth=parseInt(clientInfo.attr("scrRate").split("_")[0]);
 			screenHeight=parseInt(clientInfo.attr("scrRate").split("_")[1]);
@@ -2726,16 +2412,20 @@ function connect() {
 			    console.log("2_" + secondToMinute((playProc1 / 10000) * strs));
 			}
 			if (soundFlag <= 0) {
-			    
+			    //$("#range").val(systemSound);
+			    //$("#value").html(systemSound);
 			    $("#range2").val(mplayVol);
 			    $("#value2").html(mplayVol);
 			}
 			
-		}	
+		}
+		
 		socket.onclose = function(){
-		}					
+		}			
+			
 	} catch(exception){
-	}			
+	}
+			
 }
 //此处根据设备的内核判断是手机端或者pc或者pad，然后跳转到相应的链接中
 function browserRedirect() {
@@ -2753,10 +2443,21 @@ function browserRedirect() {
   }else{
   }
 } 
+//链接到资源文件获取页面
+function SourceGet() {
+    if (newurl == "") {
+        window.location.href = window.location.href.split("/")[0] + "//" + window.location.href.split("/")[1] + window.location.href.split("/")[2] + "/source.html";
+    } else {
+        window.location.href = newurl + "/source.html";
+    }
+	
+}
 
 //只处理move操作，进行当前的操start和end都不发送数据，当连续两次快速的点击时发送end指令即可以实现双击
 $(document).ready(function(){
+	//resetCanvas();
 	var ctx=document.getElementById("myCanvas1");
+    //var tempCtx=canvas.getContext('2d');
 	var tempCtx = ctx.getContext('2d');
 	var startX=0;
 	var startY=0;
@@ -2764,7 +2465,7 @@ $(document).ready(function(){
 	//添加touchStart监听
 	ctx.addEventListener('touchstart',function(evt){
 		started=evt.clientX+","+evt.clientY;
-		//将在平板上读取的坐标以同样的比例放大到显示终端上同样的位置
+		//将在平板上读取的坐标以同样的比例放大到显示终端上同样的位
 		var moveX=parseInt(screenWidth/$("#myCanvas1").width()*evt.touches[0].pageX);
 		var moveY=parseInt(screenHeight/$("#myCanvas1").height()*evt.touches[0].pageY);
 		startX=moveX;
@@ -2931,6 +2632,23 @@ function changeNowRate(){
 		var width=styles.width;//灰色块的长度，用于计算红色块最大滑动的距离
 		//leftWidth为当前灰色块距离屏幕最左侧的距离
 		var leftWidth=parseFloat($(".musicOrVideo img").eq(0).css("width"))+parseFloat((parseFloat($(".musicOrVideo").css("width"))*0.05))+parseFloat($(".musicOrVideo img").eq(1).css("width"))+parseFloat(parseFloat($(".musicOrVideo").css("width"))*0.05)+ parseFloat($(".musicOrVideo img").eq(2).css("width"))+parseFloat($(".musicOrVideo img").eq(3).css("width"))+parseFloat(parseFloat($("#rangeRate1").css("width"))*0.04);       
+       
+		//console.log(width);            
+		//if (event.targetTouches.length == 1) {                
+		//	var touch = event.targetTouches[0];                
+		//	//计算红色块的left值，pageX是相对于整个页面的坐标，减去10（红色块长度的一半）是为了让鼠标点显示在中间，
+		//	//可以更改值看看效果，如果灰色块不是紧挨着屏幕，那还需要计算灰色块距离左屏幕的距离，应为pageX！！！                
+		//	moveleft = touch.pageX-leftWidth-10;                
+		//	if(moveleft<=0){//红色块的left值最小是0；                    
+		//		moveleft=0;                
+		//	};                
+		//	if(moveleft>=parseFloat(width)-20){////红色块的left值最小是灰色块的width减去红色块的width；                    
+		//		moveleft=parseFloat(width)-20;                
+		//	}                
+		//	rangeRate2.style.left=moveleft+"px";//最后把left值附
+		//	$("#rangeLeft").css("width",moveleft);
+		//	console.log($("#rangeRate2").css("left"));            
+	    //};  
 		if (event.targetTouches.length == 1) {
 		    var touch = event.targetTouches[0];
 		    //计算红色块的left值，pageX是相对于整个页面的坐标，减去10（红色块长度的一半）是为了让鼠标点显示在中间，
@@ -2958,171 +2676,41 @@ function changeNowRate(){
 		var nw=parseInt($("#tabscreen").attr("nowwindow"));
 		nowSecond = moveleft * strsMax / reteWidth;
 		timeFlag = 2;
-		//docmd(nw*10000+3009,parseInt(nowSecond));
-		docmdex(3009,parseInt(nowSecond));
+		docmd(nw*10000+3009,parseInt(nowSecond));
 		changeFlage=0;
 	})  
 }
 //重启wisesendInfo
-function reStartWiseSendInfo() {
-	showLoading();
+function reStartWiseSendInfo(){
 	var thisLocal=localUrl.split(":8080")[0];
 	var restartcnname=$(".clientName").html().split(":")[1];
 	$.ajax({
 		url:thisLocal+":8080/wpcontrolcenter.asp?wpcontrolcenter=sys internal command30&maintype=6&subtype=0&companyid=wisepeak&utf8=1&cnlist="+restartcnname+"&commandparam=-wisesendinfo restart",
 		type:"get",
 		dataType:"xml",
-		success: function (data) {
-			hideLoading();
+		success:function(data){
 		    timeShowMsg("title", getLanguageMsg("发送成功", $.cookie("yuyan")), 500);
 		},
-		error: function (data) {
-			hideLoading();
+		error:function(data){
 		    timeShowMsg("title", getLanguageMsg("发送失败", $.cookie("yuyan")), 500);
 		}
 	})
 }
-//刷新栏目
 function refreshColumn(thisNum) {
-	showLoading();
     var winNum = (parseInt($(".current").find("i").html().split("-")[0])+1).toString(16);
     $.ajax({
         url: newurl + "/wpsendclientmsg.asp?wpsendclientmsg=" + thisNum + "_0x" + winNum + "000000",
         type: "get",
         dataType: "xml",
-		success: function (data) {
-			hideLoading();
+        success: function (data) {
             timeShowMsg("title", "发送成功", 500);
         },
-		error: function (data) {
-			hideLoading();
+        error: function (data) {
             timeShowMsg("title", "发送失败", 500);
         }
     })
 }
-//滑动实现甩屏播放功能
-function dragScreen(thisItem) {
-	var oDiv = "";
-	var dragScreenx = 0;
-	var dragScreeny = 0;
-	var oldMoveX = 0;
-	var oldMoveY = 0;
-	var leftListDragW = 0;
-	var leftListDragH = 0;
-	var thisHeight = 0;
-	var borderStyle = "";
-	//此处用let声明变量，使i的作用域在for循环中，从而使for循环中的每一个列表都可以被注册事件
-	for (let i = 0; i < document.getElementById("Screen").getElementsByClassName("left").length; i++) {
-		
-		document.getElementsByClassName("leftList")[i].ontouchstart = function (evt) {	
-			console.log($(this).find("span"));
-			var oDiv = this.children[0];
-			thisHeight = window.getComputedStyle(oDiv.parentNode.parentNode).height;
-			//获取精确高度，包括小数点，一定要获取精确的值，否则出现和原来的宽高不等的情况
-			dragScreenx = 0;
-			dragScreeny = 0;
-			oldMoveX = $(oDiv).parent().parent().offset().left;
-			oldMoveY = $(oDiv).parent().parent().offset().top;
-			leftListDragW = window.getComputedStyle(oDiv.parentNode.parentNode).width;
-			//获取精确宽度，包括小数点
-			leftListDragH = thisHeight;
 
-			$(".dragShadow").show();
-			oDiv.parentNode.parentNode.nextSibling.style.display = "block";
-			$(".left1").css("height", thisHeight);
-			borderStyle = $(oDiv).parent().parent().css("borderBottom");
-			var boxRight = 0;
-			
-			oldMoveX = $(oDiv).parent().parent().offset().left;
-			
-			oldMoveY = $(oDiv).parent().parent().offset().top;
-			oDiv.parentNode.parentNode.style.position = "absolute";
-			oDiv.parentNode.parentNode.style.background = "#fff";
-			oDiv.parentNode.parentNode.style.zIndex = 1006;
-			oDiv.parentNode.parentNode.style.left = oldMoveX + "px";
-			boxRight = ($(".top").width() - oldMoveX - parseFloat(leftListDragW));
-			oDiv.parentNode.parentNode.style.right = boxRight + "px";
-			oDiv.parentNode.parentNode.style.top = oldMoveY + "px";
-			oDiv.parentNode.parentNode.style.width = leftListDragW;
-			oDiv.parentNode.parentNode.style.height = leftListDragH;
-
-			var startedx = evt.touches[0].clientX;
-			var startedy = evt.touches[0].clientY;
-			dragScreenx = startedx;
-			dragScreeny = startedy;
-			oDiv.click();
-		},
-		document.getElementsByClassName("leftList")[i].ontouchmove = function (evt) {
-			var oDiv = this.children[0];
-
-			var deLeft = 0;
-			var deTop = 0;
-				
-			var movex = evt.touches[0].clientX;
-			var movey = evt.touches[0].clientY;
-
-			if (movex > dragScreenx) {
-				deLeft = movex - dragScreenx;
-				oDiv.parentNode.parentNode.style.left = (parseFloat(oDiv.parentNode.parentNode.style.left) + deLeft) + "px";
-			} else {
-				deLeft = dragScreenx - movex;
-				oDiv.parentNode.parentNode.style.left = (parseFloat(oDiv.parentNode.parentNode.style.left) - deLeft) + "px";
-
-			}
-			if (movey > dragScreeny) {
-				deTop = movey - dragScreeny;
-
-				oDiv.parentNode.parentNode.style.top = (parseFloat(oDiv.parentNode.parentNode.style.top) + deTop) + "px";
-
-			} else {
-				deTop = dragScreeny - movey;
-
-				oDiv.parentNode.parentNode.style.top = (parseFloat(oDiv.parentNode.parentNode.style.top) - deTop) + "px";
-			}
-			if (parseFloat(oDiv.parentNode.parentNode.style.top) >= document.documentElement.clientHeight) {
-			}
-			oDiv.parentNode.parentNode.style.right = document.documentElement.clientWidth - parseInt(oDiv.parentNode.parentNode.style.left) - leftListDragW;
-			dragScreenx = movex;
-			dragScreeny = movey;
-		},
-		document.getElementsByClassName("leftList")[i].ontouchend = function (evt) {
-			var oDiv = this.children[0];
-
-			var endx = evt.changedTouches[0].clientX;
-			var endy = evt.changedTouches[0].clientY;
-			//获取当前元素的taskid方便后面传值
-			var thisDragId = oDiv.parentNode.getAttribute("taskid");
-			var thisMarkId = oDiv.getAttribute("markID");
-			var thisitemType = oDiv.getAttribute("itemType");
-			if (parseInt(oDiv.parentNode.parentNode.style.top) <= 0) {//向上
-				//startNow(thisDragId);
-				playScreenContent("0-全屏窗口", thisDragId);
-			} else if (parseInt(oDiv.parentNode.parentNode.style.left) <= 0) {
-				$("#upload_File").click();
-				showPrint("1")
-				console.log("打印");
-			} else if (parseInt(oDiv.parentNode.parentNode.style.left) > document.documentElement.clientWidth - parseFloat(oDiv.parentNode.parentNode.style.width) + 20) {
-				$("#upload_File").click();
-				showPrint("0")
-				console.log("上传");
-			} else if (parseInt(oDiv.parentNode.parentNode.style.top) > document.documentElement.clientHeight - parseFloat(oDiv.parentNode.parentNode.style.height)/2) {
-				
-				var href = document.getElementById("downLoad");
-				window.location = href
-				console.log("下载")
-			}
-			$(".dragShadow").hide();
-			oDiv.parentNode.parentNode.style.position = "";
-			oDiv.parentNode.parentNode.style.background = "";
-			oDiv.parentNode.parentNode.nextSibling.style.display = "none";
-			oDiv.parentNode.parentNode.style.left = 0;
-			oDiv.parentNode.parentNode.style.right = 0;
-			oDiv.parentNode.parentNode.style.zIndex = 0
-			oDiv.parentNode.parentNode.removeAttribute("style");
-			oDiv.parentNode.parentNode.style.height = thisHeight;
-		}	
-	}
-}
 
 
 
