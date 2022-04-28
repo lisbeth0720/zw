@@ -23,8 +23,7 @@ namespace Web.company.client
                 myComId.Value = mmodel.Companyid;
                 if (!(cmService.IsShouQuan(mmodel, 0, CommonRight.RIGHT_C_Client) || cmService.IsShouQuan(mmodel, 0, CommonRight.RIGHT_C_SelfClient) || cmService.IsShouQuan(mmodel, 0, CommonRight.RIGHT_C_ClientMenu) || cmService.IsShouQuan(mmodel, 0, CommonRight.RIGHT_C_RemoteCommands)))
                 {
-                    //Response.Redirect("/login.aspx");
-                    ClientScript.RegisterStartupScript(typeof(client_main_right), "loginTimeOut", "<script>LoginTimeOut();</script>");
+                    Response.Redirect("/login.aspx");
                 }
                 else
                 {

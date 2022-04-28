@@ -13,7 +13,7 @@
     }
 
     .sor_dxpic {
-        width: 28px;
+        width: 20px;
         height: 26px;
         line-height: 26px;
         vertical-align: sub;
@@ -21,7 +21,7 @@
         border: 1px solid #b6aeae;
         background-image: url('/images/tubiao.png');
         background-repeat: no-repeat;
-        background-position: -245px -524px;
+        background-position: -225px -524px;
         position: absolute;
         left: 212px;
         top: 6px;
@@ -292,7 +292,7 @@
         });
         //添加节目单 '按钮'
         $("#client_groupinfo_sendMenu").click(function () {
-            //debugger;
+            debugger;
             $.ajax({
                 type: 'post',
                 url: 'ajax/IsShouQuan.ashx',
@@ -324,104 +324,95 @@
         });
         //发送指令
         $("#client_groupinfo_sendCmd").click(function () {
-            //if ($("#client_list_tab tr").length > 1 && $("input[name=client_groupinfo_check]:checked").length>0) {
-            //只有一个终端，或者 选择了终端
-            if ($("#client_list_tab tr").length == 2 || $("input[name=client_groupinfo_check]:checked").length > 0) {              
-                $.ajax({
-                    type: 'post',
-                    url: 'ajax/IsShouQuan.ashx',
-                    async: true,
-                    data: { "mark": clientmark },
-                    dataType: 'text',
-                    success: function (data) {
-                        if (data > 0) {
-                            var sellist = "";
-                            var client_ipaddress = "";
-                            var client_name = "";
+            $.ajax({
+                type: 'post',
+                url: 'ajax/IsShouQuan.ashx',
+                async: true,
+                data: { "mark": clientmark },
+                dataType: 'text',
+                success: function (data) {
+                    if (data > 0) {
+                        var sellist = "";
+                        var client_ipaddress = "";
+                        var client_name = "";
+                        $("input[name=client_groupinfo_check]:checked").each(function () {
+                            sellist = sellist + $(this).val() + ",";
+                            //获取终端名字和IP地址
+                            client_name = $(this).parent().parent().attr("data-name");
+                            client_ipaddress = $(this).parent().parent().attr("data-ipaddress");
 
-                            var client_ctlip = "";
-                            var client_ctlport = "";
-                            var client_detail = "";
-                            var client_serialmark = "";
-                            var client_ctlColor = "";
-                            var client_cltoption = "";
-                            var client_port = "";
-
-                            if ($("#client_list_tab tr").length == 2) {
-                                sellist = $("input[name=client_groupinfo_check]").parent().parent().attr("data-id");//只有一个终端的ID
-                                client_name = $("input[name=client_groupinfo_check]").parent().parent().attr("data-name");
-                                client_ipaddress = $("input[name=client_groupinfo_check]").parent().parent().attr("data-ipaddress");
-
-                                client_ctlip = $("input[name=client_groupinfo_check]").parent().parent().attr("controlIp");
-                                client_ctlport = $("input[name=client_groupinfo_check]").parent().parent().attr("controlIpport");
-                                client_detail = $("input[name=client_groupinfo_check]").parent().parent().attr("detail");
-                                client_serialmark = $("input[name=client_groupinfo_check]").parent().parent().attr("serialmark");
-
-                                client_ctlColor = $("input[name=client_groupinfo_check]").parent().parent().attr("ctlColor");
-                                client_cltoption = $("input[name=client_groupinfo_check]").parent().parent().attr("cltoption");
-                                client_port = $("input[name=client_groupinfo_check]").parent().parent().attr("port");
-                                //if (client_name == "" && $("input[name=client_groupinfo_check]").length == 1) {//当前只有一个终端
-                                //    client_name = $("input[name=client_groupinfo_check]").parent().parent().attr("data-name");
-                                //}
-                                //if (client_ipaddress == "" && $("input[name=client_groupinfo_check]").length == 1) {//当前只有一个终端
-                                //    client_ipaddress = $("input[name=client_groupinfo_check]").parent().parent().attr("data-ipaddress");
-                                //}
-                            } else {
-                                $("input[name=client_groupinfo_check]:checked").each(function () {
-                                    sellist = sellist + $(this).val() + ",";
-                                    //获取终端名字和IP地址
-                                    client_name = $(this).parent().parent().attr("data-name");
-                                    client_ipaddress = $(this).parent().parent().attr("data-ipaddress");
-
-                                    client_ctlip = $(this).parent().parent().attr("controlIp");
-                                    client_ctlport = $(this).parent().parent().attr("controlIpport");
-                                    client_detail = $(this).parent().parent().attr("detail");
-                                    client_serialmark = $(this).parent().parent().attr("serialmark");
-                                    client_ctlColor = $(this).parent().parent().attr("ctlColor");
-                                    client_cltoption = $(this).parent().parent().attr("cltoption");
-                                    client_port = $(this).parent().parent().attr("port");
-                                });
-                            }
-                            
-                           
-                            if (sellist != "") {
-                                //if (sellist.lastIndexOf(',')>0) { sellist = sellist.substr(0, sellist.length - 1); }
-                                $("#client_main_cmdbox").load("client_cmd.aspx", { "gid": sellist, "dlv": dlevel, "mark": clientmark, client_ipaddress: client_ipaddress, client_name: client_name, "client_ctlip": client_ctlip, "client_ctlport": client_ctlport, "client_detail": client_detail, "client_serialmark": client_serialmark, "client_ctlColor": client_ctlColor, "client_cltoption": client_cltoption, "client_port": client_port}, function () {
-                                    $("#overlay").fadeIn();
-                                    $("#client_main_cmdbox").fadeIn();
-                                });
-                            }
-                            else {
-                                sellist = "*";
-                                $("#client_main_cmdbox").load("client_cmd.aspx", { "gid": sellist, "dlv": dlevel, "mark": clientmark, client_ipaddress: client_ipaddress, client_name: client_name, "client_ctlip": client_ctlip, "client_ctlport": client_ctlport, "client_detail": client_detail, "client_serialmark": client_serialmark, "client_ctlColor": client_ctlColor, "client_cltoption": client_cltoption, "client_port": client_port}, function () {
-                                    $("#overlay").fadeIn();
-                                    $("#client_main_cmdbox").fadeIn();
-                                });
-                            }
+                        });
+                        if (sellist == "") {//当前只有一个终端
+                            sellist = $("input[name=client_groupinfo_check]").parent().parent().attr("data-id");
                         }
-                        else if (data == 0) {
-                            TopTrip(getLanguageMsg("您没有该终端组的操作权限!", $.cookie("yuyan")), 2);
+                        if (client_name == "" && $("input[name=client_groupinfo_check]").length == 1) {//当前只有一个终端
+                            client_name = $("input[name=client_groupinfo_check]").parent().parent().attr("data-name");
+                        }
+                        if (client_ipaddress == "" && $("input[name=client_groupinfo_check]").length == 1) {//当前只有一个终端
+                            client_ipaddress = $("input[name=client_groupinfo_check]").parent().parent().attr("data-ipaddress");
+                        }
+
+                        if (sellist != "") {
+                            $("#client_main_cmdbox").load("client_cmd.aspx", { "gid": sellist, "dlv": dlevel, "mark": clientmark, client_ipaddress: client_ipaddress, client_name: client_name }, function () {
+                                $("#overlay").fadeIn();
+                                $("#client_main_cmdbox").fadeIn();
+                            });
                         }
                         else {
-                            LoginTimeOut();
+                            sellist = "*";
+                            $("#client_main_cmdbox").load("client_cmd.aspx", { "gid": sellist, "dlv": dlevel, "mark": clientmark, client_ipaddress: client_ipaddress, client_name: client_name }, function () {
+                                $("#overlay").fadeIn();
+                                $("#client_main_cmdbox").fadeIn();
+                            });
                         }
                     }
-                });
-            } else {//没有选择终端
-                //获取列表中的第一个终端
-                // sellist = $("input[name=client_groupinfo_check]").parent().parent().first().attr("data-id");
-                TopTrip("请选择要发送指令的终端", 2);
-                return;
-            }
+                    else if (data == 0) {
+                        TopTrip(getLanguageMsg("您没有该终端组的操作权限!", $.cookie("yuyan")), 2);
+                    }
+                    else {
+                        LoginTimeOut();
+                    }
+                }
+            });
         });
-        //设置开关机时间 按钮
+        //设置开关机时间
         $("#client_timesbtn").click(function () {//‘终端管理’页面：选择一个或多个终端
             var sellist = "";
             if ($("input[name='client_groupinfo_check']:checked").length > 0) {//勾选了一个或多个终端。。。
                 $("input[name='client_groupinfo_check']").each(function (index, item) {
                     if (item.checked) { sellist += item.value + ","; }
                 });
-                SetShutDownTimes(sellist);
+                $.ajax({
+                    type: 'post',
+                    url: 'ajax/getcmdParameter.ashx',
+                    async: true, timeout: 5000,
+                    dataType: 'text',//maintype=0 --type=6
+                    data: { "type": 6, "idlist": sellist, "mark": clientmark, "maintype": 5, "subtype": 9, "value1": 0 },
+                    success: function (data) {
+                        console.log(data);
+                        if (data == "-1") {
+                            LoginTimeOut();
+                        }
+                        if (data == "-2") {
+                            TopTrip("您没有权限执行该操作！", 2);
+                        }
+                        else {
+                            $.ajax({
+                                type: 'post',
+                                url: '/cgi-bin/preparefilecgi.cgi?' + data + "&utf8=1",// + "&charset=utf-8",
+                                async: true,
+                                dataType: 'text',
+                                success: function (data) {
+                                    TopTrip(getLanguageMsg("发送指令成功！", $.cookie("yuyan")), 1);
+                                    setTimeout(function () {
+                                        loadclientlist(1);
+                                    }, 2000);//刷新页面， 更新分发进度。
+
+                                }
+                            });
+                        }
+                    }
+                });
             } else {
                 TopTrip(getLanguageMsg("请选择要设置的终端", $.cookie("yuyan")), 3);
             }
@@ -431,7 +422,7 @@
 
         //刷新媒体播放终端状态
         $("#client_refreshbtn").click(function () {
-            //debugger;
+            debugger;
             //选择终端组、选择一个或多个终端，
             var sellist = "";
             var myid = $("#client_groupinfo_clientid").val();
@@ -459,7 +450,7 @@
                     dataType: 'text',//maintype=0 --type=6//"subtype": 2
                     data: { "type": 6, "idlist": sellist, "mark": clientmark, "maintype": 4, "subtype": 3, "value1": 0 },
                     success: function (data) {
-                        //debugger;
+                        debugger;
                         // console.log(data);
                         if (data == "-1") {
                             LoginTimeOut();
@@ -470,11 +461,11 @@
                         else {
                             $.ajax({
                                 type: 'post',
-                                url: '/cgi-bin/preparefilecgi.cgi?' + data + "&utf8=2",// + "&charset=utf-8",
+                                url: '/cgi-bin/preparefilecgi.cgi?' + data + "&utf8=1",// + "&charset=utf-8",
                                 async: true,
                                 dataType: 'text',
                                 success: function (data) {
-                                    //debugger;
+                                    debugger;
                                     TopTrip(getLanguageMsg("发送指令成功！", $.cookie("yuyan")), 1);
                                     setTimeout(function () {
                                         loadclientlist(1);
@@ -501,7 +492,7 @@
                 dataType: 'text',//maintype=0 --type=6
                 data: { "type": 6, "idlist": "0", "mark": "", "maintype": 4, "subtype": 0, "value1": 0 },
                 success: function (data) {
-                    //http://192.168.1.145:8090/cgi-bin/preparefilecgi.cgi?companyid=wisepeak&maintype=4&subtype=0&value1=0&merit=0&groupid=0&clientid=0&username=administrator&password=K6sf1DbzRvJ@dVi4Cedklw==&charset=utf-8&utf8=2
+                    //http://192.168.1.145:8090/cgi-bin/preparefilecgi.cgi?companyid=wisepeak&maintype=4&subtype=0&value1=0&merit=0&groupid=0&clientid=0&username=administrator&password=K6sf1DbzRvJ@dVi4Cedklw==&charset=utf-8&utf8=1
                     if (data == "-1") {
                         LoginTimeOut();
                     }
@@ -511,7 +502,7 @@
                     else {
                         $.ajax({
                             type: 'post',
-                            url: '/cgi-bin/preparefilecgi.cgi?' + data + "&utf8=2",// + "&charset=utf-8",
+                            url: '/cgi-bin/preparefilecgi.cgi?' + data + "&utf8=1",// + "&charset=utf-8",
                             async: true,
                             dataType: 'text',
                             success: function (data) {
@@ -577,7 +568,7 @@
             //load   client_groupinfo.aspx...
         });
     })
-    //定时  刷新媒体播放终端状态  //暂时不用，查询终端分发进度，能获取到状态。
+    //定时  刷新媒体播放终端状态
     function refreshStatus() {//树形列表中，当前点击的终端组 包含的终端/点击终端 的状态。。。
         //刷新状态，//从数据库获取--一直获取。5秒查询一次
         var sellist = "";
@@ -615,16 +606,15 @@
                         TopTrip(getLanguageMsg("您没有权限执行该操作！", $.cookie("yuyan")), 2);
                     }
                     else {
-                       // console.log(data);
+                        console.log(data);
                         $.ajax({
                             type: 'post',
-                            url: '/cgi-bin/preparefilecgi.cgi?' + data + "&utf8=2",// + "&charset=utf-8",
+                            url: '/cgi-bin/preparefilecgi.cgi?' + data + "&utf8=1",// + "&charset=utf-8",
                             async: true,
                             dataType: 'text',
                             success: function (data) {
                                 //getclientprocessstatus();////从数据库获取
                                 //强行异步加载 父节点的子节点  //节点的属性 isParent = false 时，不进行异步加载
-                                //从数据库刷新 当前点击的树形的节点
                                 var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
                                 var nodes = treeObj.getSelectedNodes();//点击终端组，刷新 下面的终端状态
                                 if (nodes[0].groupflag == "0") {
@@ -637,7 +627,7 @@
                                         treeObj.reAsyncChildNodes(nodes[0], "refresh");
                                     }
                                 }
-                                setTimeout("showStatus()", 500);// js刷新终端 状态图标
+                                setTimeout("showStatus()", 500);//刷新终端 状态图标
                                 //ztree  刷新后，，节点ID会变。！！！！
                                 /*
                                 treeObj.getSelectedNodes();  //找不到。。。cookie也对不上ID
@@ -656,7 +646,7 @@
         if (sh == 1) {
             $("#sortby").attr("value", "0");
             $("#sortby").attr("title", getLanguageMsg("倒序", $.cookie("yuyan")));
-            $("#sortby").css("background-position", "-220px -524px");
+            $("#sortby").css("background-position", "-225px -524px");
         } else {
             $("#sortby").attr("value", "1");
             $("#sortby").attr("title", getLanguageMsg("正序", $.cookie("yuyan")));
@@ -680,7 +670,7 @@
             url: 'ajax/getclientlist.ashx',
             async: true,
             dataType: 'text',
-            data: { "action": "myPlayStatus", "playStatuss": mycheckstatus, "sortField": sortField, "sortType": sortType, "mark": clientmark, clientid: clientid },
+            data: { "action": "myPlayStatus", "playStatuss": mycheckstatus, "sortField": sortField, "sortType": sortType, "mark": clientmark },
             success: function (data) {
                 var currentGroup = "";
                 var deleteButton = "</td></tr>";
@@ -737,25 +727,26 @@
                     if (item.clientmark == "" || item.clientmark == null) {
                         mymark = '<a title="' + getLanguageMsg("在虚拟组中", $.cookie("yuyan")) + '" style="background:url(/images/tubiaoa.png) no-repeat scroll -152px -80px;width: 16px;height: 16px;display:inline-block;position:relative;position:relative;top:9px;"></a>';//mymark = "在虚拟组中";
                     } else {
-                        mymark = '<a title="' + getLanguageMsg("在实体组中", $.cookie("yuyan")) + '" style="background:url(/images/tubiaoa.png) no-repeat scroll -150px -56px;width: 16px;height: 16px;display:inline-block;position:relative;top:5px;"></a>';//mymark = "在实体组中";
+                        mymark = '<a title="' + getLanguageMsg("在实体组中", $.cookie("yuyan")) + '" style="background:url(/images/tubiaoa.png) no-repeat scroll -150px -56px;width: 16px;height: 16px;display:inline-block;position:relative;position:relative;top:9px;"></a>';//mymark = "在实体组中";
                     }
 
                     var statushtml = '<span class="icon state_' + (parseInt(item.playstatus) + 1) + '" title="' + getLanguageMsg(myStatus, $.cookie("yuyan")) + '" style="position:relative;left:20px;"></span>';
                     if (item.clientname.length > 8) { client_group = item.clientname.substr(0, 7) + "..." }
                     var client_group = item.clientname;//--whq2.8 实体组、虚拟组： 可以编辑 终端属性。。。。
                     //if (isVirtual=="no") {
-                    myHtml = '<a href="javascript:void(0)" title="' + getLanguageMsg("编辑", $.cookie("yuyan")) + '" onclick="client_main_loadright(8,\'' + item.clientid + '\',4,\'' + item.clientmark + '\')" style="position:relative;top:3px;margin-right:5px;><img src="/images/icon_edit.png"></a>';//显示编辑按钮
+                    myHtml = '<a href="javascript:void(0)" title="' + getLanguageMsg("编辑", $.cookie("yuyan")) + '" onclick="client_main_loadright(8,\'' + item.clientid + '\',4,\'' + item.clientmark + '\')" style="position:relative;top:3px;><img src="/images/icon_edit.png"></a>';//显示编辑按钮
                     myLink = '<a onclick="client_main_loadright(8,\'' + item.clientid + '\',4,\'' + item.clientmark + '\')" style="cursor:pointer">' + client_group + '</a>';//终端名称 显示‘超链接’，点击可以编辑。
                     //} else {
                     //    myLink = client_group;//虚拟组下的终端，只显示 ‘终端名称’。不能编辑 --2.8可以编辑
                     //}
 
-                    $("#client_list_tab").append('<tr data-type="data" data-id="' + item.clientid + '" data-name="' + item.clientname + '" data-ipaddress=' + item.ip + '><td><input type="checkbox" value="' + item.clientid + '" name="client_groupinfo_check" style=""><span class="client_gnumber">' + item.clientid + '</span>' + '&nbsp;'+ statushtml + mymark + '</td>'
+
+                    $("#client_list_tab").append('<tr data-type="data" data-id="' + item.clientid + '" data-name="' + item.clientname + '" data-ipaddress=' + item.ip + '><td><input type="checkbox" value="' + item.clientid + '" name="client_groupinfo_check" style="position:relative;top:6px;"><span class="client_gnumber">' + item.clientid + '</span>' + '&nbsp;' + statushtml + mymark + '</td>'
                         + '<td title="' + item.clientname + '"><a onclick="client_main_loadright(8,\'' + item.clientid + '\',4,\'' + item.clientmark + '\')" style="cursor:pointer">' + myLink + '</a></td>'
                         + '<td>' + item.ip + '</td>'
                         + '<td>' + item.startuptime + '</td>'
                         + '<td>' + item.shutdowntime + '</td>'
-                        + '<td><div style="width:100px; height:20px; margin:0 5px; background:#ddd;"><div class="process" style="height:20px; color:#fff;display: initial;"><div></div></td>'//<td><div style="width:100px; height:20px;line-height:20px; margin:0 auto; background:#ddd;"><div class="process" style="height:20px;line-height:20px;vertical-align: super; color:#fff"><div></div></td>'
+                        + '<td><div style="width:100px; height:20px;line-height:20px; margin:0 auto; background:#ddd;"><div class="process" style="height:20px;line-height:20px;vertical-align: super; color:#fff"><div></div></td>'
 
                         + '<td>'
                         + myHtml + deleteButton
@@ -770,10 +761,8 @@
         });
     }
     //删除终端组
-    $("body").off("click", "a[name=btn_deleteclientgroup]");
-    $("body").on("click", "a[name=btn_deleteclientgroup]", function () {
+    $("a[name=btn_deleteclientgroup]").die().live("click", function () {
         var newId = $(this).attr("data-id");
-       // alert(clientid + ".."); return;
         $.ajax({
             type: 'post',
             url: 'ajax/delgroup.ashx',
@@ -791,15 +780,12 @@
             }
         });
     });
-    //$("a[name=btn_candeleteclient]").off().on("click", function () {
-    //    var newId = $(this).attr("data-id");
-    //    $('#' + newId + ' .TopTrip').stop().animate({ top: 0 }, 200).remove();
-    //});
+    $("a[name=btn_candeleteclient]").die().live("click", function () {
+        var newId = $(this).attr("data-id");
+        $('#' + newId + ' .TopTrip').stop().animate({ top: 0 }, 200).remove();
+    });
     //删除弹框：删除、组内删除
-    $("body").off("click", "a[name=btn_deleteclient]");
-    $("body").on("click", "a[name=btn_deleteclient]", function () {
-        //alert(11 + "..");
-        //return;
+    $("a[name=btn_deleteclient]").die().live("click", function () {
         var newId = $(this).attr("data-id");
         var type = $(this).attr("data-type");//0、1删除、组内删除
         var id = $(this).attr("data-clienid");
@@ -824,22 +810,23 @@
             data: { id: id, mark: clientmark, type: type, "isvirtualGroup": isvirtualgroup },
             dataType: 'text',
             success: function (data) {
-                if (data == "0" || data == "-1") {
-                    LoginTimeOut();
-                    //TopTrip(getLanguageMsg("该终端组下还有终端组或终端!", $.cookie("yuyan")), 2);
+                if (data == "-2") {
+                    TopTrip(getLanguageMsg("该终端组下还有终端组或终端!", $.cookie("yuyan")), 2);
                 }
                 if (data == "1") {
+
                     loadParentPage();
+
                 }
                 $('#' + newId + ' .TopTrip').stop().animate({ top: 0 }, 200).remove();
             }
         });
     });
     function loadParentPage() {
-        //debugger;//点击终端，删除自己。
-        //var mark = clientmark.substring(0, clientmark.lastIndexOf("_"));
-        //var dlv = mark.split("_").length - 1;
-        //var gid = mark.substring(0, mark.lastIndexOf("_"));
+        debugger;
+        var mark = clientmark.substring(0, clientmark.lastIndexOf("_"));
+        dlv = mark.split("_").length - 1;
+        gid = mark.substring(0, mark.lastIndexOf("_"));
 
         if ($.cookie("mySelectNodeID") != "" && $.cookie("mySelectNodeID") != null) {//记录的上次点击的终端(组)
             $("#client_main_left").load("client_main_left.html?rnd=" + Math.random());//, { cache: false })
@@ -847,8 +834,8 @@
             $("#client_main_left").load("client_main_left.html?rnd=" + Math.random());
 
         }
-        //client_main_loadright(0, gid, dlv, mark);
-        client_main_loadright(0, clientid, dlevel, clientmark);
+        client_main_loadright(0, gid, dlv, mark);
+
     }
     function loadclientlist(type) {
 
@@ -912,13 +899,12 @@
     function client_search() {
         loadclientlist($("#client_main_right_menu li[data-isshow=1]").attr("data-type"));
     }
-    //终端状态汇总
     function getclientstatus() {
         $.ajax({
             type: 'post',
             url: 'ajax/getclientstatus.ashx',
             async: true,
-            data: { mark: clientmark,clientid:clientid },
+            data: { mark: clientmark },
             dataType: 'text',
             success: function (data) {
                 if (data == "-1") {
@@ -992,8 +978,6 @@
         var myType = 0; var menuid = 0; var groupID = 0;
         if (maintype != "7") {//maintype=="0"
             myType = 6;
-        } else {
-            myType = 1;
         }
         //$("input[name=ch_client_menu]:checked").each(function () {
         //    sellist = sellist + $(this).val() + ",";
@@ -1019,7 +1003,6 @@
         if (sellist == "") {//终端、终端组，分发指令不同。。。
             sellist = "*";
         }
-        //debugger;
         //http://192.168.1.145/cgi-bin/preparefilecgi.cgi?companyid=wisepeak&maintype=0&subtype=1&value1=233&merit=5&groupid=0&clientid=14&username=whq123&password=yoaC/EHueDeMo8EM/alIMw==&charset=utf-8
         $.ajax({
             type: 'post',
@@ -1039,12 +1022,9 @@
                 else if (data == "-3") {
                     TopTrip(getLanguageMsg("该节目单或下属素材未通过审核！", $.cookie("yuyan")), 2);
                 } else {
-                    //debugger;
-                    //若utf8=1  中文字符编码之后请求才可  utf8=2直接传输即可
-                   // data = encodeURI(encodeURI(data));
                     $.ajax({
                         type: 'post',
-                        url: '/cgi-bin/preparefilecgi.cgi?' + data + "&utf8=2", // + "&charset=utf-8",
+                        url: '/cgi-bin/preparefilecgi.cgi?' + data + "&utf8=1",// + "&charset=utf-8",
                         async: true,
                         dataType: 'text',
                         success: function (data) {
@@ -1059,41 +1039,6 @@
             }
         });
         // }width: 748px;
-    }
-
-    //设置开关机时间 //发指令
-    function SetShutDownTimes(ids) {
-        $.ajax({
-            type: 'post',
-            url: 'ajax/getcmdParameter.ashx',
-            async: true, timeout: 5000,
-            dataType: 'text',//maintype=0 --type=6
-            data: { "type": 6, "idlist": ids, "mark": clientmark, "maintype": 5, "subtype": 9, "value1": 0 },
-            success: function (data) {
-                //console.log(data);
-                if (data == "-1") {
-                    LoginTimeOut();
-                }
-                if (data == "-2") {
-                    TopTrip("您没有权限执行该操作！", 2);
-                }
-                else {
-                    $.ajax({
-                        type: 'post',
-                        url: '/cgi-bin/preparefilecgi.cgi?' + data + "&utf8=2",// + "&charset=utf-8",
-                        async: true,
-                        dataType: 'text',
-                        success: function (data) {
-                            TopTrip(getLanguageMsg("发送指令成功！", $.cookie("yuyan")), 1);
-                            setTimeout(function () {
-                                loadclientlist(1);
-                            }, 2000);//刷新页面， 更新分发进度。
-
-                        }
-                    });
-                }
-            }
-        });
     }
 
     //var allclient=$("#client_list_tab tbody tr td :checkbox")
@@ -1119,14 +1064,13 @@
         if (ids != "") {
             ids = ids.substr(0, ids.length - 1);
         }
-        <%--debugger;--%>
         var url = "ajax/getclientlist.ashx?action=exportClient&myType=" + mytype + "&ids=" + ids;// + "&myWhere=" + myWhere1
         var ptop = window.screen.height / 2 - 400;
         var pleft = window.screen.width / 2 - 700;
         var a = window.open(url, "daochu", 'left=' + pleft + ',top=' + ptop + ',height=400,width=700,toolbar=no,menubar=no,scrollbars=no,status=no,location=no,resizable=no');
         a.focus();
         if (a) {
-            //console.log("export....ok....");
+            console.log("export....ok....");
 
         }
         /*var allclient = $("#client_list_tab tbody tr td :checkbox");
@@ -1135,28 +1079,26 @@
             //console.log(item.value);
             ids = ids  + item.value+ ",";
         });*/
-        //console.log("导出的终端id  " + ids);
+        console.log("导出的终端id  " + ids);
     }
 
 </script>
 
-<input type="hidden" id="client_groupinfo_comid" runat="server" />
+
 <input type="hidden" id="client_main_right_dlevel" runat="server" />
 <input type="hidden" id="client_main_right_clientid" runat="server" />
 <input type="hidden" id="client_main_right_mark" runat="server" />
 <%--文本--播放终端根目录--%>
 <input type="hidden" id="client_main_right_pageMap" runat="server" /><!-- #f7f7f7  84-->
 <div class="terminal_state" data-isshow="0" style="display: none; width: 872px; position: absolute; top: 77px; left: 0; z-index: 1000; background: #d4d2d2">
-    <div class="title"><span class="language">播放终端状态查看</span><span class="inp_btn input_hover" style="padding-left: 1px;"><a href="javascript:void(0)" onclick="getclientstatus()" class="language">刷新状态统计</a></span>&nbsp;&nbsp;<span class="clientOnline"></span></div>
+    <div class="title"><span class="language">播放终端状态查看</span><span class="inp_btn input_hover" style="padding-left: 1px;"><a href="javascript:void(0)" onclick="getclientstatus()" class="language">刷新终端状态</a></span>&nbsp;&nbsp;<span class="clientOnline"></span></div>
     <div class="cont" style="width: 100%;">
         <ul class="clearfix ukl_box">
             <li><span class="icon state_1" title="离线"></span><span class="num" id="client_main_right_status1">0</span><span class="clien_statues language">离线</span></li>
             <li><span class="icon state_2" title="在线(任务未启动)"></span><span class="num" id="client_main_right_status2">0</span><span class="clien_statues language">在线(任务未启动)</span></li>
-
-            <li><span class="icon state_3" title="在线(任务自动执行)"></span><span class="num" id="client_main_right_status3">0</span><span class="clien_statues language">在线(任务自动执行)</span></li>
-
+            <li style="line-height: 14px;"><span class="icon state_3" title="在线(任务自动执行)"></span><span class="num" id="client_main_right_status3">0</span><span class="clien_statues language">在线(任务自动执行)</span></li>
             <li><span class="icon state_4" title="在线(任务手动执行)"></span><span class="num" id="client_main_right_status4">0</span><span class="clien_statues language">在线(任务手动执行)</span></li>
-            <li><span class="icon state_5" title="在线(临时信息显示)"></span><span class="num" id="client_main_right_status5">0</span><span class="clien_statues language">在线(临时信息显示)</span></li>
+            <li style="line-height: 14px;"><span class="icon state_5" title="在线(临时信息显示)"></span><span class="num" id="client_main_right_status5">0</span><span class="clien_statues language">在线(临时信息显示)</span></li>
             <li><span class="icon state_6" title="在线(紧急信息显示)"></span><span class="num" id="client_main_right_status6">0</span><span class="clien_statues language">在线(紧急信息显示)</span></li>
             <li><span class="icon state_7" title="在线(任务执行完毕)"></span><span class="num" id="client_main_right_status7">0</span><span class="clien_statues language">在线(任务执行完毕)</span></li>
             <li><span class="icon state_8" title="在线(任务暂停执行)"></span><span class="num" id="client_main_right_status8">0</span><span class="clien_statues language">在线(任务暂停执行)</span></li>
@@ -1172,7 +1114,7 @@
     <div class="title">
         <ul>
             <li><%---- clientid   clientname  playdetail   descript    clientmark   playstatus   postion--%>
-                <select name="sort" id="sort" runat="server" style="width: 180px; height: 30px; line-height: 30px;">
+                <select name="sort" id="sort" style="width: 180px; height: 30px; line-height: 30px;">
                     <option value="clientname" class="language">终端名称排序</option>
                     <option value="clientid" class="language">终端标记排序</option>
                     <option value="playdetail" class="language">终端版本号排序</option>
@@ -1180,25 +1122,24 @@
                     <option value="clientmark" class="language">终端所属排序</option>
                     <option value="playstatus" class="language">终端状态排序</option>
                     <option value="postion" class="language">终端分发顺序排序</option>
-                    <option value="createtime" >终端添加时间排序</option>
-                    <option value="ip" >终端地址排序</option>
+
                 </select>
                 <!--<input id="sortby" name="sortby" value="1" type="checkbox" style="display:none;"><label for="sortby">倒序</label> margin-left: 1px;margin-top:4px;padding-left:27px;-->
                 <a class="sor_dxpic" id="sortby" value="0" title="倒序" onclick="daoxu()"></a>
             </li>
             <li style="margin-left: 20px;">
-                <span style="float: left; margin-left: 20px;" class="language">终端名称：</span><input class="ss_t" type="text" placeholder="终端名称/IP" id="client_main_right_key" runat="server" style="width: 160px; line-height: 25px; height: 25px; margin-left: 0;"></li>
+                <span style="float: left; margin-left: 20px;" class="language">终端名称：</span><input class="ss_t" type="text" id="client_main_right_key" style="width: 160px; line-height: 25px; height: 25px; margin-left: 0;"></li>
             <li>
                 <input class="ss_s language" value="查询" title="查询" type="button" onclick="client_search()"></li>
             <li>
                 <input class="ss_s language" value="查看状态" title="查看状态" type="button" id="client_groupinfo_reloadbtn"></li>
-            <%--<li>
+            <li>
 
                 <a href="JavaScript:void(0)" title="导出TXT" onclick="exportData('txt')">
                     <img src="/images/txt.png" /></a>
                 <a href="JavaScript:void(0)" title="导出Excel" onclick="exportData('xls')">
                     <img src="/images/xls.png" /></a>
-            </li>--%>
+            </li>
         </ul>
     </div>
 </div>
@@ -1210,7 +1151,7 @@
 <div class="add_btn clearfix" id="client_groupinfo_btnMenu" runat="server" style="padding: 0; display: none">
 </div>
 <%--内容--%>
-<div class="client_main_right_menu" style="height:640px;overflow:auto">
+<div class="client_main_right_menu">
     <div class="item">
         <ul class="clearfix" id="client_main_right_menu" runat="server">
         </ul>

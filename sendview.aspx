@@ -5,11 +5,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>数字媒体信息发布服务平台-分发过程查看</title>
+    <title>慧峰科技-数字媒体信息发布服务平台-分发过程查看</title>
     <link href="/css/style.css" rel="stylesheet" />
     <link href="/css/zTreeStyle.css" rel="stylesheet" />
     <script src="/js/jquery-1.7.1.min.js"></script>
-    <%--<script src="/js/jquery-1.9.1.min.js"></script>--%>
     <script src="/js/jquery.ztree.core-3.5.js"></script>
     <script src="/js/jquery.ztree.exedit-3.5.js"></script>
     <script src="/js/jquery.cookie.js"></script>

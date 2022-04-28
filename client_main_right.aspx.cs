@@ -21,14 +21,6 @@ namespace Web.company.client
             CompanyManager mmodel = cmService.GetLoginInfo();
             if (mmodel.IsOnLine == 1)
             {
-                client_groupinfo_comid.Value = mmodel.Companyid;
-
-                string sortbyUrl = (Request["clientsort"] ?? "clientname") == "undefined" ? "clientname" : Request["clientsort"];
-                string clientkeybyUrl = (Request["clientkey"] ?? "") == "undefined" ? "" : Request["clientkey"];
-
-                sort.Value = sortbyUrl;
-                client_main_right_key.Value = clientkeybyUrl;
-
                 if (cmService.IsShouQuan(mmodel, 0, CommonRight.RIGHT_C_Client) || cmService.IsShouQuan(mmodel, 0, CommonRight.RIGHT_C_SelfClient) || cmService.IsShouQuan(mmodel, 0, CommonRight.RIGHT_C_ClientMenu) || cmService.IsShouQuan(mmodel, 0, CommonRight.RIGHT_C_RemoteCommands))
                 {
                     int dlevel = 0;
@@ -90,7 +82,7 @@ namespace Web.company.client
                             }
                         }
                         client_main_right_pageMap.Value = clientname;
-                        if (dlevel <= GlobalAtt.ClientLevel && Request["gid"].ToString()!="-1")
+                        if (dlevel <= GlobalAtt.ClientLevel)
                         {
 
                             if (dlevel == 0)
@@ -153,11 +145,11 @@ namespace Web.company.client
                             }
                         }
                     }
-                    if (cmService.IsShouQuan(mmodel, 0, CommonRight.RIGHT_C_RemoteCommands) && Request["gid"].ToString() != "-1")
+                    if (cmService.IsShouQuan(mmodel, 0, CommonRight.RIGHT_C_RemoteCommands))
                     {// 是不是应该  点击 三级终端组/终端 时，才会有。。。。？？？
                         operateBtnList.Append("<span class=\"inp_btn client_edit\"><a href=\"javascript:void(0)\" title=\"发送指令\" id=\"client_groupinfo_sendCmd\" style=\"padding-left:25px;\"><b></b><span>发送指令</span></a></span>");
                     }
-                    if (cmService.IsShouQuan(mmodel, 0, CommonRight.RIGHT_C_ClientMenu) && Request["gid"].ToString() != "-1")
+                    if (cmService.IsShouQuan(mmodel, 0, CommonRight.RIGHT_C_ClientMenu))
                     {
 
                         btnmenuHtml.Append("<li data-type=\"1\" data-isshow=\"0\" ><a id=\"myMenuSend\" href=\"javascript:void(0)\" title=\"节目单分发管理\">节目单分发管理</span></a></li>");
@@ -217,15 +209,12 @@ namespace Web.company.client
                 }
                 else
                 {
-                    
-                    Page.RegisterStartupScript("loginTimeOut", "<script>LoginTimeOut();</script>");
-                   // Response.Redirect("/login.aspx");//页面时load进来的，这样重定向，只会在div中加载登录页面，不会跳转到登录页面
+                    Response.Redirect("/login.aspx");
                 }
             }
             else
             {
-                ClientScript.RegisterStartupScript(GetType(), "loginTimeOut", "<script>LoginTimeOut();</script>");
-               // Response.Redirect("/login.aspx");
+                Response.Redirect("/login.aspx");
             }
         }
         public string GetClientName(string companyid, int clientid)

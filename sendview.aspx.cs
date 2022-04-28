@@ -24,8 +24,7 @@ namespace Web.company.client
             }
             else
             {
-                ClientScript.RegisterStartupScript(GetType(), "loginTimeOut", "<script>LoginTimeOut();</script>");
-                //Response.Redirect("/login.aspx");
+                Response.Redirect("/login.aspx");
             }
         }
     }

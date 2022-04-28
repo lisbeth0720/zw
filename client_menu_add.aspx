@@ -17,8 +17,7 @@
     }
 
         .sync:hover {
-            /*background: #1ca8dd;*/
-            background: #0596f2;
+            background: #1ca8dd;
             color: #fff;
         }
 </style>
@@ -46,7 +45,7 @@
                     $(this).attr("checked", "checked");
                 }
             });
-            //debugger;
+            debugger;
             $("input[name=clientmenu_add_flag][value=" + datas.flag + "]").attr("checked", "checked");
             if(datas.startdate.length==6&&datas.enddate.length==6){
                  $("#clientmenu_add_startdate").val("");
@@ -71,13 +70,13 @@
             if (datas.sendingprocess == "0") {//分发状态//finishedtime
                 $("#sendstatus").html(getLanguageMsg('未分发，自动检测分发过程会对其进行分发', $.cookie("yuyan")));
             } else {
-                $("#sendstatus").html(getLanguageMsg('已分发', $.cookie("yuyan")) + datas.finishedtime);
+                $("#sendstatus").html(getLanguageMsg('已分发  ', $.cookie("yuyan")) + datas.finishedtime);
                 //+ '<br /><font color="red">(提示：在节目单变动或者终端组变动完毕后，重置该状态才能参与自动分发)</font>'
             }
         } else {
             $("#addButton").val(getLanguageMsg("添加", $.cookie("yuyan")));
             $("#showStatus").css("display", "none");
-            //$("input[name=clientmenu_add_ctrlflag][value=1]").attr("checked", true);//分发前停止节目播放
+            $("input[name=clientmenu_add_ctrlflag][value=1]").attr("checked", true);//分发前停止节目播放
             $("input[name=clientmenu_add_ctrlflag][value=2]").attr("checked", true);//分发后重启节目播放
         }
         //$("#client_menu_clientmenuid").val("11");
@@ -95,8 +94,8 @@
             },
             beforeSubmit: function (curform) {
                 //记录 点击了哪一个终端。。
-                $.cookie("mySelectNodeID", $(".curSelectedNode").attr("id"), { expires: 7, path: '/company/' });
-                $.cookie("mySelectNodeName", $(".curSelectedNode").attr("title"), { expires: 7, path: '/company/' });
+                $.cookie("mySelectNodeID", $(".curSelectedNode").attr("id"), { path: '/company/' });
+                $.cookie("mySelectNodeName", $(".curSelectedNode").attr("title"), { path: '/company/' });
                 if ($("#clientmenu_add_menuid").val() == "") {
                     TopTrip(getLanguageMsg("您还未选择节目单！", $.cookie("yuyan")), 2);
                     return false;
@@ -201,7 +200,7 @@
         var startFlag = 0;
         var startIndex = -1;
         var endIndex = -1;
-        //debugger;
+        debugger;
         for (var i = 0; i < $("#zyyStartWeek label").find("input[type='checkbox']").length; i++) {
             if( $("#zyyStartWeek label").find("input[type='checkbox']").eq(i).prop("checked")==true){
                 startIndex = i;
@@ -244,7 +243,7 @@
         //});
     }
     function loadParentPage() {
-        //debugger;
+        debugger;
         client_main_loadright(0, clientid, dlevel, clientmark);
        // $("#client_main_left").load("client_main_left.html?rn=" + Math.random());
         //$("#treeDemo_12_a").addClass("curSelectedNode")
@@ -281,7 +280,7 @@
         if (!IsNumric(value) || obj == "" || !IsNumric(type)) { return false; }
         var newtimestr = "";
         var objtime = $("#" + obj).val();
-        //debugger;
+        debugger;
         if (objtime.indexOf("-") == -1) { //判断如果不带长日期自动添加日期
             var tempdate = new Date();
             objtime = tempdate.getFullYear() + "-" + (tempdate.getMonth() + 1) + "-" + tempdate.getDate() + " " + objtime;

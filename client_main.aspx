@@ -11,7 +11,6 @@
     <link href="/css/Validatedemo.css" rel="stylesheet" />
     <link href="/css/style.css" rel="stylesheet" />
     <script src="/js/jquery-1.7.1.min.js"></script>
-    <%--<script src="/js/jquery-1.9.1.min.js"></script>--%>
     <script src="/js/jquery.cookie.js"></script>
     <script src="/js/jquery-ui/jquery-ui.min.js"></script>
     <script src="/js/jquery.ztree.core.js"></script>
@@ -31,7 +30,7 @@
     <script type="text/javascript">
         $(function () {
             client_main_loadright(0, $("#client_main_groupid").val(), $("#client_main_dlevel").val(), $("#client_main_mark").val());
-            $("#client_main_left").load("client_main_left.html?myComID=" + $("#myComId").val() + "&rand=" + Math.random(9999), function () {
+            $("#client_main_left").load("client_main_left.html?myComID=" + $("#myComId").val(), function () {
                 $("#client_main_left").slideDown();
             });
             switchLanguage("#container", 1, "client_main.aspx");
@@ -41,7 +40,7 @@
             var pageurl = "";
             var edit = "";
             if (type == 0) {
-                pageurl = "client_main_right.aspx?clientsort=" + $("#sort").val() + "&clientkey=" + $("#client_main_right_key").val();
+                pageurl = "client_main_right.aspx";
             }
             if (type == 1) {
                 pageurl = "clientgroup_add.aspx";
@@ -85,23 +84,6 @@
             $(".showClientNumber").load("/company/ClientMap.aspx");
             $(".showClientNumber").css("display", "block");
         }
-        //2021-12月更改为操作下的远程若是pc端就和发送指令下的远程进行对换位置即pc端操作下的远程是程序远程，发送指令下的远程是网页远程，移动端就不需要换位置
-        function pcOrMobile() {//判断是移动端还会pc端
-            var userAgen = 0;//=0是pc,=1移动
-            var sUserAgent = navigator.userAgent.toLowerCase();
-            var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
-            var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
-            var bIsMidp = sUserAgent.match(/midp/i) == "midp";
-            var bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == "rv:1.2.3.4";
-            var bIsUc = sUserAgent.match(/ucweb/i) == "ucweb";
-            var bIsAndroid = sUserAgent.match(/android/i) == "android";
-            var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
-            var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile";
-            if (bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) {//移动端
-                userAgen = 1;
-            }
-            return userAgen;
-        }
     </script>
 </head>
 <body>
@@ -125,20 +107,20 @@
            
         </div>-->
         <div class="ny_content clearfix">
-            <div class="w210" id="client_main_left" style="overflow:auto;height:730px">
+            <div class="w210" id="client_main_left">
                 <!--include file="client_main_left.html"-->
             </div>
             <div class="w750" id="client_main_right" style="position: relative;">
                 <form id="form1" runat="server">
                     <div class="terminal_state" data-isshow="0" style="display: none; width: 748px; position: absolute; top: 84px; left: 0; z-index: 1000; background: #f7f7f7;">
-                        <div class="title"><span class="language">播放终端状态查看</span><span class="inp_btn"><a href="javascript:void(0)" onclick="getclientstatus()" class="language">刷新状态统计</a></span></div>
+                        <div class="title"><span class="language">播放终端状态查看</span><span class="inp_btn"><a href="javascript:void(0)" onclick="getclientstatus()" class="language">刷新终端状态</a></span></div>
                         <div class="cont">
                             <ul class="clearfix">
                                 <li><span class="icon state_1" title="离线"></span><span class="num" id="client_main_right_status1"></span></li>
                                 <li><span class="icon state_2" title="在线(任务未启动)"></span><span class="num" id="client_main_right_status2">0</span></li>
-                                <li><span class="icon state_3" title="在线(任务自动执行)"></span><span class="num" id="client_main_right_status3">0</span></li>
+                                <li style="line-height:14px"><span class="icon state_3" title="在线(任务自动执行)"></span><span class="num" id="client_main_right_status3">0</span></li>
                                 <li><span class="icon state_4" title="在线(任务手动执行)"></span><span class="num" id="client_main_right_status4">0</span></li>
-                                <li><span class="icon state_5" title="在线(临时信息显示)"></span><span class="num" id="client_main_right_status5">0</span></li>
+                                <li style="line-height:14px;"><span class="icon state_5" title="在线(临时信息显示)"></span><span class="num" id="client_main_right_status5">0</span></li>
                                 <li><span class="icon state_6" title="在线(紧急信息显示)"></span><span class="num" id="client_main_right_status6">0</span></li>
                                 <li><span class="icon state_7" title="在线(任务执行完毕)"></span><span class="num" id="client_main_right_status7"></span></li>
                                 <li><span class="icon state_8" title="在线(任务暂停执行)"></span><span class="num" id="client_main_right_status8">0</span></li>
@@ -156,8 +138,8 @@
                                     <input class="ss_t" type="text" id="client_main_right_key"/></li>
                                 <li>
                                     <input class="ss_s language" value="查询" title="查询" type="button" onclick="client_search()"/></li>
-                                <li> <%--onclick="client_search()"--%>
-                                    <input class="ss_s language" value="查看状态" title="查看状态" type="button" id="client_groupinfo_reloadbtn"/></li>
+                                <li>
+                                    <input class="ss_s language" value="查看状态" title="查看状态" type="button" id="client_groupinfo_reloadbtn" onclick="client_search()"/></li>
                             </ul>
                         </div>
                     </div>
@@ -165,7 +147,7 @@
                     </div>
                     <div class="add_btn clearfix" id="client_groupinfo_btnMenu" runat="server" style="padding: 0; display: none">
                     </div>
-                    <div class="client_main_right_menu" style="height:600px;overflow:auto">
+                    <div class="client_main_right_menu">
                         <div class="item">
                             <ul class="clearfix" id="client_main_right_menu" runat="server">
                             </ul>

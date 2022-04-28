@@ -13,16 +13,14 @@
         text-overflow: ellipsis;width: 100%;white-space: nowrap;overflow: hidden;
     }*/
     .mynet {
-        /*color: #1ca8dd;*/
-        color: #0596f2;
+        color: #1ca8dd;
     }
 
     .ztree li a {
         padding: 1px 3px 0 0;
         margin: 0;
         cursor: pointer;
-        height: 19px !important;
-        line-height: 19px;
+        height: 19px;
         color: #333;
         background-color: transparent;
         text-decoration: none;
@@ -30,6 +28,7 @@
         display: inline-block;
     }
 </style>
+
 <script type="text/javascript">
     var clientPlayStatus = new Array();
     var myPosition = ""; var tes = 0;//whq
@@ -39,146 +38,75 @@
     var zTree;
     var zTreeDlevel;
     var expandList = "";
-
-
-    var clientIDs = "";
-    var clientIDsStatus = "";
-    var load = "0";//判断是否首次进入页面
+    var setting = {
+        async: {//记录 treeNode 节点是否已经进行过异步加载，避免父节点反复异步加载数据。
+            enable: true, //表示异步加载生效
+            url: 'ajax/getleftdata.ashx', // 异步加载时访问的页面
+            autoParam: ["id", "dlevel", "mark", "haveright"], // 异步加载时自动提交的父节点属性的参数
+            otherParam: [], //ajax请求时提交的参数
+            type: 'post',
+            dataType: 'json'
+        },
+        checkable: true,
+        showIcon: true,
+        showLine: true, // zTree显示连接线
+        data: {  //用pId来标识父子节点的关系
+            simpleData: {
+                enable: true
+            }
+        },
+        expandSpeed: "", // 设置 zTree 节点展开、折叠的动画速度，默认为"fast"，""
+        callback: { // 刷新完成后的回调函数
+            onClick: LoadClient_Main_Right,//用于捕获节点被点击的事件回调函数
+            onExpand: onExpand,//用于捕获节点被展开的事件回调函数
+            onCollapse: onCollapse,//用于捕获节点被折叠的事件回调函数
+            onAsyncSuccess: onAsyncSuccess,//用于捕获异步加载正常结束的事件回调函数
+            onNodeCreated: zTreeOnNodeCreated//用于捕获节点生成 DOM 后的事件回调函数
+        },
+        view: { fontCss: setFontCss }//whq..8.2
+    };
     //showGroupIcon();
-    var status = '';
     $(function () {
-        if (window.location.href.indexOf("client_main.aspx") >= 0) {
-            status = 1;
-        } else if (window.location.href.indexOf("program_arrange.aspx") >= 0) {
-            status = 2;
-        }
-        if (status == 1) {
-
-            var setting = {
-                async: {//记录 treeNode 节点是否已经进行过异步加载，避免父节点反复异步加载数据。
-                    enable: true, //表示异步加载生效
-                    url: '/company/client/ajax/getleftdata.ashx', // 异步加载时访问的页面
-                    autoParam: ["id", "dlevel", "mark", "haveright"], // 异步加载时自动提交的父节点属性的参数
-                    otherParam: [], //ajax请求时提交的参数
-                    type: 'post',
-                    dataType: 'json'
-                },
-                checkable: true,
-                showIcon: true,
-                showLine: true, // zTree显示连接线
-                data: {  //用pId来标识父子节点的关系
-                    simpleData: {
-                        enable: true
-                    }
-                },
-                expandSpeed: "", // 设置 zTree 节点展开、折叠的动画速度，默认为"fast"，""
-                callback: { // 刷新完成后的回调函数
-                    beforeClick: beforeClick1,
-                    beforeCollapse: beforeCollapse,
-                    beforeExpand: beforeExpand1,
-                    onClick: LoadClient_Main_Right,//用于捕获节点被点击的事件回调函数
-                    onExpand: onExpand,//用于捕获节点被展开的事件回调函数
-                    onCollapse: onCollapse,//用于捕获节点被折叠的事件回调函数
-                    onAsyncSuccess: onAsyncSuccess,//用于捕获异步加载正常结束的事件回调函数
-                    onNodeCreated: zTreeOnNodeCreated//用于捕获节点生成 DOM 后的事件回调函数
-                },
-                view: { fontCss: setFontCss }//whq..8.2
-            };
-        } else if (status == 2) {
-
-            var setting = {
-                async: {//记录 treeNode 节点是否已经进行过异步加载，避免父节点反复异步加载数据。
-                    enable: true, //表示异步加载生效
-                    url: '/company/client/ajax/getleftdata.ashx', // 异步加载时访问的页面
-                    autoParam: ["id", "dlevel", "mark", "haveright"], // 异步加载时自动提交的父节点属性的参数
-                    otherParam: [], //ajax请求时提交的参数
-                    type: 'post',
-                    dataType: 'json'
-                },
-                checkable: true,
-                showIcon: true,
-                showLine: true, // zTree显示连接线
-                data: {  //用pId来标识父子节点的关系
-                    simpleData: {
-                        enable: true
-                    }
-                },
-                expandSpeed: "", // 设置 zTree 节点展开、折叠的动画速度，默认为"fast"，""
-                callback: { // 刷新完成后的回调函数
-                    beforeClick: beforeClick1,
-                    beforeCollapse: beforeCollapse,
-                    onClick: LoadClient_Main_Right1,//用于捕获节点被点击的事件回调函数
-                    onExpand: onExpand,//用于捕获节点被展开的事件回调函数
-                    onCollapse: onCollapse,//用于捕获节点被折叠的事件回调函数
-                    onAsyncSuccess: onAsyncSuccess,//用于捕获异步加载正常结束的事件回调函数
-                    onNodeCreated: zTreeOnNodeCreated//用于捕获节点生成 DOM 后的事件回调函数
-                },
-                view: { fontCss: setFontCss }//whq..8.2
-            };
-        }
-
-
         $("#delSelf").val("0"); // 1 删除 点击的节点。 删除自己，
         $("#reloadClient").click(function () {//刷新 树形 终端列表
             //Inint();//
-            if (status == 1) {
-                $("#client_main_left").load("/company/client/client_main_left.html?type=self&rnd=" + Math.random(999));
-            } else {
-                $("#content_dialog3").load("/company/client/client_main_left.html?type=self&rnd=" + Math.random(999));
-            }
 
+            $("#client_main_left").load("client_main_left.html?type=self&rnd=" + Math.random(999));
         });
         //whq...状态图标
-        clientPlayStatus.push("2px -200px");//26   5  -407
-        clientPlayStatus.push("-24px -200px");
-        clientPlayStatus.push("-48px -200px");
-        clientPlayStatus.push("-74px -200px");
-        clientPlayStatus.push("-98px -200px");
-        clientPlayStatus.push("-123px -200px");
-        clientPlayStatus.push("2px -222px");//26
-        clientPlayStatus.push("-24px -222px");
-        clientPlayStatus.push("-48px -222px");
-        clientPlayStatus.push("-74px -222px");
-        clientPlayStatus.push("-98px -222px");
-        clientPlayStatus.push("-123px -222px");//-130px -23px
-        //
+        clientPlayStatus.push("2px -204px");//26   5  -407
+        clientPlayStatus.push("-24px -204px");
+        clientPlayStatus.push("-48px -204px");
+        clientPlayStatus.push("-74px -204px");
+        clientPlayStatus.push("-98px -204px");
+        clientPlayStatus.push("-123px -204px");
+        clientPlayStatus.push("2px -223px");//26
+        clientPlayStatus.push("-24px -223px");
+        clientPlayStatus.push("-48px -223px");
+        clientPlayStatus.push("-74px -223px");
+        clientPlayStatus.push("-98px -223px");
+        clientPlayStatus.push("-123px -223px");//-130px -23px
+        //debugger;
         if ($.cookie("expandList") != null) {
             expandList = $.cookie("expandList");
-            // alert(expandList)
+            alert(expandList)
         }
-
         Inint();
         $.fn.zTree.init($("#treeDemo"), setting, zNodes);
         showStatus();//为终端添加节目单，，刷新，终端列表状态。。。
         showGroupIcon();//终端组图标
         //cutClientName();
-        if (status == 1) {
-            setTimeout(function () {
-                if ($.cookie("mySelectNodeID") != null && $("#delSelf").val() == "0") {
-                    $("#" + $.cookie("mySelectNodeID")).addClass("curSelectedNode");
-                    $("#" + $.cookie("mySelectNodeID") + " span:eq(1)").click();
-                    //console.log("cccccccccccc222 cookie eeeeeeeee");
-                }//选择 之前点击的终端
-            }, 1000);
-        } else if (status == 2) {
-            if ($("#curSelectedNodeId").val() != "") {
-                $("#" + $('#curSelectedNodeId').val() + "").addClass('curSelectedNode');
-            }
-        }
+        setTimeout(function () {
+            if ($.cookie("mySelectNodeID") != null && $("#delSelf").val() == "0") {
+                $("#" + $.cookie("mySelectNodeID")).addClass("curSelectedNode");
+                $("#" + $.cookie("mySelectNodeID") + " span:eq(1)").click();
+                //console.log("cccccccccccc222 cookie eeeeeeeee");
+            }//选择 之前点击的终端
+        }, 1000);
     })
-    function beforeExpand1() {
-        //showGroupIcon();//终端组 图标
-
-    }
-    function beforeCollapse() {
-        showGroupIcon();//终端组 图标
-    }
-    function beforeClick1(treeId, treeNode, clickFlag) {
-
-    }
     function Inint() {
         $.ajax({
-            url: '/company/client/ajax/getleftdata.ashx',
+            url: 'ajax/getleftdata.ashx',
             type: 'post',
             dataType: 'json',
             async: false,
@@ -190,7 +118,7 @@
     };
     //用于捕获节点被点击的事件回调函数
     function LoadClient_Main_Right(event, treeId, treeNode, clickFlag) {
-        debugger
+        //debugger;
         if ($(".curSelectedNode").length > 0) {//删除
             $("#rootClient").removeClass("curSelectedNode");
             $(".curSelectedNode").removeClass("curSelectedNode");
@@ -210,7 +138,7 @@
 
             var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
             //终端层级，treeNode.level。。。。Global.config配置文件中ClientLevel-1
-            if ($(event.target).hasClass('button') && treeNode.dlevel >= 4) {//3 //点击图标，预览终端 截屏。
+            if ($(event.target).hasClass('button') && treeNode.level == 3) {//3 //点击图标，预览终端 截屏。
                 clientScreen(treeNode.id, treeNode.playstatus);
             } else {
                 $(event.target).parent().addClass('curSelectedNode');
@@ -223,78 +151,14 @@
             if (currentNodeID.indexOf("_a") <= 0) {
                 currentNodeID = $(".curSelectedNode a").attr("id");//currentNodeID +="_a";//"_span"
             }
-            $.cookie("mySelectNodeID", currentNodeID, { expires: 7, path: '/company/' });
-            //$.cookie("mySelectNodeName", $(".curSelectedNode").attr("title"), { path: '/company/' });
-            //$.cookie("mySelectNodeName", $(".curSelectedNode").attr("title"), { expires: 7, path: '/' });
-            //alert($(".curSelectedNode").attr("title"))
+            $.cookie("mySelectNodeID", currentNodeID, { path: '/company/' });
+            $.cookie("mySelectNodeName", $(".curSelectedNode").attr("title"), { path: '/company/' });
         }
         else {
             $(event.target).parent().addClass('curSelectedNode');
             client_main_loadright(type, treeNode.id, zTreeDlevel, treeNode.mark);
         }
     }
-
-    //用于捕获节点被点击的事件回调函数
-    function LoadClient_Main_Right1(event, treeId, treeNode, clickFlag) {
-        //debugger
-        if ($(".curSelectedNode").length > 0) {//删除
-            $("#rootClient").removeClass("curSelectedNode");
-            $(".curSelectedNode").removeClass("curSelectedNode");
-        }
-        if ($("#rootClient").css("background-color") != "") {//播放终端根目录
-
-            $("#rootClient")[0].setAttribute("style", "");//IE //$("#rootClient")[0].style = "";//FireFox//
-        }
-        var type = 5;
-        if (treeNode.groupflag > 0) {
-            type = 0;
-        }
-        zTreeDlevel = treeNode.dlevel;
-        if (treeNode.groupflag == "0") {//待改，，，配置文件读取
-            zTreeDlevel = "4";
-        }
-        if (treeNode.haveright == "true") {
-
-            var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
-            //终端层级，treeNode.level。。。。Global.config配置文件中ClientLevel-1
-            if ($(event.target).hasClass('button') && treeNode.dlevel >= 4) {//3 //点击图标，预览终端 截屏。
-                clientScreen(treeNode.id, treeNode.playstatus);
-            } else {
-                $(event.target).parent().addClass('curSelectedNode');
-                //client_main_loadright(type, treeNode.id, zTreeDlevel, treeNode.mark);
-                $("#curSelectedNodeId").attr("treeNodeId", treeNode.id);
-                $("#curSelectedNodeId").attr("zTreeDlevel", zTreeDlevel);
-                $("#curSelectedNodeId").attr("treeNodeMark", treeNode.mark);
-            }
-            //记录 点击了哪一个终端。。
-            var currentNodeID = $(".curSelectedNode").attr("id");
-            if (currentNodeID == undefined) { return; }
-
-            if (currentNodeID.indexOf("_a") <= 0) {
-                currentNodeID = $(".curSelectedNode a").attr("id");//currentNodeID +="_a";//"_span"
-            }
-            $.cookie("mySelectNodeID", currentNodeID, { path: '/program/' });
-            //$.cookie("mySelectNodeName", $(".curSelectedNode").attr("title"), { path: '/company/' });
-            //$.cookie("mySelectNodeName", $(".curSelectedNode").attr("title"), { expires: 7, path: '/' });
-            $("#curSelectedNodeId").val(currentNodeID);
-        }
-        else {
-            $(event.target).parent().addClass('curSelectedNode');
-            //不知道对不对因为不知道在判断什么
-            var currentNodeID = $(".curSelectedNode").attr("id");
-            if (currentNodeID == undefined) { return; }
-
-            if (currentNodeID.indexOf("_a") <= 0) {
-                currentNodeID = $(".curSelectedNode a").attr("id");//currentNodeID +="_a";//"_span"
-            }
-            $("#curSelectedNodeId").val(currentNodeID);
-            $("#curSelectedNodeId").attr("treeNodeId", treeNode.id);
-            $("#curSelectedNodeId").attr("zTreeDlevel", zTreeDlevel);
-            $("#curSelectedNodeId").attr("treeNodeMark", treeNode.mark);
-            //client_main_loadright(type, treeNode.id, zTreeDlevel, treeNode.mark);
-        }
-    }
-
     function clientScreen(clid, playStatus) {//wisepeak/image/14/   0711/0809.jpg
         if (playStatus.toString() == "0") {
             alert("终端离线，不能预览屏幕");
@@ -322,68 +186,52 @@
 
     //用于捕获节点被展开的事件回调函数
     function onExpand(event, treeId, treeNode, clickFlag) {//treeNode被展开的节点 JSON 数据对象
-        load = "1";
-        if (treeNode.children.length > 0 && treeNode.children[0].name == "") {
-            LoginTimeOut();
-        }
         //debugger;
         //alert(treeNode.level)
+        console.log("163..." + treeNode.groupflag);
         expandList = expandList + treeNode.id + "_";
-        $.cookie("expandList", expandList, { path: '/company/client' });
+        $.cookie("expandList", expandList);
         //alert(expandList)
         //终端层级，treeNode.level。。。。Global.config配置文件中ClientLevel-2
-        if (treeNode.dlevel <= 3 && treeNode.groupflag != "0") {//3  ....//美团， 4级终端组。。
-
+        if (treeNode.level < 2 && treeNode.groupflag != "0") {//3  ....//美团， 4级终端组。。
+            //debugger;
             showGroupIcon();//终端组 图标
         }
         //treeNode.level 最后一级组的 level
-        if (treeNode.dlevel >= 4) {//  //新展开的终端，加载 状态图标。
-
+        if (treeNode.level == 2) {//  //新展开的终端，加载 状态图标。
             showStatus();//treeNode.level == 3 && && treeNode.groupflag == "0"
-            //cutClientName();
+            cutClientName();
         }
     }
     //用于捕获节点被折叠的事件回调函数
     function onCollapse(event, treeId, treeNode, clickFlag) {
-        if (treeNode.children.length > 0 && treeNode.children[0].name == "") {
-            LoginTimeOut();
-        }
+        //debugger;
         expandList = expandList.replace(treeNode.id + "_", "");
         $.cookie("expandList", expandList);
         //alert(expandList)
         //终端层级，treeNode.level。。。。Global.config配置文件中ClientLevel-2
-        if (treeNode.dlevel < 4 && treeNode.groupflag != "0") {//3  ....//美团， 4级终端组。。
-            //
+        if (treeNode.level < 2 && treeNode.groupflag != "0") {//3  ....//美团， 4级终端组。。
+            //debugger;
             showGroupIcon();//终端组 图标
         }
     }
     //用于捕获异步加载正常结束的事件回调函数
     function onAsyncSuccess(event, treeId, treeNode, clickFlag) {
         //showStatus("onAsyncSuccess");
+        //debugger;
+        debugger;
         if (treeNode.open == "true") {
             expandNodes(treeNode.children);
         }
         showGroupIcon();
-        if (status == 1) {
-            setTimeout(function () {
-                if ($.cookie("mySelectNodeID") != null && $("#delSelf").val() == "0") {
-                    $("#" + $.cookie("mySelectNodeID")).addClass("curSelectedNode");
-                    $("#" + $.cookie("mySelectNodeID") + " span:eq(1)").click();
-                    //console.log("cccccccccccc222 cookie eeeeeeeee");
-                }//选择 之前点击的终端
-            }, 500);
-        } else if (status == 2) {
-            if ($("#curSelectedNodeId").val() != "") {
-                $("#" + $('#curSelectedNodeId').val() + "").addClass('curSelectedNode');
-            }
-        }
-        //if ($.cookie("mySelectNodeID") != null && $("#delSelf").val() == "0") {
-        //    $("#" + $.cookie("mySelectNodeID")).addClass("curSelectedNode");
-        //    $("#" + $.cookie("mySelectNodeID") + " span:eq(1)").click();
-        //}//选择 之前点击的终端
+        if ($.cookie("mySelectNodeID") != null) {
+            $("#" + $.cookie("mySelectNodeID")).addClass("curSelectedNode");
+            $("#" + $.cookie("mySelectNodeID") + " span:eq(1)").click();
+        }//选择 之前点击的终端
     }
     //用于捕获节点生成 DOM 后的事件回调函数
     function zTreeOnNodeCreated(event, treeId, treeNode) {
+        //debugger;
         if (treeNode.groupflag == "2") {//虚拟组的图标，不一样。。。
             if (virtualGroupIDs.indexOf(treeNode.tId) < 0) {
                 virtualGroupIDs += treeNode.tId + ",";
@@ -395,22 +243,15 @@
     //zTree 后台返回icon图标地址，赋值给<a>;  应该赋值给<span>
     //将图标，设置为 正确的状态图标
     function setFontCss(treeId, treeNode) {
+        //debugger;
         //终端层级，treeNode.level。。。。Global.config配置文件中ClientLevel-1
-        if (treeNode.dlevel >= 4) { //3 终端
-
+        if (treeNode.level == 3) { //3 终端
             myPosition = clientPlayStatus[treeNode.playstatus];//treeNode.playstatus  ，tes,, do...
             //tes++;//测试：显示所有状态图标。。。
             //if (tes>11) {
             //    tes = tes - 10;
             //}///images/client_state.png  // url("/images/client_state.png") no-repeat scroll -56px -3px / 150px 40px
-
-            clientIDs += treeNode.tId + ",";
-            clientIDsStatus += myPosition + ",";
-            //$('#' + treeNode.tId + ' a span:eq(0)').css('background', 'url(/images/tubiao.png)  no-repeat ' + myPosition + ' / 150px 400px');
-            if (load != "0") {
-                // return { background: "url(/images/tubiao.png)  no-repeat " + myPosition + " / 150px 400px" };//,width:"34px",height:"34px"
-            }
-
+            return { background: "url(/images/tubiao.png)  no-repeat " + myPosition + " / 150px 400px" };//,width:"34px",height:"34px"
         }// + " / 150px 325px"
         //下面：备用。。。。
         //treeNode.level==3  //treeNode.playstatus  终端、状态
@@ -426,17 +267,6 @@
                 expandNodes(nodes[i].children);
             }
         }
-    }
-    //长的终端名称，截取前6个字符 +...//不用了。全部显示，有滚动条。
-    function cutClientName() {
-        //$("#treeDemo li a.level3").find("span:eq(1)")[3].innerText
-        var currentText = "";
-        $.each($("#treeDemo li a.level3").find("span:eq(1)"), function (idx, ite) {
-            currentText = $(this).text();
-            if (currentText.length > 7) {
-                $(this).text(currentText.substr(0, 7) + "...");
-            }
-        });
     }
     //whq..设置 终端 状态图标
     function showStatus() {
@@ -463,32 +293,21 @@
         }
     }
     function showGroupIcon() {//图标
-
+        //debugger;
         //url(/images/tubiaoa.png) -150px -56px no-repeat
         var myClientGroup = $("li a.level0").find("span:eq(0)");//1级终端组
-        //此时为了设置居中，将56改为54
-        myClientGroup.css("background", "url(/images/tubiaoa.png)  -150px -53px no-repeat");
+        myClientGroup.css("background", "url(/images/tubiaoa.png)  -150px -56px no-repeat");
         myClientGroup = $("li a.level1").find("span:eq(0)");//2级终端组
-        myClientGroup.css("background", "url(/images/tubiaoa.png)  -150px -53px no-repeat");
+        myClientGroup.css("background", "url(/images/tubiaoa.png)  -150px -56px no-repeat");
         myClientGroup = $("li a.level2").find("span:eq(0)");//3级终端组
-        myClientGroup.css("background", "url(/images/tubiaoa.png)  -150px -53px no-repeat");
+        myClientGroup.css("background", "url(/images/tubiaoa.png)  -150px -56px no-repeat");
         //myClientGroup = $("li a.level3").find("span:eq(0)");//4 级终端组。。。
         //myClientGroup.css("background", "url(/images/tubiaoa.png)  -150px -56px no-repeat");
         //console.log(virtualGroupIDs+"vvvvvvvvvirtualsssssssss");
         var virtualIDs = virtualGroupIDs.split(',');
         for (var i = 0; i < virtualIDs.length - 1; i++) {
-            //为了图标居中，将80改为78
-            //$('#' + virtualIDs[i] + ' a span:eq(0)').css('background', 'rgba(0, 0, 0, 0) url("/images/tubiaoa.png") no-repeat scroll -150px -78px');
-            $('#' + virtualIDs[i] + ' a span:eq(0)').css('background', 'rgba(0, 0, 0, 0) url("/images/tubiaoa.png") no-repeat scroll -273px -197px');
+            $('#' + virtualIDs[i] + ' a span:eq(0)').css('background', 'rgba(0, 0, 0, 0) url("/images/tubiaoa.png") no-repeat scroll -152px -80px');
         }
-
-        var clientIDList = clientIDs.split(',');
-        for (var i = 0; i < clientIDList.length - 1; i++) {
-
-            //为了图标居中，将80改为78
-            $('#' + clientIDList[i] + ' a span:eq(0)').css('background', 'url(/images/tubiao.png)  no-repeat ' + clientIDsStatus.split(',')[i] + ' / 150px 400px');
-        }
-
         //$('#treeDemo_1 a span:eq(0)').css('background', 'rgba(0, 0, 0, 0) url("/images/tubiaoa.png") no-repeat scroll -152px -80px');
     }
     function showRootInfo() {
@@ -496,33 +315,10 @@
         $("#rootClient").addClass("curSelectedNode");//$("#rootClient")[0].style.length
         //if ($("#rootClient").css("background").length <= 0) {//避免重复点击
         if (document.getElementById("rootClient").style.backgroundColor.length <= 0) {
-            if (status == 1) {
-                $("#" + $.cookie("mySelectNodeID")).removeClass("curSelectedNode");
-                $.cookie("mySelectNodeID", null, { path: '/company/' });
-                //取消节点的选中状态。
-                var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
-                var nodes = treeObj.getSelectedNodes();
-                if (nodes.length > 0) {
-                    treeObj.cancelSelectedNode(nodes[0]);
-                }
-                $("#rootClient").css({ "background-color": "#FFE6B0", "border": "1px #FFB951 solid", "text-decoration": "underline" });
-                client_main_loadright(0, $("#client_main_groupid").val(), $("#client_main_dlevel").val(), $("#client_main_mark").val());
-            } else if (status == 2) {
-                $("#" + $("#curSelectedNodeId").val()).removeClass("curSelectedNode");
-                $.cookie("mySelectNodeID", null, { path: '/company/' });
-                //取消节点的选中状态。
-                var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
-                var nodes = treeObj.getSelectedNodes();
-                if (nodes.length > 0) {
-                    treeObj.cancelSelectedNode(nodes[0]);
-                }
-                $("#rootClient").css({ "background-color": "#FFE6B0", "border": "1px #FFB951 solid", "text-decoration": "underline" });
-
-                $("#curSelectedNodeId").val("");
-                $("#curSelectedNodeId").attr("treeNodeId", "");
-                $("#curSelectedNodeId").attr("zTreeDlevel", "");
-                $("#curSelectedNodeId").attr("treeNodeMark", "");
-            }
+            $("#" + $.cookie("mySelectNodeID")).removeClass("curSelectedNode");
+            $.cookie("mySelectNodeID", null, { path: '/company/' });
+            $("#rootClient").css({ "background-color": "#FFE6B0", "border": "1px #FFB951 solid", "text-decoration": "underline" });
+            client_main_loadright(0, $("#client_main_groupid").val(), $("#client_main_dlevel").val(), $("#client_main_mark").val());
         }
         //$("#client_main_right_mark").val("");//不用，
         //setTimeout(function () {//能够//获取所有终端的状态信息
@@ -537,8 +333,8 @@
 
 </script>
 <div class="title" style="position:relative">
-    <h4><a id="rootClient" style="color: #0596f2;" href="javascript:void(0)" onclick="showRootInfo()" class="mynet">播放终端根目录</a></h4>
-    <div title="刷新终端目录结构" id="reloadClient" style="background-image: url('/images/gengxin.png');width: 21px;position: absolute;top: 9px;left: 210px;height: 21px;cursor:pointer"></div>
+    <h4><a id="rootClient" style="color:#1ca8dd;" href="javascript:void(0)" onclick="showRootInfo()" class="mynet">播放终端根目录</a></h4>
+    <div title="刷新终端目录结构" id="reloadClient" style="background-image: url('/images/gengxin.png');width: 21px;position: absolute;top: 9px;left: 170px;height: 21px;cursor:pointer"></div>
 </div>
 <div class="zTreeDemoBackground left">
     <ul id="treeDemo" class="ztree"></ul>

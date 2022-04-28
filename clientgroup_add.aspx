@@ -72,11 +72,40 @@
 
         }
         switchLanguage("#clientgroup_addbox", 1, "clientgroup_add.aspx");
-       // $("#clientgroup_add_picture_upload").on("onpropertychange", function () {//.off("change")
-           // console.log("upload...." + $(this).val());
+        $("#clientgroup_add_picture_upload").live("change", function () {
+            //console.log("upload...." + $(this).val());
             //debugger;
-        
-       // });
+            var filename = $(this).val();
+            filename = filename.split('\\')[filename.split('\\').length - 1];
+            if ($(this).val() != "") {
+                $.ajaxFileUpload({
+                    url: 'ajax/receivepicture.ashx',
+                    type: 'post',
+                    secureuri: false, //一般设置为false
+                    fileElementId: 'clientgroup_add_picture_upload', // 上传文件的id、name属性名
+                    dataType: 'text', //返回值类型，一般设置为json、application/json
+                    elementIds: "clientgroup_add_picture_upload", //传递参数到服务器
+                    success: function (data, status) {
+                        //debugger;
+                        if (data <= 0) {
+                            showError("clientgroup_add_picture", getLanguageMsg("上传错误", $.cookie("yuyan")), 0);
+                        }
+                        else {
+                            if ($(".mod_sucess").length > 0) {
+                                $(".mod_sucess").remove();
+                            }
+                            $("#clientgroup_add_picture").val(data);
+                            //$("#clientgroup_add_picture_upload").after('<span style="float: left;padding-top: 5px;">'+ filename + '</span>');
+                            $("#clientgroup_add_picture_upload").after('<span style="float: left;padding-top: 5px;">' + filename + '</span>' + "<div class=\"mod_sucess\"><span class=\"sucess_icon\"></span>" + getLanguageMsg("上传成功", $.cookie("yuyan")) + "</div>");
+                            $("#previewPhotoDiv>img").attr("src", $("#clientgroup_add_picture").val());
+                        }
+                    },
+                    error: function (data, status, e) {
+                        alert(e);
+                    }
+                });
+            }
+        });
         $("#clientgroup_add").Validform({
             tiptype: function (msg, o, cssctl) {
                 if (!o.obj.is("form")) {//验证表单元素时o.obj为该表单元素，全部验证通过提交表单时o.obj为该表单对象;
@@ -99,57 +128,19 @@
                     loadParentPage1();
                 }
                 else {
-                    if (d.Info == "-1") {
-                        TopTrip("请重新登录", 2);
-                        LoginTimeOut();
+                    if (d.info == -1) {
+                        TopTrip(getLanguageMsg("终端组已存在", $.cookie("yuyan")), 2);
                     }
-                    if (d.Info == "-99") {
-                        TopTrip("无权限添加", 2);
-                    }
-                    if (d.Info == "0") {
+                    if (d.info == 0) {
                         TopTrip(getLanguageMsg("系统错误，请联系管理员", $.cookie("yuyan")), 3);
                     }
                 }
             }
         });
     })
-    function groupImage(ele) {
-        var filename = $(ele).val();
-        filename = filename.split('\\')[filename.split('\\').length - 1];
-        if ($(ele).val() != "") {
-            $(".span_success").remove();
-            $(".mod_sucess").remove();
-
-            $.ajaxFileUpload({
-                url: 'ajax/receivepicture.ashx',
-                type: 'post',
-                secureuri: false, //一般设置为false
-                fileElementId: 'clientgroup_add_picture_upload', // 上传文件的id、name属性名
-                dataType: 'text', //返回值类型，一般设置为json、application/json
-                elementIds: "clientgroup_add_picture_upload", //传递参数到服务器
-                success: function (data, status) {
-                    //debugger;
-                    if (data <= 0) {
-                        showError("clientgroup_add_picture", getLanguageMsg("上传错误", $.cookie("yuyan")), 0);
-                    }
-                    else {
-                        //if ($(".mod_sucess").length > 0) {
-                        //    $(".mod_sucess").remove();
-                        //}
-                        $("#clientgroup_add_picture").val(data);
-                        //$("#clientgroup_add_picture_upload").after('<span style="float: left;padding-top: 5px;">'+ filename + '</span>');
-                        $("#clientgroup_add_picture_upload").after('<span class="span_success" style="float: left;padding-top: 5px;">' + filename + '</span>' + "<div class=\"mod_sucess\"><span class=\"sucess_icon\"></span>" + getLanguageMsg("上传成功", $.cookie("yuyan")) + "</div>");
-                        $("#previewPhotoDiv>img").attr("src", $("#clientgroup_add_picture").val());
-                    }
-                },
-                error: function (data, status, e) {
-                    alert(e);
-                }
-            });
-        }
-    }
     //添加终端组，刷新页面。。。。备用。whq.
     function loadParentPage1() {
+        debugger;
         if ($.cookie("mySelectNodeID") != "" && $.cookie("mySelectNodeID") != null) {//记录的上次点击的终端(组)
             $("#client_main_left").load("client_main_left.html?rnd=" + Math.random());
         } else {
@@ -210,7 +201,7 @@
             <li><span class="label language">位置说明：</span><input class="inp_t" id="clientgroup_add_location" name="clientgroup_add_location" type="text"></li>
             <li><span class="label language">推荐度：</span><input class="inp_t" id="clientgroup_add_recomand" name="clientgroup_add_recomand" type="text" value="30"></li>
             <li><span class="label language">现场图片：</span><input class="inp_t" style="display: none;" id="clientgroup_add_picture" name="clientgroup_add_picture" runat="server" type="text">
-                <input type="file" name="clientgroup_add_picture_upload" accept="image/jpg,image/png,image/gif,image/bmp,image/jpeg" style="float: left" id="clientgroup_add_picture_upload" onchange="groupImage(this)" />
+                <input type="file" name="clientgroup_add_picture_upload" style="float: left" id="clientgroup_add_picture_upload" />
                 <div class="showallbtn">
                     <a href="javascript:void(0)" onclick="previewPhoto()" class="language">预览</a>
 

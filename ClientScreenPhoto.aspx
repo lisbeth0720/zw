@@ -28,7 +28,7 @@
             <input id="getPhoto" type="button" value="重新获取图片" /><span id="enableButton"></span>
         </div>
         <div>
-            <img src="/images/loading.gif" alt="screen photo" id="imgShow" onerror="获取失败，请稍后重试" /> <%--onerror="resetImage()"--%>
+            <img src="/images/loading.gif" alt="screen photo" id="imgShow" onerror="resetImage()" /> <%--onerror="resetImage()"--%>
             <input type="hidden" name="imgAddress" id="imgAddress" value="" runat="server" />
 
         </div>
@@ -101,13 +101,12 @@
                     $("#photoTime").siblings().css("display", "none");
                 }
             } else {
-                clearInterval(daojishi);
                 $("#photoTime").html("");
                 $("#photoTime").siblings().css("display", "none");
             }
         }
         $(function () {
-           var daojishi= setInterval(pageTime, 1000); //清 定时器！！！
+            setInterval(pageTime, 1000);
 
             //‘重新获取图片’ 点击之后禁用按钮，(向cgi请求截图)，倒计时30秒，启用按钮。。
             $("#getPhoto").click(function () {
