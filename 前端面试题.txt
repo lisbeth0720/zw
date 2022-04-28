@@ -1,0 +1,191 @@
+1、负责美化网页的是什么技术(A)
+ A、css  B、html  C、JavaScript  D、java
+2、嵌入在HTML文档中的图像格式可以是？(A C D)
+ A、*.gift  B、*.tif  C、*.bmp  D、*.jpg
+3、以下结构正确的是：ABD
+ A、<ul><li>今天是个好日子</li></ul>
+ B、<ol><li>第一步</li><li>第二步</li></ol>
+ C、<ul><p>今天的天气真好</p></ul>
+ D、<dl><dt>慧峰科技</dt><dd>网址为：http://www.wisepeak.com/</dd><dd>科技创新，诚信为本</dd></dl>
+4、下面哪一种不属于js的五中基本数据类型？（D）
+ A、undefined  B、string  C、null  D、Object
+5、假设val已经声明，可定义为任何值。则下面js代码有可能输出的结果为：（C）
+   console.log('Value is ' + (val != '0') ? 'define' : 'undefine');
+  A、Value is define
+  B、Value is undefine
+  C、define
+  D、undefine
+  E、Value is define或者 Value is undefine
+  F、define 或者 undefine
+  G、其他选项都有可能
+6、现有如下html结构
+   <ul>
+    <li>click me</li>
+    <li>click me</li>
+    <li>click me</li>
+    <li>click me</li>
+   </ul>
+  运行如下代码：
+    var elements=document.getElementsByTagName('li');
+    var length=elements.length;
+    for(var i=0;i<length;i++){
+        elements[i].onclick=function(){
+         alert(i);
+       }
+    }
+（D）
+ A、依次弹出1,2,3,4
+ B、依次弹出0，1,2,3
+ C、依次弹出3,3，3,3
+ D、依次弹出4,4,4,4
+7 完成extname函数，它会接受一个文件名作为参数，你需要返回它的扩展名。例如，输入wise.png,返回.png.(请将各种情况考虑全)
+ function extname(filename)(){
+	var ss=(filename).split(".");
+	var answer='';
+	if(ss.length<=1){
+		answer;
+	}else{
+		if(ss[0]!=''){
+			if(ss[ss.length-1]!=''){
+				answer='.'+ss[ss.length-1];
+			}else{
+				answer='';
+			}
+		}else{
+			answer=''
+		}
+	}
+	return answer;
+}
+8、完成将toChineseNum,可以将数字转换成中文大写的表示，处理到万级别，例如toChineseNum(12345),返回一万三千四百五。
+ var numStr='';
+window.onload=function(){
+	document.getElementById("btn").onclick=function(){
+		var Num=parseInt(document.getElementById("number").value);
+		numStr=''
+		toChineseNum(Num);
+	}
+}
+
+//函数调用
+function toChineseNum(num){
+    var num=num.toString();//将数字转换成字符串
+	if(num.length>4){//判断当前的数字是不是大于等于万
+	  var number1=num.length-4;
+	  var number=num.substring(0,number1);//截取包括万位的字符串
+	  var num1=num.substring(num.length-4);//截取后四位
+	   numStr= add(number)+"万";
+	   numStr=add(num1);
+	}else{
+	  add(num);
+	}
+	document.getElementsByClassName("content")[0].innerHTML=numStr;
+  //console.log(numStr);
+  // TODO
+}
+//核心代码
+function add(num){
+  var ss=num.length;
+  var nsi='';
+  for(var i=0;i<num.length;i++){
+	  //判断当前的数字是第几位
+      if(ss>4){
+		 //判断当前数字是不是0
+        if(num[i]!="0"){
+		   //不是0时加单位
+           numStr+= translate(num[i])+"万";
+        }else{
+			//是0时不加单位
+          numStr+= translate(num[i])
+        }
+       ss--;//每次判断结束后位数减1
+       continue;
+      }else if(ss>3){
+       if(num[i]!="0"){
+           numStr+= translate(num[i])+"千";
+        }else{
+          numStr+= translate(num[i])
+        }
+        ss--;
+        continue;
+      }else if(ss>2){
+        if(num[i]!="0"){
+           numStr+= translate(num[i])+"百";
+        }else{
+			//判断前一位是不是0,避免出现"零零"的情况
+			if(num[i-1]=="0"){
+				 numStr+="";
+			}else{
+				numStr+= translate(num[i]);
+			}
+          
+        }
+        ss--;
+        continue;
+      }else if(ss>1){
+       if(num[i]!="0"){
+           numStr+= translate(num[i])+"十";
+        }else{
+          if(num[i-1]=="0"){
+				 numStr+="";
+			}else{
+				numStr+= translate(num[i]);
+			}
+        }
+        ss--;
+        continue;
+      }else if(ss>0){
+       if(num[i]!="0"){
+           numStr+= translate(num[i]);
+        }else{
+		  numStr+="";
+          if(num[i-1]=="0"){
+				 numStr+="";
+			}
+			//判断前几位是否为0 避免出现 一千零零零的情况
+		   if(num[i-1]=="0"||(num[i-1]=="0"&&num[i-2]=="0")||(num[i-1]=="0"&&num[i-2]=="0"&&num[i-3]=="0")){
+			   //若前面的数字都为0，以及后来的数字也都为0,就将最后一个零去掉 如 三千 而不是 三千零
+				numStr=numStr.substring(0,numStr.length-1);
+			}
+        }
+        //ss--;
+      }
+    }
+	return numStr;
+}
+//将数字转换成中文
+function translate(num){
+  var tolowerNumber=['1','2','3','4','5','6','7','8','9','0'];
+  switch(num){
+    case "1":
+      return "一";
+      break;
+    case "2":
+      return "二";
+      break;
+    case "3":
+      return "三";
+      break;
+    case "4":
+      return "四";
+      break;
+    case "5":
+      return "五";
+      break;
+    case "6":
+      return "六";
+      break;
+    case "7":
+      return "七";
+      break;
+    case "8":
+      return "八";
+      break;
+    case "9":
+      return "九";
+      break;
+    case "0":
+      return "零";
+      break;
+  }
+}

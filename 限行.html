@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<style>
+	body{
+		margin:0;
+		padding:0;
+	}
+	#demo1{
+		width:100%;
+		height:100%;
+		background:red;
+	}
+	
+	#demo2{
+		width:100%;
+		height:100%;
+		background:green;
+	}
+</style>
+<script src="jquery-1.9.1.min.js"></script>
+<script>
+	
+	function shift(){
+		var x=document.getElementById("demo1");
+		var y=document.getElementById("demo2");
+		if(x.style.display=="block")
+		{
+			x.style.display="none";
+			document.getElementById("demo2").style.display="block";
+		}
+		else if(x.style.display=="none"){
+			document.getElementById("demo2").style.display="none";
+			x.style.display="block";
+		}
+		
+	}
+	//IE//document.getElementById("demo2").currentStyle["display"]
+	//window.getComputedStyle(document.getElementById("demo1"))["display"]
+	window.onload=function (){
+		var time=setInterval(shift,1000);
+		}
+</script>
+</head>
+
+<body>
+<div id="demo1" class="one" style="display:block">
+	one
+</div>
+<div id="demo2" class="two" style="display:none">
+	two
+</div>
+</body>
+</html>
