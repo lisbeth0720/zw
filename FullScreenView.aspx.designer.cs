@@ -2,41 +2,77 @@
 // <自动生成>
 //     此代码由工具生成。
 //
-//     对此文件的更改可能会导致不正确的行为，并且如果
-//     重新生成代码，这些更改将会丢失。 
+//     对此文件的更改可能导致不正确的行为，如果
+//     重新生成代码，则所做更改将丢失。
 // </自动生成>
 //------------------------------------------------------------------------------
 
-namespace Web.company.column {
+namespace Web.company.program {
     
     
     public partial class FullScreenView {
         
         /// <summary>
-        /// column_full_scid 控件。
+        /// program_full_menuid 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputHidden column_full_scid;
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden program_full_menuid;
         
         /// <summary>
-        /// column_full_temp 控件。
+        /// program_full_layoutid 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputHidden column_full_temp;
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden program_full_layoutid;
         
         /// <summary>
-        /// column_full_ct 控件。
+        /// program_full_window 控件。
         /// </summary>
         /// <remarks>
         /// 自动生成的字段。
         /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputHidden column_full_ct;
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden program_full_window;
+        
+        /// <summary>
+        /// program_full_layposition 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden program_full_layposition;
+        
+        /// <summary>
+        /// program_full_sourceid 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden program_full_sourceid;
+        
+        /// <summary>
+        /// program_full_tempid 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden program_full_tempid;
+        
+        /// <summary>
+        /// program_full_contenttype 控件。
+        /// </summary>
+        /// <remarks>
+        /// 自动生成的字段。
+        /// 若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden program_full_contenttype;
     }
 }

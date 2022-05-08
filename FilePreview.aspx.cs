@@ -8,11 +8,13 @@ using System.Data;
 using System.IO;
 using HuiFeng.Common;
 
-namespace Web.company.column
+namespace Web.company.program
 {
     public partial class FilePreview : System.Web.UI.Page
     {
         public string HTMLStr = string.Empty;
+        public int TaskID = 0;
+        public int cb = 0;
         protected void Page_Load(object sender, EventArgs e)
         {
             Init();
@@ -27,6 +29,23 @@ namespace Web.company.column
                 int ItemId = 0;
                 int TemplateId = 0;
                 string outDescript = string.Empty;
+                string windows = string.Empty;
+                if (!string.IsNullOrEmpty(Request["taskid"]))
+                {
+                    if (!int.TryParse(Request["taskid"].ToString(), out TaskID))
+                    {
+                        Response.Write("给出的节目项标记有误！");
+                        Response.End();
+                    }
+                }
+                if (!string.IsNullOrEmpty(Request["cb"]))
+                {
+                    if (!int.TryParse(Request["cb"].ToString(), out cb))
+                    {
+                        Response.Write("穿入参数有误！");
+                        Response.End();
+                    }
+                }
                 if (Request["itemid"] != null)
                 {
                     if (!int.TryParse(Request["itemid"].ToString(), out ItemId))
@@ -57,7 +76,11 @@ namespace Web.company.column
                 {
                     outDescript = Request["desript"].ToString();
                 }
-                HTMLStr = GetHTML(ItemId, TemplateId, outDescript, mmodel.Companyid,"");
+                if (Request["w"] != null)
+                {
+                    windows = Request["w"];
+                }
+                HTMLStr = GetHTML(ItemId, TemplateId, outDescript, mmodel.Companyid, windows);
             }
         }
 
@@ -100,7 +123,11 @@ namespace Web.company.column
             int loc = -1;
             string wndclickstr = "";
 
-            if (windowsname.Length > 0) wndclickstr = "onclick=\"window.parent.parent.changewindowname('" + windowsname + "',0,1);\"";
+            if (windowsname.Length > 0&& string.IsNullOrEmpty(Request.QueryString["fullscreen"]))
+            {
+               
+                wndclickstr = "onclick=\"window.parent.parent.changewindowname('" + windowsname + "',0,0);\"";
+            }
 
             charsetstr = "";//外面写了 "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">";
 
@@ -158,7 +185,7 @@ namespace Web.company.column
             }
             if (Request["itemtype"] != null)
             {
-                tt=Request["itemtype"].ToString();
+                tt = Request["itemtype"].ToString();
                 tt = tt.Trim();
                 if (tt != "")
                 {
@@ -176,11 +203,11 @@ namespace Web.company.column
                 if (dt.Rows.Count > 0)
                 {
                     bkpic = dt.Rows[0]["bkpic"].ToString().Trim();
-                    bkclr = "#"+Convert.ToString(Convert.ToInt32(dt.Rows[0]["bkclr"].ToString().Trim()), 16);
+                    bkclr = "#" + Convert.ToString(Convert.ToInt32(dt.Rows[0]["bkclr"].ToString().Trim()), 16);
                     fontclr = "#" + Convert.ToString(Convert.ToInt32(dt.Rows[0]["fontclr"].ToString().Trim()), 16);
                     fontoption = dt.Rows[0]["fontoption"].ToString().Trim();
                     loc = fontoption.IndexOf(";");//前2个标点在C/S中为逗号,在preparecgi中改成一致的了
-                    if (loc>=0)
+                    if (loc >= 0)
                     {
                         try
                         {
@@ -193,7 +220,7 @@ namespace Web.company.column
 
                         fontoption = fontoption.Substring((loc + 1), (fontoption.Length - loc - 1));
                         loc = fontoption.IndexOf(";");
-                        if (loc>=0)
+                        if (loc >= 0)
                         {
                             fontname = fontoption.Substring(0, loc);
                         }
@@ -263,7 +290,7 @@ namespace Web.company.column
             descript = MI.Rows[0]["descript"].ToString().Trim();
             if (descript.Trim().Length > 0)
             {
-                if (descript.IndexOf("&lt;")>=0)
+                if (descript.IndexOf("&lt;") >= 0)
                 {
                     descript.Replace("&lt;", "<").Replace("&gt;", ">");
                 }
@@ -512,9 +539,9 @@ namespace Web.company.column
                     }
                     sb.Append("<center>\r\n");
                     if (itemtype == 0)
-                        sb.Append("<div " + alignstr + "><img border=\"0\" src=\"" + path + "\" onload='autosize(this);'></div>\r\n");
+                        sb.Append("<div " + alignstr + "><img onerror=\"no_find(3,this)\" border=\"0\" src=\"" + path + "\" onload='autosize(this);'></div>\r\n");
                     else
-                        sb.Append("<div " + alignstr + "><img border=\"0\" src=\"" + path + "\" width=\"" + width + "\" height=\"" + height + "\" onload='autosize(this);'></div>\r\n");
+                        sb.Append("<div " + alignstr + "><img onerror=\"no_find(3,this)\" border=\"0\" src=\"" + path + "\" width=\"" + width + "\" height=\"" + height + "\" onload='autosize(this);'></div>\r\n");
                     sb.Append("</center>\r\n");
                     sb.Append("</body>\r\n");
                     sb.Append("</html>\r\n");
@@ -831,7 +858,7 @@ namespace Web.company.column
                     break;
                 case "10":
                     dispmsg += "10-视频文件/网络视频/电视";
-                    //sb.Append("<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n");
+                    sb.Append("<html>\r\n");
                     sb.Append("<head>\r\n");
                     sb.Append(charsetstr + "\r\n");
                     sb.Append("<title>Digital Multi-Media Distributing System</title>\r\n");
@@ -868,32 +895,38 @@ namespace Web.company.column
                         }
                         sb.Append("<div id=\"myvideo\" " + alignstr + " style=\"position:absolute;" + ttempurl + ";width='100%';height='100%';\"><font color=\"" + fontclr + "\" style=\"font-size:" + fontsize + "pt\" face=\"" + fontname + "\" style=\"line-height: 130%\">" + fontbold + fontitalic + tt + fontbold1 + fontitalic1 + "</font></div>\r\n");
                     }
+                    sb.Append("<div style='position:absolute;top:0px;left:0px;width:100%;height:50%;text-align:center;padding-top:20%;color:#FFF;cursor:pointer;font-size:14px;' id='mark' >点击预览视频</div>");
                     sb.Append("<center>\r\n");
-                    /*string okurl = path;
+                    string okurl = path;
                     bool dealit = false;
                     sb.Append("<script>\r\n");
+                    //sb.Append("if(JudgeBroswer()=='ie'){\r\n");
                     sb.Append("$(function(){\r\n");
                     sb.Append("$.fn.media.mapFormat(\"flv\",\"winmedia\");\r\n");
                     sb.Append("$.fn.media.mapFormat(\"mp3\",\"winmedia\");\r\n");
                     sb.Append("$.fn.media.mapFormat(\"mp4\",\"winmedia\");\r\n");
+                    sb.Append("$(\"#mark\").click(function(){$(\".media\").toggle(500,function(){if($(\".media\").css(\"display\")==\"block\"){myPlayer.play();}else{myPlayer.stop();}});$(\"img\").toggle(500);});\r\n");
                     sb.Append("$(\".media\").media({\r\n");
-                    sb.Append("autoplay:1,\r\n");
+                    sb.Append("autoplay:false,\r\n");
+                    sb.Append("playerid:\"myPlayer\",\r\n");
                     sb.Append("width:$(window).width(),\r\n");
                     sb.Append("height:$(window).height(),\r\n");
-                    sb.Append("params:{uiMode:\"none\",\r\n");
+                    sb.Append("params:{uiMode:\"None\",\r\n");
                     sb.Append("EnableContextMenu:1,\r\n");
                     sb.Append("enabled:1,\r\n");
-                    sb.Append("windowlessVideo:18,\r\n");
+                    sb.Append("windowlessVideo:1,\r\n");
+                    sb.Append("wmode:\"transparent\",\r\n");
                     sb.Append("volume:100,\r\n");
-                    sb.Append("PlayCount:9999,\r\n");
-                    sb.Append("Loop:1,\r\n");
+                    sb.Append("PlayCount:1,\r\n");
+                    sb.Append("Loop:0,\r\n");
                     sb.Append("CONTROLS:\"ImageWindow\"\r\n");
                     sb.Append("},\r\n");
                     sb.Append("attrs:{id:\"myplayer\"}\r\n");
                     sb.Append("});\r\n");
-                    sb.Append("$(\"#divplayer\").click(function(){\r\n");
+                    sb.Append("$(\".media\").hide();");
+                    /*sb.Append("$(\"#divplayer\").click(function(){\r\n");
                     sb.Append("var videotype=\"" + GetFileSubfix(okurl) + "\";\r\n");
-                    sb.Append("if($.fn.media.getPlayerType(videotype)==\"winmedia\"){,\r\n");
+                    sb.Append("if($.fn.media.getPlayerType(videotype)==\"winmedia\"){\r\n");
                     sb.Append("if(myplayer.uiMode==\"full\"){\r\n");
                     sb.Append("myplayer.uiMode=\"none\";	\r\n");
                     sb.Append("$(this).text(\"显示控制条\");\r\n");
@@ -911,23 +944,25 @@ namespace Web.company.column
                     sb.Append("}\r\n");
                     sb.Append("}else if($.fn.media.getPlayerType(videotype)==\"quicktime\"){ \r\n");
                     sb.Append("}\r\n");
+                    sb.Append("});\r\n");*/
                     sb.Append("});\r\n");
-                    sb.Append("});\r\n");
+                    //sb.Append("}\r\n");
                     sb.Append("</script>\r\n");
-                    sb.Append("<div id=\"divplayer\" style=\"position:absolute;top:0;left:0;color:#FFF;font-size:12px;margin:10px;cursor:pointer;\">显示控制条</div>\r\n");
-                    sb.Append("<a class=\"media\" href=\"" + okurl + "\" ></a> \r\n");
+                    //sb.Append("<div id=\"divplayer\" style=\"position:absolute;top:0;left:0;color:#FFF;font-size:12px;margin:10px;cursor:pointer;\">显示控制条</div>\r\n");
+                    sb.Append("<a class=\"media\"  href=\"" + okurl + "\" ></a> \r\n");
                     //dealit = true;
-                    if (!dealit)
-                    {
-                        if (itemtype == 0)
-                        {
-                            sb.Append("<p valign=\"middle\" " + alignstr + "><img border=\"0\" dynsrc=\"" + path + "\" start=\"fileopen\" " + circlestr + "></p>\r\n");
-                        }
-                        else
-                        {
-                            sb.Append("<p valign=\"middle\" " + alignstr + "><img border=\"0\" dynsrc=\"" + path + "\" width=\"" + width + "\" height=\"" + height + "\" start=\"fileopen\" " + circlestr + "></p>\r\n");
-                        }
-                    }*/
+                    string circlestr = "";
+                    //if (!dealit)
+                    //{
+                    //    if (itemtype == 0)
+                    //    {
+                    //        sb.Append("<p valign=\"middle\" " + alignstr + "><img border=\"0\" dynsrc=\"" + path + "\" start=\"fileopen\" " + circlestr + "></p>\r\n");
+                    //    }
+                    //    else
+                    //    {
+                    //        sb.Append("<p valign=\"middle\" " + alignstr + "><img border=\"0\" dynsrc=\"" + path + "\" width=\"" + width + "\" height=\"" + height + "\" start=\"fileopen\" " + circlestr + "></p>\r\n");
+                    //    }
+                    //}
                     //显示缩略图
                     path = FileHelper.GetThumbnailFilename(path, 5, 0, 10);
                     sb.Append("<div " + alignstr + "><img border=\"0\" src=\"" + path + "\" onload='autosize(this);'></div>\r\n");
@@ -1069,9 +1104,9 @@ namespace Web.company.column
             }
             catch
             {
-                sb.Append("定位错误-"+fullname);
+                sb.Append("定位错误-" + fullname);
             }
-            
+
             return sb.ToString();
         }
 
@@ -1079,7 +1114,7 @@ namespace Web.company.column
         {//获取后缀
             int loc = fileName.IndexOf(".");
             if (loc >= 0)
-                return fileName.Substring((loc + 1), fileName.Length-loc-1);
+                return fileName.Substring((loc + 1), fileName.Length - loc - 1);
             else
                 return "";
         }
